@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+os-svc-daemon heat-api heat heat-api
+os-svc-daemon heat-api-cfn heat heat-api-cfn
+os-svc-daemon heat-api-cloudwatch heat heat-api-cloudwatch
+os-svc-daemon heat-metadata heat heat-metadata
