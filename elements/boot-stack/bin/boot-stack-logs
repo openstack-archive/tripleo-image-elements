@@ -1,0 +1,34 @@
+#!/bin/bash
+set -eu
+
+#!/bin/bash
+set -eu
+
+if [[ $EUID -ne 0 ]]; then
+   echo "ERROR: you must be root to run this" 1>&2
+   exit 1
+fi
+
+scr_name=os-logs
+scr_file=$(mktemp)
+this_dir=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)
+
+cat > $scr_file <<eof
+startup_message off
+hardstatus alwayslastline "%w"
+caption always "%{-b ..}%-w%{+b ..}[[%n%f*%t]]%{-}%+w"
+source $this_dir/../stackrc
+eof
+
+for f in \
+  /var/log/upstart/nova-compute.log \
+  /var/log/upstart/nova-scheduler.log; do
+  if [ -e $f ]; then
+    echo "screen -t $(basename $f) sh -c \"tail -f $f | ccze\"" >> $scr_file
+  fi
+done
+
+echo "screen -t dnsmasq sh -c \"tail -f /var/log/syslog | grep dnsmasq\"" >> $scr_file
+echo "screen -t nova-list sh -c \"watch nova list\"" >> $scr_file
+
+exec screen -c $scr_file

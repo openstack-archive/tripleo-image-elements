@@ -19,7 +19,7 @@ end script
 
 respawn
 
-exec start-stop-daemon --start -c $user --exec /opt/stack/venvs/$user/bin/$cmd $args
+exec start-stop-daemon --start -c $user --exec /opt/stack/venvs/$user/bin/$cmd -- $args
 EOF
 }
 

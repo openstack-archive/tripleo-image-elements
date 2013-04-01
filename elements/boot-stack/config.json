@@ -1,0 +1,46 @@
+{
+  "OpenStack::Heat::Stack": {
+    "Name": "foo",
+    "Region": "az1",
+    "RefreshResource": "foo"
+  },
+  "admin-token": "foobar",
+  "admin-password": "kilgore",
+  "service-password": "foobaz",
+  "db-password": "stackdb",
+  "keystone": {
+    "host": "127.0.0.1",
+    "db": "mysql://keystone:stackdb@localhost/keystone"
+  },
+  "interfaces": {
+    "control": "eth0"
+  },
+  "rabbit": {
+    "host": "127.0.0.1",
+    "password": "guest"
+  },
+  "glance": {
+    "host": "127.0.0.1",
+    "db": "mysql://glance:stackdb@localhost/glance"
+  },
+  "nova": {
+    "host": "127.0.0.1",
+    "db":    "mysql://nova:stackdb@localhost/nova",
+    "bm_db": "mysql://nova:stackdb@localhost/nova_bm",
+    "virtual_power_user": "stack",
+    "virtual_power_key": "/opt/stack/boot-stack/virtual-power-key",
+    "virtual_power_ssh_host": "192.168.122.1"
+  },
+  "cinder": {
+    "db": "mysql://cinder:stackdb@localhost/cinder",
+    "volume_size_mb": "5000"
+  },
+  "quantum": {
+    "host": "127.0.0.1",
+    "ovs_db": "mysql://quantum:stackdb@localhost/ovs_quantum?charset=utf8"
+  },
+  "swift": {
+    "store_user": "foo",
+    "store_key": "bar"
+  }
+}

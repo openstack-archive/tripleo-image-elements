@@ -1,0 +1,11 @@
+#!/bin/bash
+set -eu
+
+PATH=/usr/local/bin:$PATH
+
+reset-db
+reset-keystone
+reset-nova
+reset-quantum
+
+os-refresh-config

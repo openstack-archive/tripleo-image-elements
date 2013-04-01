@@ -1,0 +1,27 @@
+#!/bin/bash
+set -eu
+
+db_pass=$(os-config-applier --key db-password)
+
+service mysql restart
+
+PATH=/usr/local/bin:$PATH
+venvs=/opt/stack/venvs
+
+os-db-create keystone keystone $db_pass
+$venvs/keystone/bin/keystone-manage db_sync
+
+os-db-create cinder cinder $db_pass
+$venvs/cinder/bin/cinder-manage db sync
+
+os-db-create nova nova $db_pass
+$venvs/nova/bin/nova-manage db sync
+
+os-db-create nova_bm nova $db_pass
+$venvs/nova/bin/nova-baremetal-manage db sync
+
+os-db-create glance glance $db_pass
+$venvs/glance/bin/glance-manage db_sync
+
+os-db-create ovs_quantum quantum $db_pass
+

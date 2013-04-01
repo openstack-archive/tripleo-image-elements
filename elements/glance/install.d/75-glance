@@ -1,10 +1,7 @@
 #!/bin/bash
 set -eux
 
-# TODO: use trunk instead of folsom
-# trunk glance currently results in CRITICAL 'duplicate config entry log-format' errors:
-#    https://bugs.launchpad.net/ubuntu/+source/python-glanceclient/+bug/1131327
-os-svc-install -n glance -u glance -r https://github.com/openstack/glance.git -b stable/folsom
+os-svc-install -n glance -u glance -r https://github.com/openstack/glance.git
 
 mkdir -p /var/lib/glance/images && chown -R glance:glance /var/lib/glance/images
 os-svc-daemon glance-api glance glance-api "--debug --log-config /etc/glance/logging.conf"

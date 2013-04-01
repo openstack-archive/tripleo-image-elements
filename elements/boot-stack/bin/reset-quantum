@@ -1,0 +1,56 @@
+#!/bin/bash
+set -eux
+
+PATH=/usr/local/bin:$PATH
+source /root/stackrc
+
+if ! grep boot-stack /etc/network/interfaces; then
+  cat >> /etc/network/interfaces <<eof
+
+# This interface was installed by the diskimage-builder boot-stack element.
+auto eth1
+iface eth1 inet static
+  address 192.0.2.1
+  netmask 255.255.255.0
+  up iptables -t nat -A PREROUTING -d 169.254.169.254 -p tcp -m tcp --dport 80 -j REDIRECT --to-port 8775
+  up iptables -t nat -A POSTROUTING  -s 192.0.2.0/24 -o eth0 -j MASQUERADE
+  up ip addr add 192.0.2.33/29 dev eth1
+
+# Public Bridge
+#    auto eth2
+#    iface eth2 inet manual
+#    up ifconfig \$IFACE 0.0.0.0 up
+#    up ip link set \$IFACE promisc on
+#    down ifconfig \$IFACE down
+eof
+fi
+
+service networking restart
+service openvswitch-switch restart
+service quantum-server restart
+
+OVS_PHYSICAL_BRIDGE=br-ctlplane
+PHYSICAL_NETWORK=ctlplane
+PUBLIC_INTERFACE=eth1
+
+ovs-vsctl --no-wait -- --may-exist add-br br-int
+ovs-vsctl --no-wait br-set-external-id br-int bridge-id br-int
+ovs-vsctl --no-wait -- --may-exist add-br br-ctlplane
+ovs-vsctl add-port $OVS_PHYSICAL_BRIDGE $PUBLIC_INTERFACE || echo "port already added?"
+
+for IP in $(ip addr show dev $PUBLIC_INTERFACE | grep ' inet ' | awk '{print $2}'); do
+  ip addr del $IP dev $PUBLIC_INTERFACE
+  ip addr add $IP dev $OVS_PHYSICAL_BRIDGE
+done
+ifconfig $OVS_PHYSICAL_BRIDGE up
+
+# TODO: configurable
+ALLOCATION_POOL="start=192.0.2.34,end=192.0.2.38"
+NETWORK_GATEWAY=192.168.122.1
+FIXED_RANGE=192.0.2.33/29
+TENANT_ID=$(keystone tenant-list | grep ' admin ' | awk '{print $2}')
+
+NET_ID=$(quantum net-create $PHYSICAL_NETWORK --tenant_id $TENANT_ID --provider:network_type flat --provider:physical_network "$PHYSICAL_NETWORK" | grep ' id ' | awk '{print $4}')
+SUBNET_ID=$(quantum subnet-create --tenant_id $TENANT_ID --ip_version 4 ${ALLOCATION_POOL:+--allocation-pool $ALLOCATION_POOL} --gateway $NETWORK_GATEWAY $NET_ID $FIXED_RANGE | grep ' id ' | awk '{print $4}')
+
+ifconfig $OVS_PHYSICAL_BRIDGE up

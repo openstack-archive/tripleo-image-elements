@@ -1,0 +1,22 @@
+#!/bin/bash
+set -eu
+
+
+# This key is to be retrieved to allow nova to ssh
+# into the host machine when using VirtualPowerManager
+ssh-keygen -t rsa -f /opt/stack/boot-stack/virtual-power-key \
+     -N '' -C 'boot-stack key for use with nova VirtualPowerDriver'
+chown nova:nova /opt/stack/boot-stack/virtual-power-key*
+chmod 400 /opt/stack/boot-stack/virtual-power-key*
+
+PATH=/usr/local/bin:$PATH
+
+# TODO: rabbit should not need to be restarted on first boot - but currently does.
+# https://bugs.launchpad.net/diskimage-builder/+bug/1166838
+service rabbitmq-server restart
+
+os-config-applier
+wipe-openstack
+
+touch /opt/stack/boot-stack.ok
+
