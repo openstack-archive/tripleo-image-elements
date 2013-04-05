@@ -19,22 +19,22 @@ with open("README.md", 'rt') as readme:
     readme_text = readme.read()
 
 setuptools.setup(
-    name='diskimage_builder',
+    name='tripleo_image_elements',
     version='0.0.1',
-    description="""Build Disk Images for use on OpenStack Nova""",
+    description="""Disk image elements for deploying OpenStack.""",
     long_description=readme_text,
     license='Apache License (2.0)',
     author='HP Cloud Services',
     author_email='nobody@hp.com',
-    url='https://github.com/stackforge/diskimage-builder',
+    url='https://github.com/stackforge/tripleo-image-elements',
     packages=setuptools.find_packages(),
     include_package_data=True,
     classifiers=[
         'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: POSIX :: Linux',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Other',
         'Environment :: Console',
     ],
-    scripts=['bin/element-info'],
+    scripts=[],
     py_modules=[])

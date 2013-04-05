@@ -1,3 +1,0 @@
-# extra load for mellanox
-modprobe mlx4_en
-

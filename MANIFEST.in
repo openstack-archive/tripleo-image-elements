@@ -1,7 +1,3 @@
-recursive-include lib
-include bin/disk-image-create
-include bin/disk-image-get-kernel
-include bin/ramdisk-image-create
 recursive-include elements
 include README.md
 recursive-include docs

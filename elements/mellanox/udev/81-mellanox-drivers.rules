@@ -1,6 +1,0 @@
-ACTION!="add", GOTO="drivers_end"
-
-SUBSYSTEM=="net", RUN+="/sbin/modprobe mlx4_en"
-
-LABEL="drivers_end"
-

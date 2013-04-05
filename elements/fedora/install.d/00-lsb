@@ -1,3 +1,0 @@
-#!/bin/bash
-
-exec install-packages redhat-lsb

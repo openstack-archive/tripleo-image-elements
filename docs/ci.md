@@ -1,4 +1,4 @@
-CI needs for image building
+CI needs for TripleO Images
 ===========================
 
 Eventually, if/when TripleO becomes an official Openstack project, all CI for
@@ -13,13 +13,14 @@ Jenkins
   members as service admins.
 * Grant jenkin builders sudo [may want lxc containers or cloud instances for
   security isolation]
-* Jobs to build:
- * bootstrap VM from-scratch (archive bootstrap.qcow2).
+* Jobs built are in the autobuilt-jobs matrix, including fedora and ubuntu
+  bootstrap nodes, plain heat-cfn images - e.g.::
 
         disk-image-create vm base devstack -o bootstrap -a i386
 
- * devstack nova-bm execution (archive the resulting image).
-   Chained off of the bootstrap vm build
+ * We plan to but do not yet perform functional testing including running up
+   a live stack based on the images we build.
+   e.g. Chained off of the bootstrap vm build
 
         ssh into the node, run demo/scripts/demo
 
@@ -38,7 +39,7 @@ Jenkins
         disk-image-create base vm glance nova-bm swift cinder quantum \
         -o bootstrap-prod
 
- * ramdisk deploy image buil
+ * ramdisk deploy image build
 
         ramdisk-image-create deploy
         
@@ -49,7 +50,7 @@ Jenkins
 Copyright
 =========
 
-Copyright 2012 Hewlett-Packard Development Company, L.P.
+Copyright 2012, 2013 Hewlett-Packard Development Company, L.P.
 Copyright (c) 2012 NTT DOCOMO, INC. 
 
 All Rights Reserved.
