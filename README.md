@@ -10,11 +10,11 @@ Instructions
 
 Checkout this source tree and also the diskimage builder
 (https://github.com/stackforge/diskimage-builder), export an ELEMENTS\_PATH
-to both trees, and build any disk images you need.
+to add elements from this tree, and build any disk images you need.
 
 	git clone https://github.com/stackforge/diskimage-builder.git
 	git clone https://github.com/stackforge/tripleo-image-elements.git
-	export ELEMENTS_PATH=diskimage-builder/elements:tripleo-image-elements/elements
+	export ELEMENTS_PATH=tripleo-image-elements/elements
 	diskimage-builder/bin/disk-image-create -u base vm bootstrap local-config stackuser -a i386 -o bootstrap
 
 Common element combinations
