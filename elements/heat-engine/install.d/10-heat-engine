@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+install-packages python-mysqldb
+
+os-svc-daemon heat-engine heat heat-engine
