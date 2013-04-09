@@ -2,4 +2,3 @@ glance-api
 keystone
 mysql
 nova-api
-nova-vm
