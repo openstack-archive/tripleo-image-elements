@@ -28,25 +28,14 @@ for client in nova quantum glance; do
   venvs=/opt/stack/venvs
   git clone --depth 1 https://github.com/openstack/$repo.git /opt/stack/$repo
 
-  virtualenv $venvs/$repo
-  set +u
-  source $venvs/$repo/bin/activate
-  set -u
-
   # required for a cliff version conflict. this can be removed once cliff will accept prettytable >0.7
   pip install cliff
 
-  [ -e /opt/stack/$repo/tools/pip-requires ] && pip install -r /opt/stack/$repo/tools/pip-requires
   pushd /opt/stack/$repo
+  [ -e tools/pip-requires ] && pip install -r tools/pip-requires
   python setup.py develop --script-dir /usr/local/bin
   popd
-  #pip install /opt/stack/$repo
 
-  set +u
-  deactivate
-  set -u
-
-  ln -sf /opt/stack/venvs/$repo/bin/$client /usr/local/bin/$client
 done
 
 # image toolchain
