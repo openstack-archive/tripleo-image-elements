@@ -27,6 +27,7 @@
     "host": "127.0.0.1",
     "db":    "mysql://nova:stackdb@localhost/nova",
     "bm_db": "mysql://nova:stackdb@localhost/nova_bm",
+    "bm_arch": "i386",
     "virtual_power_user": "stack",
     "virtual_power_key": "/opt/stack/boot-stack/virtual-power-key",
     "virtual_power_ssh_host": "192.168.122.1"
