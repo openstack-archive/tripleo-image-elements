@@ -5,6 +5,12 @@ PATH=/usr/local/bin:$PATH
 
 reset-db
 reset-keystone
+
+# after resetting keystone, we must make API services reconnect
+service glance-api restart
+service glance-reg restart
+service nova-api restart
+
 reset-nova
 reset-quantum
 
