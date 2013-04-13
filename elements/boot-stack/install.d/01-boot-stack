@@ -43,6 +43,18 @@ git clone https://github.com/stackforge/diskimage-builder.git /opt/stack/diskima
 
 # rabbit
 install-packages rabbitmq-server
+# rabbit's default init.d script is broken.
+update-rc.d -f rabbitmq-server remove
+rm /etc/init.d/rabbitmq-server
+cat > /etc/init/rabbitmq-server.conf <<eof
+start on runlevel [2345]
+stop on runlevel [016]
+respawn
+
+exec /usr/sbin/rabbitmq-server > /var/log/rabbitmq/startup_log \
+                              2> /var/log/rabbitmq/startup_err
+post-start exec /usr/sbin/rabbitmqctl wait >/dev/null 2>&1
+eof
 
 # db
 install-packages mysql-server python-mysqldb
