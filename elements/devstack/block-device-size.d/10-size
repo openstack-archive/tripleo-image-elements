@@ -1,8 +1,8 @@
 #!/bin/bash
-# Add the stack user we recommend folk use.
+# Enforce a maximum size on the image size
 
 set -e
 
-if (( '16' '>' $IMAGE_SIZE )); then
-   echo IMAGE_SIZE=16
+if (( '16' '>' $DIB_IMAGE_SIZE )); then
+   echo DIB_IMAGE_SIZE=16
 fi
