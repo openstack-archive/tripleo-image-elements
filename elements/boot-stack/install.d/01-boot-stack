@@ -37,7 +37,10 @@ for client in nova quantum glance; do
   pip install cliff
 
   pushd /opt/stack/$repo
-  [ -e tools/pip-requires ] && pip install -r tools/pip-requires
+  if [ -e tools/pip-requires ]; then
+    PIP_INDEX_URL=http://pypi.openstack.org/openstack/ \
+      pip install -r tools/pip-requires
+  fi
   python setup.py develop --script-dir /usr/local/bin
   popd
 
