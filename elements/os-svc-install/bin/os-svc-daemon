@@ -23,11 +23,34 @@ exec start-stop-daemon --start -c $user --exec /opt/stack/venvs/$user/bin/$cmd -
 EOF
 }
 
+function install_systemd {
+  local name=$1
+  local user=$2
+  local cmd=$3
+  shift; shift; shift
+  local args=$*
+  cat > /etc/systemd/system/$name.service <<EOF
+[Unit]
+Description=$name Service
+
+[Service]
+ExecStart=/opt/stack/venvs/$user/bin/$cmd -- $args
+User=$user
+
+[Install]
+WantedBy=multi-user.target
+Alias=$name.service
+EOF
+}
+
 if [ $# -lt 3 ]; then
   echo "Usage: os-svc-daemon DAEMON_NAME USER COMMAND [ARG[ARG[...]]]"
   exit 1
 fi
 
-# TODO: check what system we are on, and install
-#       systemv instead, if appropriate.
-install_upstart $*
+# TODO: SysV init fallback support
+if [ -d /etc/init ]; then
+  install_upstart $*
+elif [ -d /etc/systemd/system ]; then
+  install_systemd $*
+fi
