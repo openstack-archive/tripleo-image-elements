@@ -2,7 +2,15 @@
 set -eu
 
 install-packages mysql-server python-mysqldb
-sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/my.cnf
+
+my_cnf=
+if [ -f /etc/mysql/my.cnf ]; then
+  my_cnf=/etc/mysql/my.cnf # Ubuntu
+elif [ -f /etc/my.cnf ]; then
+  my_cnf=/etc/my.cnf # Fedora/RHEL
+fi
+
+sed -i 's/127.0.0.1/0.0.0.0/g' $my_cnf
 
 os-svc-install -u keystone -r https://github.com/openstack/keystone.git
 os-svc-install -u cinder   -r https://github.com/openstack/cinder.git
