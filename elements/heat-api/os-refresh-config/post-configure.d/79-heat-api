@@ -1,0 +1,4 @@
+#!/bin/bash
+service heat-api restart
+service heat-api-cfn restart
+service heat-api-cloudwatch restart

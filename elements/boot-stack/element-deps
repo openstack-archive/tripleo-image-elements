@@ -4,3 +4,5 @@ nova-api
 nova-compute
 openstack-db
 quantum
+heat-api
+heat-engine

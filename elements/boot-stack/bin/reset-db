@@ -23,5 +23,8 @@ $venvs/nova/bin/nova-baremetal-manage db sync
 os-db-create glance glance $db_pass
 $venvs/glance/bin/glance-manage db_sync
 
+os-db-create heat heat $db_pass
+$venvs/heat/bin/python -m heat.db.sync
+
 os-db-create ovs_quantum quantum $db_pass
 

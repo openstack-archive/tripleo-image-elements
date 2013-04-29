@@ -47,6 +47,16 @@
     "host": "127.0.0.1",
     "ovs_db": "mysql://quantum:unset@localhost/ovs_quantum?charset=utf8"
   },
+  "heat": {
+    "db": "mysql://heat:unset@localhost/heat",
+    "auth_encryption_key": "unset___________",
+    "heat_watch_server_url": "http://127.0.0.1:8003",
+    "waitcondition_server_url": "http://127.0.0.1:8000/v1/waitcondition",
+    "metadata_server_url": "http://127.0.0.1:8000",
+    "admin_tenant_name": "service",
+    "admin_user": "heat",
+    "admin_password": "unset"
+  },
   "swift": {
     "store_user": "unset",
     "store_key": "unset"
