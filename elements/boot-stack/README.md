@@ -1,36 +1,44 @@
 A self-contained one-node baremetal openstack.
 
-## instructions for use:
+Description
+-----------
 
-- Edit "virtual_power_user"  in config.json, if using the VirtualPowerDriver.
+This element contains nova, glance, and keystone services, configured to perform baremetal deployments.
 
-- Build this element into an image and boot it. (see https://github.com/tripleo/incubator)
 
-- SSH in as `root`.
+Basic Usage
+-----------
 
-- Upon first boot, it will take a couple minutes to initialize nova and glance.  Progress can be observed in `/var/log/first-boot.d.log`. `/opt/stack/boot-stack/ok` will be touched upon completion
+See this doc for basic usage instructions:
+  https://github.com/tripleo/incubator/blob/master/notes.md
 
-- `source` OpenStack credentials from /root/stackrc.
 
-- Allow nova ssh access to your host, if using VirtualPowerDriver:
-```bash
-ssh -o StrictHostKeyChecking=no \
-    -o UserKnownHostsFile=/dev/null \
-    root@192.168.122.144 cat /opt/stack/boot-stack/virtual-power-key.pub >> ~/.ssh/authorized_keys
-```
+First Boot
+----------
 
-- Add some baremetal nodes to nova. e.g.:
+Upon first boot, scripts will be automatically run to perform the following:
+- database initialization
+- service restarts
+- default keystone accounts
+- default nova flavors/images
+- default network configuration.
 
-```bash
-nova baremetal-node-create ubuntu 1 2 10 52:54:00:bc:2c:1a --pm_address 192.168.122.1 --pm_user $USER --pm_password $PASS
-nova baremetal-interface-add $id 52:54:00:bc:2c:1a
-# in a few seconds, an entry will appear in the nova.compute_nodes table, after which the bm node is ready.
-```
+The output of the first-boot scripts can be viewed in `/var/log/first-boot.d.log`.
+The file `/opt/stack/boot-stack/boot-stack.ok` will be touched upon the scripts' completion.
 
-- If a disk image existed at `/root/demo.qcow2` during first boot, it will already be in glance. Else, or if you wish to install more images, see /usr/local/bin/reset-nova for an example.
 
-- Perform a baremetal-boot: `nova boot --image demo --flavor baremetal test"
+Credentials
+-----------
 
-- See progress in the logs: `boot-stack-logs`
+OpenStack credentials are installed to /root/stackrc in the boot-stack machine.
+All services listen on a wildcard address, so that the credentials may be copied out and used from outside the boot-stack machine.
 
-- At any time, you may completely reset OpenStack state: `sudo wipe-openstack`
+
+Utilities
+---------
+
+The following utilities are available in the running boot-stack machine:
+
+`wipe-openstack` - Clear all openstack databases, and return nova/keystone/quantum/etc. to their default states.
+
+`boot-stack-logs` - Start a screen session which tails important logs.
