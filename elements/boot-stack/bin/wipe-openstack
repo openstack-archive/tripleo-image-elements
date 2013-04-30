@@ -4,14 +4,14 @@ set -eu
 PATH=/usr/local/bin:$PATH
 
 reset-db
-reset-keystone
+init-keystone
 
 # after resetting keystone, we must make API services reconnect
 service glance-api restart
 service glance-reg restart
 service nova-api restart
 
-reset-nova
-reset-quantum
+init-nova
+init-quantum
 
 os-refresh-config

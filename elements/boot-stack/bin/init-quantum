@@ -25,10 +25,6 @@ iface eth1 inet static
 eof
 fi
 
-service networking restart
-service openvswitch-switch restart
-service quantum-server restart
-
 OVS_PHYSICAL_BRIDGE=br-ctlplane
 PHYSICAL_NETWORK=ctlplane
 PUBLIC_INTERFACE=eth1
@@ -40,9 +36,16 @@ ovs-vsctl add-port $OVS_PHYSICAL_BRIDGE $PUBLIC_INTERFACE || echo "port already 
 
 for IP in $(ip addr show dev $PUBLIC_INTERFACE | grep ' inet ' | awk '{print $2}'); do
   ip addr del $IP dev $PUBLIC_INTERFACE
-  ip addr add $IP dev $OVS_PHYSICAL_BRIDGE
+
+  if ! ip addr show $OVS_PHYSICAL_BRIDGE | grep $IP; then
+    ip addr add $IP dev $OVS_PHYSICAL_BRIDGE
+  fi
 done
 ifconfig $OVS_PHYSICAL_BRIDGE up
+
+service networking restart
+service openvswitch-switch restart
+service quantum-server restart
 
 # TODO: configurable
 ALLOCATION_POOL="start=192.0.2.34,end=192.0.2.38"
