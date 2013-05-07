@@ -4,8 +4,11 @@ set -eu
 
 # This key is to be retrieved to allow nova to ssh
 # into the host machine when using VirtualPowerManager
-ssh-keygen -t rsa -f /opt/stack/boot-stack/virtual-power-key \
-     -N '' -C 'boot-stack key for use with nova VirtualPowerDriver'
+KEYPATH=/opt/stack/boot-stack/virtual-power-key
+if [ ! -e $KEYPATH ] ; then
+    ssh-keygen -t rsa -f $KEYPATH \
+        -N '' -C 'boot-stack key for use with nova VirtualPowerDriver'
+fi
 chown nova:nova /opt/stack/boot-stack/virtual-power-key*
 chmod 400 /opt/stack/boot-stack/virtual-power-key*
 
