@@ -5,7 +5,6 @@ set -uex
 install-packages \
     python-pip python-psutil
 
-# Boto in Ubuntu 12.10 is too old. Newer boto's aren't
-# supported by heat-api-cfn. Bug ref: http://pad.lv/1122472
-pip install 'boto==2.5.2' heat-cfntools
+# a new boto is needed for this bug fix: http://pad.lv/1177576
+pip install -U boto heat-cfntools
 cfn-create-aws-symlinks --source /usr/local/bin
