@@ -1,0 +1,4 @@
+#!/bin/sh
+
+sed -i -e 's/ console=ttyS0//' /etc/default/grub
+sed -i -e 's/ console=ttyS0//' /boot/grub/grub.cfg
