@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -uex
 
@@ -6,5 +6,15 @@ install-packages \
     python-pip python-psutil
 
 # a new boto is needed for this bug fix: http://pad.lv/1177576
-pip install -U boto heat-cfntools
+pip install -U boto
+
+mkdir -p /opt/stack
+git clone --depth=1 https://github.com/openstack/heat-cfntools.git /opt/stack/heat-cfntools
+
+pip install -r /opt/stack/heat-cfntools/tools/pip-requires
+
+pushd /opt/stack/heat-cfntools
+python setup.py install
+popd
+
 cfn-create-aws-symlinks --source /usr/local/bin
