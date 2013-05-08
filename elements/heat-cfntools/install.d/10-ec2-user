@@ -4,9 +4,13 @@
 
 set -uex
 
-# This is a specific workaround for Ubuntu
+# This is a specific workaround for Ubuntu 12.10 "quantal"
 distro=$(lsb_release -is || :)
 if [ "$distro" != "Ubuntu" ] ; then
+    exit 0
+fi
+codename=$(lsb_release -cs || :)
+if [ "$codename" != "quantal" ] ; then
     exit 0
 fi
 
@@ -23,6 +27,10 @@ fi
 # We must pin to this fixed cloud-init from the demo ppa to ensure keys
 # are installed. This can be removed if http://pad.lv/1100920 is ever
 # fixed in the distro
+
+add-apt-repository -y ppa:tripleo/demo
+apt-get update
+
 cat > /etc/apt/preferences.d/cloud-init-from-ppa <<EOF
 Package: cloud-init
 Pin: release o=LP-PPA-tripleo-demo
