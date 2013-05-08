@@ -88,5 +88,5 @@ if [[ -z "$user" || -z "$repo" ]]; then
   exit 1
 fi
 
-install-packages python-dev python-pip git-core python-setuptools gcc libc6-dev libxml2-dev libxslt-dev
+install-packages python-dev python-pip git-core python-setuptools gcc libc6-dev libxml2-dev libxslt-dev libz-dev
 install-os-service "$user" "$repo" "$branch"
