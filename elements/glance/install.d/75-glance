@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eux
 
+install-packages python-mysqldb
+
 os-svc-install -n glance -u glance -r https://github.com/openstack/glance.git
 
 mkdir -p /var/lib/glance/images && chown -R glance:glance /var/lib/glance/images
