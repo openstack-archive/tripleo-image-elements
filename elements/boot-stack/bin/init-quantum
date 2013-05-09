@@ -49,7 +49,7 @@ service quantum-server restart
 
 # TODO: configurable
 ALLOCATION_POOL="start=192.0.2.34,end=192.0.2.38"
-NETWORK_GATEWAY=192.168.122.1
+NETWORK_GATEWAY=192.0.2.33
 FIXED_RANGE=192.0.2.33/29
 TENANT_ID=$(keystone tenant-list | grep ' admin ' | awk '{print $2}')
 
