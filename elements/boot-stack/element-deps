@@ -1,5 +1,6 @@
 keystone
 glance
-nova
+nova-api
+nova-compute
 openstack-db
 quantum
