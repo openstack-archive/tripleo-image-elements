@@ -23,11 +23,21 @@
   "nova": {
     "host": "127.0.0.1",
     "db":    "mysql://nova:unset@localhost/nova",
-    "bm_db": "mysql://nova:unset@localhost/nova_bm",
-    "bm_arch": "i386",
-    "virtual_power_user": "stack",
-    "virtual_power_key": "/opt/stack/boot-stack/virtual-power-key",
-    "virtual_power_ssh_host": "192.168.122.1"
+    "compute_driver": "baremetal.driver.BareMetalDriver",
+    "tuning": {
+        "ram_allocation_ratio": "1.0",
+        "reserved_host_memory_mb": "0"
+    },
+    "baremetal": {
+      "db": "mysql://nova:unset@localhost/nova_bm",
+      "arch": "i386",
+      "power_manager": "nova.virt.baremetal.virtual_power_driver.VirtualPowerManager",
+      "virtual_power": {
+        "user": "stack",
+        "key": "/opt/stack/boot-stack/virtual-power-key",
+        "ssh_host": "192.168.122.1"
+      }
+    }
   },
   "cinder": {
     "db": "mysql://cinder:unset@localhost/cinder",
