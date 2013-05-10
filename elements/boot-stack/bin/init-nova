@@ -5,7 +5,7 @@ PATH=/usr/local/bin:$PATH
 
 source /root/stackrc
 
-arch=$(os-config-applier --key nova.bm_arch)
+arch=$(os-config-applier --key nova.baremetal.arch)
 
 boot_stack=/opt/stack/boot-stack
 dib=/opt/stack/diskimage-builder
