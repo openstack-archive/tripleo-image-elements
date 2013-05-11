@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Install Nagios
+
+set -eux
+
+install-packages python-pip nagios3
+
+# set check_external_commands
+sed -i "s/check_external_commands=0/check_external_commands=1/" /etc/nagios3/nagios.cfg
+# fix a minior display issue
+if [ -f /etc/nagios3/conf.d/extinfo_nagios2.cfg ]; then
+  sed -i "s/base\/debian/debian/g" /etc/nagios3/conf.d/extinfo_nagios2.cfg
+fi
+# set all servers as having ssh
+sed -i '0,/ssh-servers/! s/localhost/*/' /etc/nagios3/conf.d/hostgroups_nagios2.cfg
+# some cleanup
+chmod g+x /var/lib/nagios3/rw
+chmod g+x /var/lib/nagios3

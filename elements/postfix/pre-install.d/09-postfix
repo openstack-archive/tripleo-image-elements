@@ -1,0 +1,10 @@
+#!/bin/bash
+set -eux
+
+# set some defaults for Debian based installs
+if [ -f /etc/debian_version ]; then
+    debconf-set-selections <<< "postfix postfix/main_mailer_type string '${DIB_POSTFIX_INSTALL_TYPE:-Local Only}'"
+else
+    echo "Postfix element currently supports Debian based environments only."
+    exit 1
+fi

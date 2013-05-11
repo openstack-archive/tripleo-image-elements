@@ -1,0 +1,31 @@
+#!/bin/bash
+set -eux
+
+# exit if we cann't source our required data
+DEFAULTS=/etc/nagios3/nova_access_info
+[ -e $DEFAULTS ] || exit 0
+source $DEFAULTS
+echo "defaults loaded."
+# set the nagiosadmin web password
+passwd_cmd="htpasswd -bc /etc/nagios3/htpasswd.users nagiosadmin $nagiosadmin_pass"
+cmd_run=$($passwd_cmd)
+get_ip_cmd="nova list | awk -F'|' '/$split_key/ { split(\$5,x,\"=\"); print x[2] }'"
+nova_ip_list=$(eval $get_ip_cmd)
+echo "Found $nova_ip_list"
+for node_ip in $nova_ip_list
+do
+    echo "setup cfg file for $node_ip."
+    # TODO: make host_name & alias real names
+    if [ ! -f /etc/nagios3/conf.d/$node_ip.cfg ]; then
+        cat << _EOF_ >> /etc/nagios3/conf.d/$node_ip.cfg
+define host{
+        use                     generic-host
+        host_name               $node_ip
+        alias                   $node_ip
+        address                 $node_ip
+        }
+_EOF_
+    fi
+done
+
+service nagios3 restart
