@@ -25,6 +25,8 @@ iface eth1 inet static
 eof
 fi
 
+service networking restart
+
 OVS_PHYSICAL_BRIDGE=br-ctlplane
 PHYSICAL_NETWORK=ctlplane
 PUBLIC_INTERFACE=eth1
@@ -43,7 +45,6 @@ for IP in $(ip addr show dev $PUBLIC_INTERFACE | grep ' inet ' | awk '{print $2}
 done
 ifconfig $OVS_PHYSICAL_BRIDGE up
 
-service networking restart
 service openvswitch-switch restart
 service quantum-server restart
 
