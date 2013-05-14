@@ -1,0 +1,3 @@
+{{#rabbit.users}}
+{{username}} {{tags}}
+{{/rabbit.users}}
