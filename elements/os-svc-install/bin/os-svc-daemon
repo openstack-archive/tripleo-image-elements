@@ -20,6 +20,9 @@ end script
 respawn
 
 exec start-stop-daemon --start -c $user --exec /opt/stack/venvs/$user/bin/$cmd -- $args
+
+# Help avoid race with daemon listening. http://pad.lv/1179766
+post-start exec sleep 1
 EOF
 }
 
