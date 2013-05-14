@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-install-packages git build-essential python-dev libssl-dev
+install-packages git build-essential python-dev libssl-dev python-netaddr
 install-packages tgt busybox # to run diskimage-builder for deploy ramdisk
 
 install -m 0755 -o root -g root -d /opt/stack/boot-stack

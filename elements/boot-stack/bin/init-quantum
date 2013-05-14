@@ -5,18 +5,35 @@ PATH=/usr/local/bin:$PATH
 source /root/stackrc
 
 PUBLIC_INTERFACE=$(os-config-applier --key quantum.ovs.public_interface)
+OVS_PHYSICAL_BRIDGE=$(os-config-applier --type raw --key quantum.ovs.physical_bridge)
+OVS_RANGE=$(os-config-applier --type raw --key quantum.ovs.ovs_range)
+PHYSICAL_NETWORK=$(os-config-applier --type raw --key quantum.ovs.physical_network)
+FIXED_RANGE=$(os-config-applier --type raw --key quantum.ovs.fixed_range)
+
+OVS_ADDRESS=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1])[1]' $OVS_RANGE`
+OVS_NETMASK=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1]).netmask' $OVS_RANGE`
+NETWORK_GATEWAY=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1])[1]' $FIXED_RANGE`
+OVS_FIXED_ADDRESS=${NETWORK_GATEWAY}/${FIXED_RANGE##*/}
+FIXED_RANGE_START=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1])[2]' $FIXED_RANGE`
+FIXED_RANGE_END=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1])[-2]' $FIXED_RANGE`
+ALLOCATION_POOL="start=${FIXED_RANGE_START},end=${FIXED_RANGE_END}"
 
 if ! grep -q boot-stack /etc/network/interfaces && ! grep -q "iface $PUBLIC_INTERFACE" /etc/network/interfaces; then
   cat >> /etc/network/interfaces <<eof
 
 # This interface was installed by the diskimage-builder boot-stack element.
-auto $PUBLIC_INTERFACE
-iface $PUBLIC_INTERFACE inet static
-  address 192.0.2.1
-  netmask 255.255.255.0
+auto $OVS_PHYSICAL_BRIDGE
+iface $OVS_PHYSICAL_BRIDGE inet static
+  address $OVS_ADDRESS
+  netmask $OVS_NETMASK
+  pre-up service openvswitch-switch restart
   up iptables -t nat -A PREROUTING -d 169.254.169.254 -p tcp -m tcp --dport 80 -j REDIRECT --to-port 8775
-  up iptables -t nat -A POSTROUTING  -s 192.0.2.0/24 -o eth0 -j MASQUERADE
-  up ip addr add 192.0.2.33/29 dev $PUBLIC_INTERFACE
+  up iptables -t nat -A POSTROUTING  -s $OVS_RANGE -o eth0 -j MASQUERADE
+  up ip addr add $OVS_FIXED_ADDRESS dev \$IFACE
+
+auto $PUBLIC_INTERFACE
+iface $PUBLIC_INTERFACE  inet manual
+    up ifconfig \$IFACE 0.0.0.0 up
 
 # Public Bridge
 #    auto eth2
@@ -26,22 +43,15 @@ iface $PUBLIC_INTERFACE inet static
 #    down ifconfig \$IFACE down
 eof
 elif ! grep -q '# may need to add' /etc/network/interfaces ; then
-    echo "# may need to add 192.0.2.1 to $PUBLIC_INTERFACE, see $0" >> /etc/network/interfaces
+    echo "# may need to add 192.0.2.1 to $OVS_PHYSICAL_BRIDGE, see $0" >> /etc/network/interfaces
 fi
 
 service networking restart
-
-OVS_PHYSICAL_BRIDGE=br-ctlplane
-PHYSICAL_NETWORK=ctlplane
-
 init-quantum-ovs
 
 service quantum-server restart
 
 # TODO: configurable
-ALLOCATION_POOL="start=192.0.2.34,end=192.0.2.38"
-NETWORK_GATEWAY=192.0.2.33
-FIXED_RANGE=192.0.2.33/29
 TENANT_ID=$(keystone tenant-list | grep ' admin ' | awk '{print $2}')
 
 NET_ID=$(quantum net-create $PHYSICAL_NETWORK --tenant_id $TENANT_ID --provider:network_type flat --provider:physical_network "$PHYSICAL_NETWORK" | grep ' id ' | awk '{print $4}')

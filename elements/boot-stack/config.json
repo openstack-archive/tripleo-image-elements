@@ -48,7 +48,11 @@
     "host": "127.0.0.1",
     "ovs_db": "mysql://quantum:unset@localhost/ovs_quantum?charset=utf8",
     "ovs": {
-      "public_interface": "eth1"
+      "public_interface": "eth1",
+      "physical_bridge": "br-ctlplane",
+      "physical_network": "ctlplane",
+      "fixed_range": "192.0.2.32/29",
+      "ovs_range": "192.0.2.0/24"
     }
   },
   "heat": {
