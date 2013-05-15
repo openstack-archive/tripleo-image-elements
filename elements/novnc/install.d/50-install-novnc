@@ -1,0 +1,11 @@
+#!/bin/bash
+set -ex
+git clone --depth=1 https://github.com/kanaka/noVNC.git /opt/stack/novnc
+
+# nova-novncproxy looks in /usr/share/novnc by default
+install -d -m 0755 -o root -g root /usr/share/novnc
+install -m 0644 -o root -g root /opt/stack/novnc/favicon.ico /usr/share/novnc
+install -m 0644 -o root -g root /opt/stack/novnc/*.html /usr/share/novnc
+install -d -m 0755 -o root -g root /usr/share/novnc/include
+install -m 0644 -o root -g root /opt/stack/novnc/include/*.css /usr/share/novnc/include
+install -m 0644 -o root -g root /opt/stack/novnc/include/*.js /usr/share/novnc/include

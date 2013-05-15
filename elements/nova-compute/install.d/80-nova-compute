@@ -53,7 +53,7 @@ eof
 }
 
 # Used by all compute
-install-packages dnsmasq novnc dnsmasq-utils ebtables
+install-packages dnsmasq dnsmasq-utils ebtables
 
 # for libvirt clouds only
 install-packages libvirt-bin python-libvirt kvm pm-utils syslinux
@@ -79,6 +79,7 @@ elif [ -f /usr/share/syslinux/pxelinux.0 ]; then
 fi
 
 os-svc-daemon nova-compute  nova nova-compute          "--config-dir /etc/nova"
+os-svc-daemon nova-novncproxy  nova nova-novncproxy          "--config-dir /etc/nova"
 os-svc-daemon nova-baremetal-deploy-helper nova nova-baremetal-deploy-helper "--config-dir /etc/nova"
 
 chown -R nova:nova /var/lib/misc/
