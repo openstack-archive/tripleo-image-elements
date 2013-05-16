@@ -6,6 +6,7 @@ PATH=/usr/local/bin:$PATH
 source /root/stackrc
 
 arch=$(os-config-applier --key nova.baremetal.arch)
+ramdisk_elements=$(os-config-applier --type raw --key dib.ramdisk_elements)
 
 boot_stack=/opt/stack/boot-stack
 dib=/opt/stack/diskimage-builder
@@ -15,7 +16,7 @@ deploy_ramdisk=bm-deploy-ramdisk
 ls $boot_stack/$deploy_kernel || cp /boot/vmlinuz-$(uname -r) $boot_stack/$deploy_kernel
 chmod a+r $boot_stack/$deploy_kernel
 
-ls $boot_stack/$deploy_ramdisk || $dib/bin/ramdisk-image-create deploy -o $boot_stack/$deploy_ramdisk
+ls $boot_stack/$deploy_ramdisk || $dib/bin/ramdisk-image-create $ramdisk_elements -o $boot_stack/$deploy_ramdisk
 
 deploy_kernel_id=$(glance image-create --name $deploy_kernel --public --disk-format aki < "$boot_stack/$deploy_kernel" \
                    | grep ' id ' | awk '{print $4}')

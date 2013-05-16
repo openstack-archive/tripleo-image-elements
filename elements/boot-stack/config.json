@@ -63,5 +63,8 @@
   "swift": {
     "store_user": "unset",
     "store_key": "unset"
+  },
+  "dib": {
+    "ramdisk_elements": "deploy"
   }
 }
