@@ -14,7 +14,7 @@ git clone --depth=1 https://github.com/openstack/heat-cfntools.git /opt/stack/he
 pip install -r /opt/stack/heat-cfntools/tools/pip-requires
 
 pushd /opt/stack/heat-cfntools
-python setup.py install
+python setup.py install --install-scripts=/usr/local/bin
 popd
 
 cfn-create-aws-symlinks --source /usr/local/bin
