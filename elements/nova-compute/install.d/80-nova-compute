@@ -14,6 +14,7 @@ task
 
 script
   exec dnsmasq --conf-file= \\
+               --keep-in-foreground \\
                --port=0 \\
                --enable-tftp \\
                --tftp-root=/tftpboot \\
