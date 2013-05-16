@@ -4,7 +4,7 @@ Command line utilities to simplify instalation of OpenStack services.
 Given a git repo url, pip-install the repo and all of its python dependencies into a virtualenv under /opt/stack/venvs.
 
 ## os-svc-daemon
-Given a system service command line and run-as user, generate and install system service start script.
+Given a system service command line and run-as user, generate and install system service start script. See output of `os-svc-daemon -h` for online help.
 
 
 ## example usage
@@ -13,6 +13,6 @@ Given a system service command line and run-as user, generate and install system
 os-svc-install -u nova -n nova-all -c 'nova-all --someoption' -r https://github.com/openstack/nova.git
 
 # install a system-start script for nova-api
-os-svc-daemon nova-api nova /opt/stack/venvs/nova/bin/nova-api --config-dir /etc/nova
+os-svc-daemon -n nova-api -u nova -c /opt/stack/venvs/nova/bin/nova-api -- --config-dir /etc/nova
 ```
 
