@@ -5,7 +5,7 @@ set -eux
 PATH=/usr/local/bin:$PATH
 
 OVS_PHYSICAL_BRIDGE=br-ctlplane
-PUBLIC_INTERFACE=eth1
+PUBLIC_INTERFACE=$(os-config-applier --key quantum.ovs.public_interface)
 
 ovs-vsctl --no-wait -- --may-exist add-br br-int
 ovs-vsctl --no-wait br-set-external-id br-int bridge-id br-int

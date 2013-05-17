@@ -45,7 +45,10 @@
   },
   "quantum": {
     "host": "127.0.0.1",
-    "ovs_db": "mysql://quantum:unset@localhost/ovs_quantum?charset=utf8"
+    "ovs_db": "mysql://quantum:unset@localhost/ovs_quantum?charset=utf8",
+    "ovs": {
+      "public_interface": "eth1"
+    }
   },
   "heat": {
     "db": "mysql://heat:unset@localhost/heat",
