@@ -5,11 +5,18 @@ modprobe nbd || true
 
 chown -R nova:nova /var/log/nova
 
-# TODO: for compute nodes only
 mkdir -p /var/run/nova/instances
 chown -R nova:nova /var/run/nova
 mkdir -p /tftpboot
 chown -R nova:nova /tftpboot
+
 service nova-compute restart
-service nova-baremetal-deploy-helper restart
-service nova-bm-dnsmasq restart
+
+compute_driver=$(os-config-applier --type raw --key nova.compute_driver)
+if [ "$compute_driver" = "baremetal.driver.BareMetalDriver" ] ; then
+    service nova-baremetal-deploy-helper restart
+    service nova-bm-dnsmasq restart
+else
+    service nova-bm-dnsmasq stop || :
+    service nova-baremetal-deploy-helper stop || :
+fi
