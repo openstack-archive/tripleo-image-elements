@@ -2,7 +2,6 @@
 set -eux
 
 os-svc-daemon nova-api              nova nova-api              "--config-dir /etc/nova"
-os-svc-daemon nova-rpc-zmq-receiver nova nova-rpc-zmq-receiver "--config-dir /etc/nova"
 os-svc-daemon nova-cert             nova nova-cert             "--config-dir /etc/nova"
 os-svc-daemon nova-scheduler        nova nova-scheduler        "--config-dir /etc/nova --debug"
 os-svc-daemon nova-consoleauth      nova nova-consoleauth      "--config-dir /etc/nova"

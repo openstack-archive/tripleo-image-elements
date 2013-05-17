@@ -14,6 +14,5 @@ chown -R nova:nova /var/run/nova
 service nova-conductor restart
 service nova-api restart
 service nova-cert restart
-service nova-rpc-zmq-receiver restart
 service nova-scheduler restart
 service nova-consoleauth restart
