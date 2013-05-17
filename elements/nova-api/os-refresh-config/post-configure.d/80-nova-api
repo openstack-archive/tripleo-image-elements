@@ -1,0 +1,19 @@
+#!/bin/bash
+set -eux
+
+chown -R nova:nova /var/log/nova
+
+# For nova-rpc-zmq-receiver
+mkdir -p /var/run/openstack
+# XXX Hrm, but what if others use this dir?
+chown -R nova:nova /var/run/openstack
+
+mkdir -p /var/run/nova
+chown -R nova:nova /var/run/nova
+
+service nova-conductor restart
+service nova-api restart
+service nova-cert restart
+service nova-rpc-zmq-receiver restart
+service nova-scheduler restart
+service nova-consoleauth restart
