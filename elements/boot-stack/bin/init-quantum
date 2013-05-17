@@ -29,23 +29,9 @@ service networking restart
 
 OVS_PHYSICAL_BRIDGE=br-ctlplane
 PHYSICAL_NETWORK=ctlplane
-PUBLIC_INTERFACE=eth1
 
-ovs-vsctl --no-wait -- --may-exist add-br br-int
-ovs-vsctl --no-wait br-set-external-id br-int bridge-id br-int
-ovs-vsctl --no-wait -- --may-exist add-br br-ctlplane
-ovs-vsctl add-port $OVS_PHYSICAL_BRIDGE $PUBLIC_INTERFACE || echo "port already added?"
+init-quantum-ovs
 
-for IP in $(ip addr show dev $PUBLIC_INTERFACE | grep ' inet ' | awk '{print $2}'); do
-  ip addr del $IP dev $PUBLIC_INTERFACE
-
-  if ! ip addr show $OVS_PHYSICAL_BRIDGE | grep $IP; then
-    ip addr add $IP dev $OVS_PHYSICAL_BRIDGE
-  fi
-done
-ifconfig $OVS_PHYSICAL_BRIDGE up
-
-service openvswitch-switch restart
 service quantum-server restart
 
 # TODO: configurable
