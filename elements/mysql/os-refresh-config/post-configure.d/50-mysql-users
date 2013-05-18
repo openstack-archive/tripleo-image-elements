@@ -65,8 +65,11 @@ to_create = should_exist - existing
 
 for createuser in to_create:
     dbvalue = by_user[createuser]
-    with open('/dev/urandom', 'rb') as urandom:
-        password = b64encode(urandom.read(30))
+    if 'password' in dbvalue:
+        password = dbvalue['password']
+    else:
+        password = b64encode(os.urandom(30))
+
     cmd = "GRANT ALL PRIVILEGES ON `%s`.* TO `%s`@'%%' IDENTIFIED BY '%s'" % (
         dbvalue['database'], dbvalue['username'], password)
     if opts.noop:
