@@ -6,7 +6,7 @@ source /root/stackrc
 
 PUBLIC_INTERFACE=$(os-config-applier --key quantum.ovs.public_interface)
 
-if ! grep boot-stack /etc/network/interfaces; then
+if ! grep -q boot-stack /etc/network/interfaces && ! grep -q "iface $PUBLIC_INTERFACE" /etc/network/interfaces; then
   cat >> /etc/network/interfaces <<eof
 
 # This interface was installed by the diskimage-builder boot-stack element.
@@ -25,6 +25,8 @@ iface $PUBLIC_INTERFACE inet static
 #    up ip link set \$IFACE promisc on
 #    down ifconfig \$IFACE down
 eof
+elif ! grep -q '# may need to add' /etc/network/interfaces ; then
+    echo "# may need to add 192.0.2.1 to $PUBLIC_INTERFACE, see $0" >> /etc/network/interfaces
 fi
 
 service networking restart
