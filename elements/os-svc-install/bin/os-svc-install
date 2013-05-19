@@ -17,9 +17,17 @@ function python-install() {
   source /opt/stack/venvs/$name/bin/activate
   set -u
 
-  if [ -e $svc_root/tools/pip-requires ]; then
+  if [ -e $svc_root/requirements.txt ]; then
+    reqs=$svc_root/requirements.txt
+  elif [ -e $svc_root/tools/pip-requires ]; then
+    reqs=$svc_root/tools/pip-requires
+  else
+    reqs=""
+  fi
+
+  if [ -n "$reqs" ] ; then
     PIP_INDEX_URL=http://pypi.openstack.org/openstack/ \
-       pip install -r $svc_root/tools/pip-requires
+       pip install -r $reqs
   fi
 
   $pip_install $svc_root
