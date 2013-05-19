@@ -58,7 +58,10 @@ chown -R keystone:keystone /etc/keystone/ssl
 
 ADMIN_PASSWORD=$(os-config-applier --key admin-password)
 SERVICE_PASSWORD=$(os-config-applier --key service-password)
-BOOTSTRAP_IP=$(ip addr show eth0 | grep 'inet ' | awk '{print $2}' | awk -F/ '{print $1}')
+BOOTSTRAP_IP=$(os-config-applier --key controller-address 2>/dev/null 2>/dev/null || :)
+if [ -z "$BOOTSTRAP_IP" ] ; then
+    BOOTSTRAP_IP=$(ip addr show eth0 | grep 'inet ' | awk '{print $2}' | awk -F/ '{print $1}')
+fi
 CONTROLLER_PUBLIC_ADDRESS=$BOOTSTRAP_IP
 CONTROLLER_ADMIN_ADDRESS=$BOOTSTRAP_IP
 CONTROLLER_INTERNAL_ADDRESS=$BOOTSTRAP_IP

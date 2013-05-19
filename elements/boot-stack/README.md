@@ -42,3 +42,30 @@ The following utilities are available in the running boot-stack machine:
 `wipe-openstack` - Clear all openstack databases, and return nova/keystone/quantum/etc. to their default states.
 
 `boot-stack-logs` - Start a screen session which tails important logs.
+
+
+Configuration
+-------------
+
+Unlike other elements, boot-stack includes a full copy of the Heat
+Metadata in its root directory, called config.json. This is necessary
+so that boot-stack can be the bootstrap for a fully working OpenStack,
+including Heat.
+
+The various elements listed in element-deps have their own configurations,
+though boot-stack includes its own.
+
+For setting up keystone, `controller-address` can be set to an explicit
+address that will be used to control the endpoints for the initial
+cloud. If it is not set, the default is to try and determine the address
+from the default network interface configuration.
+
+Here is an example of its usage in Heat Metadata:
+
+    controller-address:
+      Fn::GetAtt: [ ControllerResource, PublicIp ]
+
+Note that if you are feeding this Metadata to ControllerResource it
+will not be fed into the process until the Heat Metadata is refreshed,
+since the initial Metadata copy will have '0.0.0.0' (as we don't know
+the address until after we create a server record).
