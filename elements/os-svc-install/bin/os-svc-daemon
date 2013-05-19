@@ -1,6 +1,70 @@
 #!/bin/bash
 set -eu
 
+DEFAULT_POSTSTART="exec sleep 1"
+
+usage() {
+  echo "Usage: os-svc-daemon [ -ph ] [ -s POSTSTART ] -n SERVICENAME -u RUNAS -c RUNCMD -- [arg [arg...]]"
+  echo ""
+  echo "SERVICENAME, RUNAS, RUNCMD, and POSTSTART can be set via the"
+  echo "environment as well. Command line arguments will override"
+  echo "environment variables."
+  echo ""
+  echo "  -h             Show help and exit"
+  echo "  -p             Print the job file instead of writing to disk"
+  echo "  -s POSTSTART   post_start will be added to the upstart job. Ignored with systemd."
+  echo "                 default: $DEFAULT_POSTSTART"
+  echo "  -n SERVICENAME Name of job/service file."
+  echo "  -u RUNAS       User to run main executable as."
+  echo "  -c RUNCMD      Command to execute. Must stay in foreground."
+  echo "     arg...      Arguments will be passed to COMMAND"
+  echo ""
+}
+
+# Can be set in environment now
+SERVICENAME=${SERVICENAME:-""}
+RUNAS=${RUNAS:-""}
+RUNCMD=${RUNCMD:-""}
+# The default helps avoid race with daemon listening. http://pad.lv/1179766
+POSTSTART=${POSTSTART:-$DEFAULT_POSTSTART}
+
+print_only() {
+    cat
+}
+
+print_to_file() {
+    cat > $1
+}
+
+OUTPUT=print_to_file
+
+nshift=0
+while getopts "phs:n:u:c:" opt; do
+    case "$opt" in
+        n) SERVICENAME=$OPTARG;;
+        u) RUNAS=$OPTARG;;
+        c) RUNCMD=$OPTARG;;
+        s) POSTSTART=$OPTARG;;
+        p) OUTPUT=print_only;;
+        h) usage; exit 0;;
+        \?) usage; exit 1;;
+        :) usage; exit 1;;
+    esac
+done
+
+shift $(($OPTIND-1))
+if [ -z "$SERVICENAME" ] || [ -z "$RUNAS" ] || [ -z "$RUNCMD" ] ; then
+    if [ $# -lt 3 ] ; then
+        usage
+        exit 1
+    fi
+fi
+
+# Compatibility with old style passing w/o switches
+[ -n "$SERVICENAME" ] || { SERVICENAME=$1 ; shift; }
+[ -n "$RUNAS" ] || { RUNAS=$1 ; shift; }
+[ -n "$RUNCMD" ] || { RUNCMD=$1 ; shift; }
+
 
 function install_upstart {
   local name=$1
@@ -8,7 +72,7 @@ function install_upstart {
   local cmd=$3
   shift; shift; shift
   local args=$*
-  cat > /etc/init/$name.conf <<EOF
+  $OUTPUT /etc/init/$name.conf <<EOF
 start on runlevel [2345]
 stop on runlevel [016]
 
@@ -21,8 +85,7 @@ respawn
 
 exec start-stop-daemon --start -c $user --exec /opt/stack/venvs/$user/bin/$cmd -- $args
 
-# Help avoid race with daemon listening. http://pad.lv/1179766
-post-start exec sleep 1
+post-start $POSTSTART
 EOF
 }
 
@@ -32,7 +95,13 @@ function install_systemd {
   local cmd=$3
   shift; shift; shift
   local args=$*
-  cat > /etc/systemd/system/$name.service <<EOF
+
+  if [ $print_only -eq 1 ] ; then
+      out=cat
+  else
+      out="cat > /etc/systemd/system/$name.service"
+  fi
+  $OUTPUT /etc/systemd/system/$name.service <<EOF
 [Unit]
 Description=$name Service
 
@@ -46,14 +115,12 @@ Alias=$name.service
 EOF
 }
 
-if [ $# -lt 3 ]; then
-  echo "Usage: os-svc-daemon DAEMON_NAME USER COMMAND [ARG[ARG[...]]]"
-  exit 1
-fi
-
 # TODO: SysV init fallback support
 if [ -d /etc/init ]; then
-  install_upstart $*
+  install_upstart $SERVICENAME $RUNAS $RUNCMD $*
 elif [ -d /etc/systemd/system ]; then
-  install_systemd $*
+  if [ "$POSTSTART" != "$DEFAULT_POSTSTART" ] ; then
+      echo "WARNING: post start is ignored with systemd." >&2
+  fi
+  install_systemd $SERVICENAME $RUNAS $RUNCMD $*
 fi
