@@ -3,6 +3,7 @@ glance
 nova-api
 nova-compute
 openstack-db
-quantum
+quantum-server
+quantum-openvswitch-agent
 heat-api
 heat-engine

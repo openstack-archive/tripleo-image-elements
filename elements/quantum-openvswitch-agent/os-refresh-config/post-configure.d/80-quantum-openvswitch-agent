@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eux
+init-quantum-ovs
+service quantum-openvswitch-agent restart

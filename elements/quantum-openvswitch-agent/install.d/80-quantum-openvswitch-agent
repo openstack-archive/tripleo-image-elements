@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eux
+install -m 0755 -o root -g root -t /usr/local/bin $(dirname $0)/../quantum-ovs-agent-bin/*
+os-svc-daemon quantum-openvswitch-agent quantum quantum-openvswitch-agent \
+    "--config-file /etc/quantum/quantum.conf  --config-file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini --config-dir /etc/quantum"
