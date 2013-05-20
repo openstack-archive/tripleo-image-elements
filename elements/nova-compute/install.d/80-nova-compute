@@ -10,7 +10,9 @@ pre-start script
   chown -R nova:nova /tftpboot
   killall -9 dnsmasq || echo 'no dnsmasq running'
 end script
-task
+
+respawn
+respawn limit 2 5
 
 script
   exec dnsmasq --conf-file= \\
@@ -24,6 +26,7 @@ script
                --interface=br-ctlplane \\
                --dhcp-range=192.0.2.65,192.0.2.69,29
 end script
+post-start exec sleep 1
 eof
 }
 
