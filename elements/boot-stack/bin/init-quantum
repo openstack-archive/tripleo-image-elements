@@ -4,17 +4,19 @@ set -eux
 PATH=/usr/local/bin:$PATH
 source /root/stackrc
 
+PUBLIC_INTERFACE=$(os-config-applier --key quantum.ovs.public_interface)
+
 if ! grep boot-stack /etc/network/interfaces; then
   cat >> /etc/network/interfaces <<eof
 
 # This interface was installed by the diskimage-builder boot-stack element.
-auto eth1
-iface eth1 inet static
+auto $PUBLIC_INTERFACE
+iface $PUBLIC_INTERFACE inet static
   address 192.0.2.1
   netmask 255.255.255.0
   up iptables -t nat -A PREROUTING -d 169.254.169.254 -p tcp -m tcp --dport 80 -j REDIRECT --to-port 8775
   up iptables -t nat -A POSTROUTING  -s 192.0.2.0/24 -o eth0 -j MASQUERADE
-  up ip addr add 192.0.2.33/29 dev eth1
+  up ip addr add 192.0.2.33/29 dev $PUBLIC_INTERFACE
 
 # Public Bridge
 #    auto eth2
