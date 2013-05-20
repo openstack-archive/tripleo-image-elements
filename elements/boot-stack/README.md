@@ -76,3 +76,12 @@ For example:
 
     dib:
       ramdisk_elements: "deploy mellanox"
+
+Build Options
+-------------
+
+To change build defaults for the boot-stack machine edit the config.json file before building.
+
+baremetal:
+  virtual_power:
+    - type: virsh or vbox

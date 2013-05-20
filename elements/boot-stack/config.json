@@ -35,7 +35,8 @@
       "virtual_power": {
         "user": "stack",
         "key": "/opt/stack/boot-stack/virtual-power-key",
-        "ssh_host": "192.168.122.1"
+        "ssh_host": "192.168.122.1",
+        "type": "virsh"
       }
     }
   },
