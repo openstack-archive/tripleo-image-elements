@@ -5,7 +5,9 @@ PATH=/usr/local/bin:$PATH
 
 source /root/stackrc
 
-arch=$(os-config-applier --key nova.baremetal.arch)
+arch=$(os-config-applier --key nova.baremetal.arch --key-default '')
+[ -n "$arch" ] || exit 0
+
 ramdisk_elements=$(os-config-applier --type raw --key dib.ramdisk_elements)
 
 boot_stack=/opt/stack/boot-stack
@@ -50,5 +52,3 @@ if [ -e /root/$image_name.qcow2 ]; then
                       --property kernel_id=$kernel_id \
                       --property ramdisk_id=$ramdisk_id < /root/$image_name.qcow2
 fi
-
-
