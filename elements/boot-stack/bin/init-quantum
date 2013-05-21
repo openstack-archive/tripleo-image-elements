@@ -4,22 +4,23 @@ set -eux
 PATH=/usr/local/bin:$PATH
 source /root/stackrc
 
-PUBLIC_INTERFACE=$(os-config-applier --key quantum.ovs.public_interface)
-OVS_PHYSICAL_BRIDGE=$(os-config-applier --type raw --key quantum.ovs.physical_bridge)
-OVS_RANGE=$(os-config-applier --type raw --key quantum.ovs.ovs_range)
-PHYSICAL_NETWORK=$(os-config-applier --type raw --key quantum.ovs.physical_network)
-FIXED_RANGE=$(os-config-applier --type raw --key quantum.ovs.fixed_range)
+PUBLIC_INTERFACE=$(os-config-applier --key quantum.ovs.public_interface --key-default '')
+OVS_PHYSICAL_BRIDGE=$(os-config-applier --type raw --key quantum.ovs.physical_bridge --key-default '')
+OVS_RANGE=$(os-config-applier --type raw --key quantum.ovs.ovs_range --key-default '')
+PHYSICAL_NETWORK=$(os-config-applier --type raw --key quantum.ovs.physical_network --key-default '')
+FIXED_RANGE=$(os-config-applier --type raw --key quantum.ovs.fixed_range --key-default '')
 
-OVS_ADDRESS=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1])[1]' $OVS_RANGE`
-OVS_NETMASK=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1]).netmask' $OVS_RANGE`
 NETWORK_GATEWAY=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1])[1]' $FIXED_RANGE`
 OVS_FIXED_ADDRESS=${NETWORK_GATEWAY}/${FIXED_RANGE##*/}
 FIXED_RANGE_START=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1])[2]' $FIXED_RANGE`
 FIXED_RANGE_END=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1])[-2]' $FIXED_RANGE`
 ALLOCATION_POOL="start=${FIXED_RANGE_START},end=${FIXED_RANGE_END}"
 
-if ! grep -q boot-stack /etc/network/interfaces && ! grep -q "iface $PUBLIC_INTERFACE" /etc/network/interfaces; then
-  cat >> /etc/network/interfaces <<eof
+add_bootstack_interfaces() {
+    OVS_ADDRESS=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1])[1]' $OVS_RANGE`
+    OVS_NETMASK=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1]).netmask' $OVS_RANGE`
+    if ! grep -q boot-stack /etc/network/interfaces && ! grep -q "iface $PUBLIC_INTERFACE" /etc/network/interfaces; then
+      cat >> /etc/network/interfaces <<eof
 
 # This interface was installed by the diskimage-builder boot-stack element.
 auto $OVS_PHYSICAL_BRIDGE
@@ -42,8 +43,13 @@ iface $PUBLIC_INTERFACE  inet manual
 #    up ip link set \$IFACE promisc on
 #    down ifconfig \$IFACE down
 eof
-elif ! grep -q '# may need to add' /etc/network/interfaces ; then
-    echo "# may need to add 192.0.2.1 to $OVS_PHYSICAL_BRIDGE, see $0" >> /etc/network/interfaces
+    elif ! grep -q '# may need to add' /etc/network/interfaces ; then
+        echo "# may need to add 192.0.2.1 to $OVS_PHYSICAL_BRIDGE, see $0" >> /etc/network/interfaces
+    fi
+}
+
+if [ -n "$PUBLIC_INTERFACE" ] && [ -n "$OVS_PHYSICAL_BRIDGE" ] ; then
+  add_bootstack_interfaces
 fi
 
 service networking restart
@@ -54,7 +60,17 @@ service quantum-server restart
 # TODO: configurable
 TENANT_ID=$(keystone tenant-list | grep ' admin ' | awk '{print $2}')
 
-NET_ID=$(quantum net-create $PHYSICAL_NETWORK --tenant_id $TENANT_ID --provider:network_type flat --provider:physical_network "$PHYSICAL_NETWORK" | grep ' id ' | awk '{print $4}')
-SUBNET_ID=$(quantum subnet-create --tenant_id $TENANT_ID --ip_version 4 ${ALLOCATION_POOL:+--allocation-pool $ALLOCATION_POOL} --gateway $NETWORK_GATEWAY $NET_ID $FIXED_RANGE | grep ' id ' | awk '{print $4}')
+NET_EXTRA="--shared"
+SUBNET_EXTRA=""
+NET_NAME="default-net"
+if [ -n "$PHYSICAL_NETWORK" ] ; then
+   NET_NAME=$PHYSICAL_NETWORK
+   NET_EXTRA="--tenant_id $TENANT_ID --provider:network_type flat --provider:physical_network $PHYSICAL_NETWORK"
+   SUBNET_EXTRA="--tenant_id $TENANT_ID"
+fi
+NET_ID=$(quantum net-create $NET_NAME $NET_EXTRA | grep ' id ' | awk '{print $4}')
+SUBNET_ID=$(quantum subnet-create $SUBNET_EXTRA --ip_version 4 ${ALLOCATION_POOL:+--allocation-pool $ALLOCATION_POOL} --gateway $NETWORK_GATEWAY $NET_ID $FIXED_RANGE | grep ' id ' | awk '{print $4}')
 
-ifconfig $OVS_PHYSICAL_BRIDGE up
+if [ -n "$OVS_PHYSICAL_BRIDGE" ] ; then
+    ifconfig $OVS_PHYSICAL_BRIDGE up
+fi

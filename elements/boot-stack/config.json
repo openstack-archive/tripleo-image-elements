@@ -51,8 +51,12 @@
       "public_interface": "eth1",
       "physical_bridge": "br-ctlplane",
       "physical_network": "ctlplane",
+      "network_vlan_ranges": "ctlplane",
+      "bridge_mappings": "ctlplane:br-ctlplane",
       "fixed_range": "192.0.2.32/29",
-      "ovs_range": "192.0.2.0/24"
+      "ovs_range": "192.0.2.0/24",
+      "tenant_network_type": "vlan",
+      "enable_tunneling": "False"
     }
   },
   "heat": {
