@@ -10,9 +10,9 @@ git clone --depth=1 https://github.com/openstack/heat-cfntools.git /opt/stack/he
 
 
 # A new boto is needed for this bug fix: http://pad.lv/1177576 .
-sed -i 's/^boto==2\.5\.2$/boto>=2.9.2/' /opt/stack/heat-cfntools/tools/pip-requires
+sed -i 's/^boto==2\.5\.2$/boto>=2.9.2/' /opt/stack/heat-cfntools/requirements.txt
 
-pip install -r /opt/stack/heat-cfntools/tools/pip-requires
+pip install -r /opt/stack/heat-cfntools/requirements.txt
 
 pushd /opt/stack/heat-cfntools
 python setup.py install --install-scripts=/usr/local/bin
