@@ -1,0 +1,9 @@
+#!/bin/bash
+set -eux
+
+os-svc-daemon -n quantum-l3-agent -u quantum -c quantum-l3-agent -- --config-file /etc/quantum/l3_agent.ini --config-dir /etc/quantum
+os-svc-daemon -n quantum-dhcp-agent -u quantum -c quantum-dhcp-agent -- --config-file /etc/quantum/dhcp_agent.ini --config-dir /etc/quantum
+os-svc-daemon -n quantum-metadata-agent -u quantum -c quantum-metadata-agent -- --config-file /etc/quantum/metadata_agent.ini --config-dir /etc/quantum
+
+# This has to be on the path of the agent that runs it http://pad.lv/1182704
+ln -sf /opt/stack/venvs/quantum/bin/quantum-ns-metadata-proxy /usr/bin
