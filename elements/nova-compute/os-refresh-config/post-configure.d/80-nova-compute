@@ -7,13 +7,13 @@ chown -R nova:nova /var/log/nova
 
 mkdir -p /var/run/nova/instances
 chown -R nova:nova /var/run/nova
-mkdir -p /tftpboot
-chown -R nova:nova /tftpboot
 
 service nova-compute restart
 
 compute_driver=$(os-config-applier --type raw --key nova.compute_driver)
 if [ "$compute_driver" = "baremetal.driver.BareMetalDriver" ] ; then
+    mkdir -p /tftpboot
+    chown -R nova:nova /tftpboot
     service nova-baremetal-deploy-helper restart
     service nova-bm-dnsmasq restart
 else
