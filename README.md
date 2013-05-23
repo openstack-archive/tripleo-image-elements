@@ -15,10 +15,14 @@ to add elements from this tree, and build any disk images you need.
 	git clone https://github.com/stackforge/diskimage-builder.git
 	git clone https://github.com/stackforge/tripleo-image-elements.git
 	export ELEMENTS_PATH=tripleo-image-elements/elements
-	diskimage-builder/bin/disk-image-create -u base vm bootstrap local-config stackuser -a i386 -o bootstrap
+	diskimage-builder/bin/disk-image-create -u base vm bootstrap local-config stackuser heat-cfntools -a i386 -o bootstrap
 
 Common element combinations
 ---------------------------
+
+Always include heat-cfntools in images that you intend to boot via heat : if
+that is not done, then the user ssh keys are not reliably pulled down from the
+metadata server due to interactions with cloud-init.
 
 To be written.
 
