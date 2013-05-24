@@ -9,3 +9,22 @@ mkdir -p /var/lib/quantum && chown -R quantum:quantum /var/lib/quantum
 echo "quantum ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/quantum
 chmod 0440 /etc/sudoers.d/quantum
 visudo -c
+
+# Build the dkms modules we installed for the kernel that will be used on boot.
+# In principle this is an OS specific issue, and applies to all elements that
+# happen to use dkms packages - or also package install via -p.
+# At this point we only have one place needed in - this should be moved in
+# future for reuse - perhaps to the ubuntu element, or to a dkms specific
+# element.
+details=$(dkms status | grep openvswitch | tr ',:' '  ' |  awk '{ print $1 "/" $2 }')
+__ARCH=$ARCH
+unset ARCH
+kernels=$(ls /usr/src/linux-headers-*-generic -d | sed -e 's|/usr/src/linux-headers-||')
+for detail in $details ; do
+  for kernel in $kernels ; do
+    dkms build $detail -k $kernel
+    dkms install $detail -k $kernel;
+  done;
+done
+
+ARCH=$__ARCH
