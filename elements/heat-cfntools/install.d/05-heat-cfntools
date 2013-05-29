@@ -3,19 +3,18 @@
 set -uex
 
 install-packages \
-    python-pip python-psutil
+    python-pip python-psutil python-virtualenv
 
-mkdir -p /opt/stack
+mkdir -p /opt/stack/venvs
 git clone --depth=1 https://github.com/openstack/heat-cfntools.git /opt/stack/heat-cfntools
 
+VENV=/opt/stack/venvs/heat-cfntools
+virtualenv $VENV --system-site-packages
 
-# A new boto is needed for this bug fix: http://pad.lv/1177576 .
-sed -i 's/^boto==2\.5\.2$/boto>=2.9.2/' /opt/stack/heat-cfntools/requirements.txt
-
-pip install -r /opt/stack/heat-cfntools/requirements.txt
+$VENV/bin/pip install -r /opt/stack/heat-cfntools/requirements.txt
 
 pushd /opt/stack/heat-cfntools
-python setup.py install --install-scripts=/usr/local/bin
+$VENV/bin/python setup.py install --install-scripts=/usr/local/bin
 popd
 
 cfn-create-aws-symlinks --source /usr/local/bin
