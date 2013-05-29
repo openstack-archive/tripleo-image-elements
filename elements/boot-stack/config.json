@@ -62,9 +62,9 @@
   "heat": {
     "db": "mysql://heat:unset@localhost/heat",
     "auth_encryption_key": "unset___________",
-    "heat_watch_server_url": "http://127.0.0.1:8003",
-    "waitcondition_server_url": "http://127.0.0.1:8000/v1/waitcondition",
-    "metadata_server_url": "http://127.0.0.1:8000",
+    "heat_watch_server_url": "http://192.0.2.1:8003",
+    "waitcondition_server_url": "http://192.0.2.1:8000/v1/waitcondition",
+    "metadata_server_url": "http://192.0.2.1:8000",
     "admin_tenant_name": "service",
     "admin_user": "heat",
     "admin_password": "unset"
