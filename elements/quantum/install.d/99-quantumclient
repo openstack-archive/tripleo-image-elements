@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eux
+
+# Due to trunk quantum relying on trunk quantumclient, we need
+# trunk quantumclient - https://bugs.launchpad.net/quantum/+bug/1182732
+/opt/stack/venvs/quantum/bin/pip install -U git+https://github.com/openstack/python-quantumclient
