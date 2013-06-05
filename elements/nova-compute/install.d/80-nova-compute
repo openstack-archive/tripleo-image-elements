@@ -60,7 +60,7 @@ eof
 install-packages dnsmasq dnsmasq-utils ebtables
 
 # for libvirt clouds only
-install-packages libvirt-bin python-libvirt kvm pm-utils syslinux
+install-packages libvirt-bin python-libvirt kvm pm-utils syslinux qemu-utils
 
 # Fedora don't always have the libvirtd group created
 if ! grep ^libvirtd /etc/group > /dev/null 2>&1; then
