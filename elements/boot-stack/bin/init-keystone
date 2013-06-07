@@ -53,8 +53,7 @@ set -eux
 PATH=/opt/stack/venvs/keystone/bin:/usr/local/bin:$PATH
 
 # keystone ssl certs
-keystone-manage pki_setup
-chown -R keystone:keystone /etc/keystone/ssl
+keystone-manage pki_setup --keystone-user keystone --keystone-group keystone
 
 ADMIN_PASSWORD=$(os-config-applier --key admin-password)
 SERVICE_PASSWORD=$(os-config-applier --key service-password)
