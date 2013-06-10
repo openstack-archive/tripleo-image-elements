@@ -46,7 +46,10 @@ for client in nova quantum glance heat; do
   pip install cliff
 
   pushd /opt/stack/$repo
-  if [ -e tools/pip-requires ]; then
+  if [ -e requirements.txt ]; then
+    PIP_INDEX_URL=http://pypi.openstack.org/openstack/ \
+      pip install -r requirements.txt
+  elif [ -e tools/pip-requires ]; then
     PIP_INDEX_URL=http://pypi.openstack.org/openstack/ \
       pip install -r tools/pip-requires
   fi
