@@ -98,12 +98,6 @@ function install_systemd {
   local cmd=$3
   shift; shift; shift
   local args=$*
-
-  if [ $print_only -eq 1 ] ; then
-      out=cat
-  else
-      out="cat > /etc/systemd/system/$name.service"
-  fi
   $OUTPUT /etc/systemd/system/$name.service <<EOF
 [Unit]
 Description=$name Service
