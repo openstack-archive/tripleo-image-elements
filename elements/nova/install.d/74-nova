@@ -4,7 +4,6 @@ set -eux
 os-svc-install -n nova -u nova -r https://github.com/openstack/nova.git
 
 mkdir -p /var/run/nova/keys && chown -R nova:nova /var/run/nova/keys
-mkdir -p /var/log/nova && chown -R nova:nova /var/log/nova
 mkdir -p /var/lib/nova && chown -R nova:nova /var/lib/nova
 install -d -m 0750 -o nova -g nova /var/lib/nova/instances
 
