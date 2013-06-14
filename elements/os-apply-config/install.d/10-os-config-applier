@@ -1,0 +1,8 @@
+#!/bin/bash
+set -eux
+
+install-packages python-pip
+
+pip install -U os-apply-config
+TEMPLATE_ROOT=$(os-apply-config --print-templates)
+mkdir -p $TEMPLATE_ROOT
