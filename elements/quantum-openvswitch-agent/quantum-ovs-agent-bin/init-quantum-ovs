@@ -27,4 +27,4 @@ if [ -n "$OVS_PHYSICAL_BRIDGE" ] && [ -n "$PUBLIC_INTERFACE" ] ; then
     ifconfig $OVS_PHYSICAL_BRIDGE up
 fi
 
-service openvswitch-switch restart
+service openvswitch-switch restart || service openvswitch restart
