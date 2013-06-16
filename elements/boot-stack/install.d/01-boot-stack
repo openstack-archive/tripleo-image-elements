@@ -107,5 +107,15 @@ net.ipv4.ip_forward=1
 eof
 }
 
+function enable_services {
+  DISTRO=`lsb_release -si` || true
+
+  if [ $DISTRO = "Fedora" ]; then
+      systemctl enable mysqld.service
+      systemctl enable rabbitmq-server.service
+  fi
+}
+
 deps
 ip_forwarding
+enable_services

@@ -1,2 +1,9 @@
 #!/bin/sh
+
+DISTRO=`lsb_release -si` || true
+
 install-packages rabbitmq-server
+
+if [ $DISTRO = "Fedora" ]; then
+    systemctl enable rabbitmq-server.service
+fi
