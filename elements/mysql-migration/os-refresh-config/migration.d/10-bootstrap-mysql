@@ -18,6 +18,8 @@
 set -eux
 set -o pipefail
 
+DISTRO=`lsb_release -si`
+
 # Quietly go away unless a migration has been asked for
 DEFAULTS=/etc/mysql/migration_default
 [ -e $DEFAULTS ] || exit 0
@@ -31,12 +33,12 @@ if [ -e $DONE_FILE ] ; then
 fi
 
 # MySQL may be stopped pre-configuration, so try to start it
-if [ -d /etc/init ] ; then
+if [ -d /etc/init ] && [ $DISTRO = "Ubuntu" ] ; then
     # Upstart: During initial boot, mysql will start in parallel with os-refresh-config
     # wait-for-state is a job that allows blocking until a particular state is reached.
     start wait-for-state WAIT_FOR=mysql WAITER=$(basename $0) WAIT_FOREVER=Y TARGET_GOAL=start WAIT_STATE=running
 else
-    service mysql start || :
+    service mysql start || service mysqld start || :
 fi
 
 local_mysql() {
@@ -64,7 +66,7 @@ if [ -n "$MIGRATION_HOST" ] ; then
         --all-databases \
         $SLAVE_OPTS -h $MIGRATION_HOST | local_mysql
 
-    # After this following command, our ~/.my.cnf may stop working as its 
+    # After this following command, our ~/.my.cnf may stop working as its
     # password may change due to the dump loaded above.
     local_mysql -e 'FLUSH PRIVILEGES'
 

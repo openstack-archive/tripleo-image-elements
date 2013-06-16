@@ -3,7 +3,7 @@ set -eu
 
 db_pass=$(os-config-applier --key db-password)
 
-service mysql restart
+service mysql restart || service mysqld restart
 
 PATH=/usr/local/bin:$PATH
 venvs=/opt/stack/venvs
