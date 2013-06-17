@@ -17,9 +17,57 @@ FIXED_RANGE_START=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.a
 FIXED_RANGE_END=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1])[-2]' $FIXED_RANGE`
 ALLOCATION_POOL="start=${FIXED_RANGE_START},end=${FIXED_RANGE_END}"
 
+DISTRO=`lsb_release -si`
+
+add_bootstack_network_scripts() {
+    # Create $OVS_PHYSICAL_BRIDGE ifcfg file
+    IFCFG_FILE=/etc/sysconfig/network-scripts/ifcfg-$OVS_PHYSICAL_BRIDGE
+    if ! grep -q boot-stack $IFCFG_FILE; then
+        cat >> $IFCFG_FILE <<eof
+# This interface was installed by the diskimage-builder boot-stack element.
+DEVICE=$OVS_PHYSICAL_BRIDGE
+BOOTPROTO=static
+IPADDR=$OVS_ADDRESS
+NETMASK=$OVS_NETMASK
+ONBOOT=yes
+
+eof
+    fi
+
+    # Create $PUBLIC_INTERFACE ifcfg file
+    IFCFG_FILE=/etc/sysconfig/network-scripts/ifcfg-$PUBLIC_INTERFACE
+    if ! grep -q boot-stack $IFCFG_FILE; then
+        cat >> $IFCFG_FILE <<eof
+# This interface was installed by the diskimage-builder boot-stack element.
+DEVICE=$PUBLIC_INTERFACE
+BOOTPROTO=manual
+ONBOOT=yes
+
+eof
+    fi
+
+    # IFUP Configuration
+    IFUP_FILE=/sbin/ifup-local
+    if ! grep -q boot-stack $IFUP_FILE; then
+        cat >> $IFUP_FILE <<eof
+# This script was installed by the diskimage-builder boot-stack element.
+if [ \${1} = "$OVS_PHYSICAL_BRIDGE" ]; then
+    iptables -t nat -A PREROUTING -d 169.254.169.254 -p tcp -m tcp --dport 80 -j REDIRECT --to-port 8775
+    iptables -t nat -A POSTROUTING  -s $OVS_RANGE -o eth0 -j MASQUERADE
+    ip addr add $OVS_FIXED_ADDRESS dev \${1}
+fi
+
+if [ \${1} = "$PUBLIC_INTERFACE" ]; then
+    ifconfig \${1} 0.0.0.0 up
+fi
+
+eof
+    fi
+
+    chmod +x $IFUP_FILE
+}
+
 add_bootstack_interfaces() {
-    OVS_ADDRESS=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1])[1]' $OVS_RANGE`
-    OVS_NETMASK=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1]).netmask' $OVS_RANGE`
     if ! grep -q boot-stack /etc/network/interfaces && ! grep -q "iface $PUBLIC_INTERFACE" /etc/network/interfaces; then
       cat >> /etc/network/interfaces <<eof
 
@@ -50,12 +98,25 @@ eof
 }
 
 if [ -n "$PUBLIC_INTERFACE" ] && [ -n "$OVS_PHYSICAL_BRIDGE" ] ; then
-  add_bootstack_interfaces
+    OVS_ADDRESS=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1])[1]' $OVS_RANGE`
+    OVS_NETMASK=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1]).netmask' $OVS_RANGE`
+
+    if [[ "Fedora RedHatEnterpriseServer" =~ "$DISTRO" ]]; then
+        add_bootstack_network_scripts
+    elif [[ "Debian Ubuntu" =~ "$DISTRO" ]]; then
+        add_bootstack_interfaces
+    fi
 fi
 
-service networking restart
 init-quantum-ovs
 
+if [[ "Fedora RedHatEnterpriseServer" =~ "$DISTRO" ]]; then
+    service network restart
+elif [[ "Debian Ubuntu" =~ "$DISTRO" ]]; then
+    service networking restart
+fi
+
+service nova-bm-dnsmasq restart
 service quantum-server restart
 
 # TODO: configurable
@@ -69,7 +130,19 @@ if [ -n "$PHYSICAL_NETWORK" ] ; then
    NET_EXTRA="--tenant_id $TENANT_ID --provider:network_type flat --provider:physical_network $PHYSICAL_NETWORK"
    SUBNET_EXTRA="--tenant_id $TENANT_ID"
 fi
-NET_ID=$(quantum net-create $NET_NAME $NET_EXTRA | grep ' id ' | awk '{print $4}')
+
+# quantum-server might not be fully started yet, so we're going to
+# call `quantum net-create` in a loop until it returns true
+t=0
+while ! NET_ID=$(quantum net-create $NET_NAME $NET_EXTRA | grep ' id ' | awk '{print $4}'); do
+    if [ $t -eq 10 ]; then
+        echo "Failed to create network $NET_NAME"
+        exit 1
+    fi
+    t=$(($t + 1))
+    sleep 1
+done
+
 SUBNET_ID=$(quantum subnet-create $SUBNET_EXTRA --ip_version 4 ${ALLOCATION_POOL:+--allocation-pool $ALLOCATION_POOL} --gateway $NETWORK_GATEWAY $NET_ID $FIXED_RANGE | grep ' id ' | awk '{print $4}')
 
 if [ -n "$OVS_PHYSICAL_BRIDGE" ] ; then
