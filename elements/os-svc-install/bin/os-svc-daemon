@@ -98,18 +98,35 @@ function install_systemd {
   local cmd=$3
   shift; shift; shift
   local args=$*
-  $OUTPUT /etc/systemd/system/$name.service <<EOF
+  $OUTPUT /lib/systemd/system/$name.service <<EOF
 [Unit]
 Description=$name Service
+After=os-refresh-config.service
+Requires=$name-create-dir.service
 
 [Service]
-ExecStart=/opt/stack/venvs/$user/bin/$cmd -- $args
+ExecStart=/opt/stack/venvs/$user/bin/$cmd $args
 User=$user
 
 [Install]
 WantedBy=multi-user.target
 Alias=$name.service
 EOF
+
+  $OUTPUT /lib/systemd/system/$name-create-dir.service <<EOF
+[Unit]
+Description=Create /var/run/$name
+
+[Service]
+ExecStartPre=/bin/mkdir -p /var/run/$user
+ExecStart=/bin/chown -R $user:$user /var/run/$user
+EOF
+
+  # Make systemd take notice of it
+  systemctl daemon-reload
+
+  # Enable the service
+  systemctl enable $name.service
 }
 
 # TODO: SysV init fallback support

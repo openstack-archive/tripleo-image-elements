@@ -19,18 +19,26 @@ start on runlevel [2345]
 task
 exec os-refresh-config
 eof
+
 # Systemd
-elif [ -d /etc/systemd/system ] ; then
-    cat > /etc/systemd/system/os-refresh-config.service <<eof
+elif [ -d /lib/systemd/system ] ; then
+    cat > /lib/systemd/system/os-refresh-config.service <<eof
 [Unit]
 Description=Refresh Config on state change
 
 [Service]
-ExecStart=os-refresh-config
+ExecStart=/bin/os-refresh-config
 
 [Install]
 WantedBy=multi-user.target
 eof
+
+  # Make systemd take notice of it
+  systemctl daemon-reload
+
+  # Enable the service
+  systemctl enable os-refresh-config.service
+
 else
     echo Only systems with systemd or upstart are supported.
     exit 1

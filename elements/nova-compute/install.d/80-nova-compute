@@ -31,16 +31,18 @@ eof
 }
 
 function install_dnsmasq_systemd {
-  cat > /etc/systemd/system/nova-bm-dnsmasq.conf << eof
+  cat > /lib/systemd/system/nova-bm-dnsmasq.service << eof
 [Unit]
 Description=Nova dnsmasq service
+After=openvswitch.service
 
 [Service]
 Type=forking
-ExecStartPre=mkdir -p /tftpboot
-ExecStartPre=chown -R nova:nova /tftpboot
-ExecStartPre=killall -9 dnsmasq || echo 'no dnsmasq running'
-ExecStart=dnsmasq --conf-file= \\
+ExecStartPre=/bin/mkdir -p /tftpboot
+ExecStartPre=/bin/chown -R nova:nova /tftpboot
+-ExecStartPre=/bin/killall -9 dnsmasq
+ExecStartPre=/sbin/ifup br-ctlplane
+ExecStart=/sbin/dnsmasq --conf-file= \\
                   --port=0 \\
                   --enable-tftp \\
                   --tftp-root=/tftpboot \\
@@ -54,6 +56,13 @@ ExecStart=dnsmasq --conf-file= \\
 WantedBy=multi-user.target
 Alias=nova-bm-dnsmasq.service
 eof
+
+  # Make systemd take notice of it
+  systemctl daemon-reload
+
+  # Enable the service
+  systemctl enable nova-bm-dnsmasq.service
+
 }
 
 # Used by all compute
@@ -71,7 +80,7 @@ usermod -a -G libvirtd nova
 
 if [ -d /etc/init ]; then
   install_dnsmasq_upstart
-elif [ -d /etc/systemd/system ]; then
+elif [ -d /lib/systemd/system ]; then
   install_dnsmasq_systemd
 fi
 
