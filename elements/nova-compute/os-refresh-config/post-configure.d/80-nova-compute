@@ -3,7 +3,6 @@ set -eux
 
 modprobe nbd || true
 
-chown -R nova:nova /var/log/nova
 chown -R nova:nova /var/run/nova
 
 service nova-compute restart

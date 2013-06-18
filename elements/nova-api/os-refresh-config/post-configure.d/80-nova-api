@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eux
 
-chown -R nova:nova /var/log/nova
-
 # For nova-rpc-zmq-receiver
 mkdir -p /var/run/openstack
 # XXX Hrm, but what if others use this dir?
