@@ -1,0 +1,35 @@
+#!/bin/bash
+set -eux
+
+
+if [ -f /etc/debian_version ]; then
+    openssl_cmd="openssl"
+    cert_create_cmd="make-ssl-cert generate-default-snakeoil --force-overwrite"
+    snakeoil_pem_file='/etc/ssl/certs/ssl-cert-snakeoil.pem'
+    if [ -f $snakeoil_pem_file ]; then
+        # check if snakeoil pem file is valid
+        cert_chk_cmd="$openssl_cmd x509 -noout -in $snakeoil_pem_file"
+        exit_error=0
+        cmd_run=$($cert_chk_cmd) || exit_error=1
+        if [ $exit_error -ne 0 ]; then
+            # Snakeoil cert is there but not valid.
+            exit_error=0
+            cmd_run=$($cert_create_cmd) || exit_error=1
+        fi
+        if [ $exit_error -eq 0 ]; then
+            # we should have valid certs. Now enable ssl in apache2
+            cmd="a2enmod ssl"
+            cmd_run=$($cmd) || exit_error=2
+            if [ $exit_error -eq 0 ]; then
+                # Activate apache default ssl
+                cmd="a2ensite default-ssl"
+                cmd_run=$($cmd) || exit_error=3
+            fi
+        fi
+        if [ $exit_error -ne 0 ]; then
+            # error setting up ssl
+            echo "Error encountered setting up SSL (exit_error=$exit_error)"
+        fi
+        service apache2 reload
+    fi
+fi

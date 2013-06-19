@@ -1,0 +1,10 @@
+export NOVA_VERSION=1.1
+export OS_PASSWORD={{nagios3.nova_os_password}}
+export OS_AUTH_URL=http://{{nagios3.nova_host_ip}}:5000/v2.0
+export OS_USERNAME={{nagios3.nova_os_username}}
+export OS_TENANT_NAME={{nagios3.nova_os_tenant_name}}
+export COMPUTE_API_VERSION=1.1
+export OS_NO_CACHE=True
+# add initial split network.
+split_key={{nagios3.initial_network_split_key}}
+nagiosadmin_pass={{nagios3.adm_web_passwd}}
