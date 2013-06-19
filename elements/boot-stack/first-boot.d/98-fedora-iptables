@@ -1,0 +1,31 @@
+#!/bin/bash
+set -eu
+
+DISTRO=`lsb_release -si` || true
+
+if [[ "Fedora" = $DISTRO ]]; then
+
+    # Check if the iptables service is active
+    systemctl is-active iptables.service
+    if [ $? -eq 0 ];then
+        IPT_FILE=/etc/sysconfig/iptables
+        if [ -f $IPT_FILE ]; then
+            iptables-restore < $IPT_FILE
+        fi
+
+        # Openstack services
+        iptables -I INPUT -p tcp --dport 8774 -j ACCEPT
+        iptables -I INPUT -p tcp --dport 9292 -j ACCEPT
+        iptables -I INPUT -p tcp --dport 5000 -j ACCEPT
+
+        # DHCP, TFTP
+        iptables -I INPUT -m udp -p udp --dport 67 -j ACCEPT
+        iptables -I INPUT -m udp -p udp --dport 69 -j ACCEPT
+
+        # ISCSI
+        iptables -I INPUT -p tcp --dport 10000 -j ACCEPT
+
+        iptables-save > $IPT_FILE
+    fi
+
+fi
