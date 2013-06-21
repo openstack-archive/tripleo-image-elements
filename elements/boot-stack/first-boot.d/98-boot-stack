@@ -14,11 +14,8 @@ chmod 400 /opt/stack/boot-stack/virtual-power-key*
 
 PATH=/usr/local/bin:$PATH
 
-# TODO: rabbit should not need to be restarted on first boot - but currently does.
-# https://bugs.launchpad.net/diskimage-builder/+bug/1166838
-service rabbitmq-server restart
-
 os-apply-config
+
 wipe-openstack
 
 touch /opt/stack/boot-stack.ok

@@ -7,3 +7,4 @@ quantum-server
 quantum-openvswitch-agent
 heat-api
 heat-engine
+rabbitmq-server
