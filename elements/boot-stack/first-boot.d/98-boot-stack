@@ -18,7 +18,7 @@ PATH=/usr/local/bin:$PATH
 # https://bugs.launchpad.net/diskimage-builder/+bug/1166838
 service rabbitmq-server restart
 
-os-config-applier
+os-apply-config
 wipe-openstack
 
 touch /opt/stack/boot-stack.ok
