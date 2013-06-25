@@ -3,7 +3,8 @@ A self-contained one-node baremetal openstack.
 Description
 -----------
 
-This element contains nova, glance, and keystone services, configured to perform baremetal deployments.
+This element contains nova, glance, and keystone services, configured to
+perform baremetal deployments.
 
 
 Basic Usage
@@ -23,15 +24,17 @@ Upon first boot, scripts will be automatically run to perform the following:
 - default nova flavors/images
 - default network configuration.
 
-The output of the first-boot scripts can be viewed in `/var/log/first-boot.d.log`.
-The file `/opt/stack/boot-stack/boot-stack.ok` will be touched upon the scripts' completion.
+The output of the first-boot scripts can be viewed in
+`/var/log/first-boot.d.log`.  The file `/opt/stack/boot-stack/boot-stack.ok`
+will be touched upon the scripts' completion.
 
 
 Credentials
 -----------
 
 OpenStack credentials are installed to /root/stackrc in the boot-stack machine.
-All services listen on a wildcard address, so that the credentials may be copied out and used from outside the boot-stack machine.
+All services listen on a wildcard address, so that the credentials may be
+copied out and used from outside the boot-stack machine.
 
 
 Utilities
@@ -39,7 +42,8 @@ Utilities
 
 The following utilities are available in the running boot-stack machine:
 
-`wipe-openstack` - Clear all openstack databases, and return nova/keystone/quantum/etc. to their default states.
+`wipe-openstack` - Clear all openstack databases, and return
+                   nova/keystone/quantum/etc. to their default states.
 
 `boot-stack-logs` - Start a screen session which tails important logs.
 
@@ -71,7 +75,8 @@ since the initial Metadata copy will have '0.0.0.0' (as we don't know
 the address until after we create a server record).
 
 
-For setting up the list of elements to include in the ramdisk must be configured as a space separated list of elements.
+For setting up the list of elements to include in the ramdisk must be
+configured as a space separated list of elements.
 For example:
 
     dib:
@@ -80,7 +85,8 @@ For example:
 Build Options
 -------------
 
-To change build defaults for the boot-stack machine edit the config.json file before building.
+To change build defaults for the boot-stack machine edit the config.json file
+before building.
 
 baremetal:
   virtual_power:
