@@ -18,6 +18,7 @@
     "db": "mysql://glance:unset@localhost/glance"
   },
   "nova": {
+    "compute_hostname": "ubuntu",
     "host": "127.0.0.1",
     "db":    "mysql://nova:unset@localhost/nova",
     "compute_driver": "baremetal.driver.BareMetalDriver",
