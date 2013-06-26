@@ -53,7 +53,7 @@ eof
 # This script was installed by the diskimage-builder boot-stack element.
 if [ \${1} = "$OVS_PHYSICAL_BRIDGE" ]; then
     iptables -t nat -A PREROUTING -d 169.254.169.254 -p tcp -m tcp --dport 80 -j REDIRECT --to-port 8775
-    iptables -t nat -A POSTROUTING  -s $OVS_RANGE -o eth0 -j MASQUERADE
+    iptables -t nat -A POSTROUTING  -s $OVS_RANGE ! -d 192.168.122.1/32 -o eth0 -j MASQUERADE
     ip addr add $OVS_FIXED_ADDRESS dev \${1}
 fi
 
