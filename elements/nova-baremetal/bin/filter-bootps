@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -eux
+
+INTERFACE=br-ctlplane
+. /root/stackrc
+MACS=$(for node in $(nova baremetal-node-list | grep -v '+\|ID' | awk ' { print $2 } '); do nova baremetal-interface-list $node | awk '/:/ { print $8}' ; done)
+
+# In case this script crashed earlier, flush, unlink and delete the temp chain.
+iptables -F FILTERBOOTPSNEW || true
+iptables -D INPUT -i $INTERFACE -j FILTERBOOTPSNEW || true
+iptables -X FILTERBOOTPSNEW || true
+iptables -N FILTERBOOTPSNEW
+# Build the chain we want.
+for MAC in $MACS; do
+ iptables -A FILTERBOOTPSNEW -i $INTERFACE -p udp -m mac ! --mac-source $MAC -m udp --dport 67 -j DROP
+done
+# Link it in.
+iptables -I INPUT -i $INTERFACE -j FILTERBOOTPSNEW
+# Delete the old chain if present.
+iptables -F FILTERBOOTPS || true
+iptables -D INPUT -i $INTERFACE -j FILTERBOOTPS || true
+iptables -X FILTERBOOTPS || true
+# Rename the new chain into permanence.
+iptables -E FILTERBOOTPSNEW FILTERBOOTPS
