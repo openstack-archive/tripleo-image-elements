@@ -10,7 +10,12 @@ function python-install() {
   local svc_root=$2
 
   pushd /opt/stack/venvs
-  virtualenv --system-site-packages $name
+  SITE_PCKGS="--no-site-packages"
+  # Nova depends on python-libvirt which can't be installed via pip
+  if [ $name == "nova" ]; then
+    SITE_PCKGS="--system-site-packages"
+  fi
+  virtualenv $SITE_PCKGS $name
   popd
 
   set +u
@@ -28,6 +33,8 @@ function python-install() {
   if [ -n "$reqs" ] ; then
     PIP_INDEX_URL=http://pypi.openstack.org/openstack/ \
        pip install -r $reqs
+       # FIXME: pip requires doesn't include MySQL-python
+       pip install MySQL-python
   fi
 
   $pip_install $svc_root

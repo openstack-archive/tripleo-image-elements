@@ -63,6 +63,8 @@ git clone https://github.com/stackforge/diskimage-builder.git /opt/stack/diskima
 
 # db
 install-packages mysql-server python-mysqldb
+# required to build MySQL-pyton
+install-packages libmysqlclient-dev
 
 my_cnf=
 if [ -f /etc/mysql/my.cnf ]; then
