@@ -39,11 +39,13 @@ echo "source /root/stackrc" >> /root/.bash_profile
 # client tools
 for client in nova quantum glance heat; do
   repo=python-${client}client
-  venvs=/opt/stack/venvs
-  git clone --depth 1 https://github.com/openstack/$repo.git /opt/stack/$repo
 
-  # required for a cliff version conflict. this can be removed once cliff will accept prettytable >0.7
-  pip install cliff
+  virtualenv --system-site-packages /opt/stack/venvs/$repo
+  set +u
+  source /opt/stack/venvs/$repo/bin/activate
+  set -u
+
+  git clone --depth 1 https://github.com/openstack/$repo.git /opt/stack/$repo
 
   pushd /opt/stack/$repo
   if [ -e requirements.txt ]; then
@@ -55,6 +57,10 @@ for client in nova quantum glance heat; do
   fi
   python setup.py develop --script-dir /usr/local/bin
   popd
+
+  set +u
+  deactivate
+  set -u
 
 done
 
