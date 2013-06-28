@@ -6,23 +6,6 @@ install-packages tgt busybox # to run diskimage-builder for deploy ramdisk
 
 install -m 0755 -o root -g root -d /opt/stack/boot-stack
 
-resolv_conf=/etc/resolv.conf
-# In Ubuntu 12.04 and over the handling of /etc/resolv.conf changed
-if [ -f /etc/resolvconf/resolv.conf.d/head ]; then
-  resolv_conf=/etc/resolvconf/resolv.conf.d/head
-fi
-
-echo 'nameserver 8.8.8.8' > $resolv_conf
-
-cat > /etc/hosts <<eof
-127.0.0.1 ubuntu localhost
-127.0.1.1 ubuntu
-eof
-
-# fake heat metadata
-mkdir -p /var/lib/cloud/data
-install -m 0755 -o root -g root $(dirname $0)/../config.json /var/lib/cloud/data/cfn-init-data
-
 # tools
 for f in `ls $(dirname $0)/../bin`; do
   install -m 0755 -o root -g root $(dirname $0)/../bin/$f /usr/local/bin/$f

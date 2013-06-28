@@ -3,11 +3,13 @@ A self-contained one-node baremetal openstack.
 Description
 -----------
 
-This element contains nova, glance, and keystone services with a default
-configuration for nova-baremetal operation.
+This element contains nova, glance, and keystone services.
 
 When building an image containing boot-stack be sure to add either nova-kvm or
 nova-baremetal to enabled the appropriate hypervisor.
+
+The seed-stack-config element can be used to configure boot-stack in the
+absence of Heat.
 
 
 Basic Usage
@@ -54,14 +56,6 @@ The following utilities are available in the running boot-stack machine:
 Configuration
 -------------
 
-Unlike other elements, boot-stack includes a full copy of the Heat
-Metadata in its root directory, called config.json. This is necessary
-so that boot-stack can be the bootstrap for a fully working OpenStack,
-including Heat.
-
-The various elements listed in element-deps have their own configurations,
-though boot-stack includes its own.
-
 For setting up keystone, `controller-address` can be set to an explicit
 address that will be used to control the endpoints for the initial
 cloud. If it is not set, the default is to try and determine the address
@@ -84,13 +78,3 @@ For example:
 
     dib:
       ramdisk_elements: "deploy mellanox"
-
-Build Options
--------------
-
-To change build defaults for the boot-stack machine edit the config.json file
-before building.
-
-baremetal:
-  virtual_power:
-    - type: virsh or vbox
