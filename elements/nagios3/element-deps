@@ -1,4 +1,4 @@
-os-config-applier
+os-apply-config
 os-refresh-config
 heat-cfntools
 postfix
