@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eux
+
+mkdir -p /tftpboot
+chown -R nova:nova /tftpboot

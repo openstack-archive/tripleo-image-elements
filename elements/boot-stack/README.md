@@ -3,8 +3,11 @@ A self-contained one-node baremetal openstack.
 Description
 -----------
 
-This element contains nova, glance, and keystone services, configured to
-perform baremetal deployments.
+This element contains nova, glance, and keystone services with a default
+configuration for nova-baremetal operation. If building for baremetal
+deployments be sure to also include the nova-baremetal element, which is not
+needed for 'overcloud' (KVM/Xen) deployments and thus is not depended on by
+boot-stack.
 
 
 Basic Usage

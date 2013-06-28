@@ -1,0 +1,11 @@
+#!/bin/bash
+install -m 0755 -o root -g root $(dirname $0)/../bin/filter-bootps /usr/local/bin/filter-bootps
+cat > /etc/cron.d/filter-bootps <<EOF
+# Ensure we don't answer BOOTP for bare metal nodes not registered with nova.
+# This is primarily important on the seed node which is only meant to manage
+# the undercloud nodes, not overcloud nodes.
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+*/1 * * * * root filter-bootps
+EOF
