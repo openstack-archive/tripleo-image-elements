@@ -4,7 +4,6 @@ DISTRO=`lsb_release -si` || true
 
 install-packages rabbitmq-server
 
-
 # In Ubuntu rabbit's default init.d script is broken.
 if [ x`lsb_release -si 2> /dev/null` = "xUbuntu" ]; then
   update-rc.d -f rabbitmq-server remove
@@ -20,8 +19,13 @@ post-start exec /usr/sbin/rabbitmqctl wait >/dev/null 2>&1
 eof
 fi
 
-
-
 if [ $DISTRO = "Fedora" ]; then
+    # Delay the rc-local.service start-up until rabbitmq-server.service is started up
+    sed -i 's/\[Unit\]/\[Unit\]\nBefore=rc-local.service/g' /lib/systemd/system/rabbitmq-server.service
+
+    # Make systemd take notice of it
+    systemctl daemon-reload
+
+    # Enable the service
     systemctl enable rabbitmq-server.service
 fi
