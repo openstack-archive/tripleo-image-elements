@@ -1,7 +1,4 @@
 #!/bin/bash
-
-# Install Nagios
-
 set -eux
 
 install-packages python-pip nagios3
