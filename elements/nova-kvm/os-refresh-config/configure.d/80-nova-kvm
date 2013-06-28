@@ -1,0 +1,8 @@
+#!/bin/bash
+set -eux
+
+mkdir -p /var/lib/nova/instances/_base
+chown nova:kvm /var/lib/nova/instances
+chown nova:kvm /var/lib/nova/instances/_base
+chmod 750 /var/lib/nova/instances
+chmod 750 /var/lib/nova/instances/_base

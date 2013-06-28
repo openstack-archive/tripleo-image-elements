@@ -4,10 +4,10 @@ Description
 -----------
 
 This element contains nova, glance, and keystone services with a default
-configuration for nova-baremetal operation. If building for baremetal
-deployments be sure to also include the nova-baremetal element, which is not
-needed for 'overcloud' (KVM/Xen) deployments and thus is not depended on by
-boot-stack.
+configuration for nova-baremetal operation.
+
+When building an image containing boot-stack be sure to add either nova-kvm or
+nova-baremetal to enabled the appropriate hypervisor.
 
 
 Basic Usage

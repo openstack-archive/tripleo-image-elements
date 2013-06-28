@@ -68,16 +68,6 @@ eof
 # Used by all compute
 install-packages dnsmasq dnsmasq-utils ebtables
 
-# for libvirt clouds only
-install-packages libvirt-bin python-libvirt kvm pm-utils syslinux qemu-utils
-
-# Fedora don't always have the libvirtd group created
-if ! grep ^libvirtd /etc/group > /dev/null 2>&1; then
-  groupadd -f libvirtd
-fi
-
-usermod -a -G libvirtd nova
-
 if [ -d /etc/init ]; then
   install_dnsmasq_upstart
 elif [ -d /lib/systemd/system ]; then
@@ -92,7 +82,6 @@ elif [ -f /usr/share/syslinux/pxelinux.0 ]; then
 fi
 
 os-svc-daemon nova-compute  nova nova-compute          "--config-dir /etc/nova"
-os-svc-daemon nova-novncproxy  nova nova-novncproxy          "--config-dir /etc/nova"
 os-svc-daemon nova-baremetal-deploy-helper nova nova-baremetal-deploy-helper "--config-dir /etc/nova"
 
 chown -R nova:nova /var/lib/misc/
