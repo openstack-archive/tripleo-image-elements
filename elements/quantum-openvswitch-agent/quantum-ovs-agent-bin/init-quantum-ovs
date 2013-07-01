@@ -1,30 +1,82 @@
 #!/bin/bash
-# This script should remain idempotent as it may be called several times
+
+# Idempotent script to apply heat configuration to the running network
+# environment.
+#
+# If a bootstrap public_interface_ip is defined in metadata and not attached to
+# any device then it will be added to the public_interface device if one is
+# defined.
+#
+# An integration bridge for quantum-ovs-agent is created.
+#
+# If no physical bridge is defined in metadata, the script will have no
+# further effect.
+#
+# If the defined physical_bridge is not present on the system, one will be
+# defined via ovs-vsctl.
+#
+# The physical bridge will be brought up.
+#
+# If a public_interface is defined in metadata:
+#   - it will be made a member of the physical_bridge.
+#   - an ip addresses on public_interface are moved onto physical_bridge.
+#
+# An iptables rule to redirect incoming metadata server requests on the public
+# bridge device is inserted if not present.
+#
+# Note that no persistent config file is written to the OS : ovs-vsctl modifies
+# a persistent database so the bridge device will persist across reboots, but
+# [on Ubuntu at least] early boot does not bring up ovs-vswitch early enough,
+# and metadata access will fail.
+
 set -eux
 
 PATH=/usr/local/bin:$PATH
 
-OVS_PHYSICAL_BRIDGE=$(os-config-applier --key quantum.ovs.physical_bridge --type raw --key-default '')
-PUBLIC_INTERFACE=$(os-config-applier --key quantum.ovs.public_interface --type raw  --key-default '')
+EXTERNAL_BRIDGE=$(os-config-applier --key quantum.ovs.physical_bridge --type raw --key-default '')
+PHYSICAL_INTERFACE=$(os-config-applier --key quantum.ovs.public_interface --type raw  --key-default '')
+PHYSICAL_INTERFACE_IP=$(os-config-applier --key bootstack.public_interface_ip --type netaddress  --key-default '')
+
+if [ -n "$PHYSICAL_INTERFACE_IP" -a -n "$PHYSICAL_INTERFACE" ] ; then
+    if ! (ip addr show | grep -q $PHYSICAL_INTERFACE_IP) ; then
+        ip addr add $PHYSICAL_INTERFACE_IP dev $PHYSICAL_INTERFACE
+    fi
+fi
+
+# Hacky: ensure the switch is running : we should instead arrange for this
+# script to not be run before it's started.
+service openvswitch-switch restart || service openvswitch restart
 
 ovs-vsctl --no-wait -- --may-exist add-br br-int
 ovs-vsctl --no-wait br-set-external-id br-int bridge-id br-int
 
-if [ -n "$OVS_PHYSICAL_BRIDGE" ] && [ -n "$PUBLIC_INTERFACE" ]; then
-    ovs-vsctl --no-wait -- --may-exist add-br $OVS_PHYSICAL_BRIDGE
-    ovs-vsctl add-port $OVS_PHYSICAL_BRIDGE $PUBLIC_INTERFACE || echo "port already added?"
+if [ -z "$EXTERNAL_BRIDGE" ] ; then
+    exit 0
 fi
 
-if [ -n "$OVS_PHYSICAL_BRIDGE" ] && [ -n "$PUBLIC_INTERFACE" ] ; then
+ovs-vsctl -- --may-exist add-br $EXTERNAL_BRIDGE
+
+ip link set dev $EXTERNAL_BRIDGE up
+
+if [ -n "$PHYSICAL_INTERFACE" ] ; then
+    if ovs-vsctl port-to-br $PHYSICAL_INTERFACE ; then
+        EXISTING_PORT=$(ovs-vsctl port-to-br $PHYSICAL_INTERFACE)
+	if [ "$EXISTING_PORT" != "$PHYSICAL_INTERFACE" ] ; then
+	    ovs-vsctl del-port $EXTERNAL_BRIDGE $PHYSICAL_INTERFACE
+	fi
+    fi
+    ovs-vsctl add-port $EXTERNAL_BRIDGE $PHYSICAL_INTERFACE
+    ip link set dev $PHYSICAL_INTERFACE up
+fi
+
+if [ -n "$PHYSICAL_INTERFACE" ] ; then
     # Right now we probably are disconnected, need to move all IPs from public interface to bridge
-    for IP in $(ip addr show dev $PUBLIC_INTERFACE | grep ' inet ' | awk '{print $2}'); do
-      ip addr del $IP dev $PUBLIC_INTERFACE
-
-      if ! ip addr show $OVS_PHYSICAL_BRIDGE | grep $IP; then
-        ip addr add $IP dev $OVS_PHYSICAL_BRIDGE
+    for IP in $(ip addr show dev $PHYSICAL_INTERFACE | grep ' inet ' | awk '{print $2}'); do
+      if ! ip addr show $EXTERNAL_BRIDGE | grep $IP; then
+        ip addr add $IP dev $EXTERNAL_BRIDGE
       fi
+      ip addr del $IP dev $PHYSICAL_INTERFACE
     done
-    ifconfig $OVS_PHYSICAL_BRIDGE up
 fi
 
-service openvswitch-switch restart || service openvswitch restart
+iptables -t nat -C PREROUTING -d 169.254.169.254/32 -i $EXTERNAL_BRIDGE -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8775 || iptables -t nat -I PREROUTING -d 169.254.169.254/32 -i $EXTERNAL_BRIDGE -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8775

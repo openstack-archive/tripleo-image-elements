@@ -40,6 +40,10 @@
     },
     "metadata-proxy": "false"
   },
+  "bootstack": {
+    "public_interface_ip": "192.0.2.1/24",
+    "masquerade_networks": ["192.0.2.0"]
+  },
   "cinder": {
     "db": "mysql://cinder:unset@localhost/cinder",
     "volume_size_mb": "5000"
@@ -48,15 +52,18 @@
     "host": "127.0.0.1",
     "ovs_db": "mysql://quantum:unset@localhost/ovs_quantum?charset=utf8",
     "ovs": {
-      "public_interface": "eth1",
+      "bridge_mappings": "ctlplane:br-ctlplane",
+      "dnsmasq_range": ["192.0.2.4", "192.0.2.4"],
+      "enable_tunneling": "False",
+      "fixed_range": {
+        "start": "192.0.2.2",
+        "end": "192.0.2.3"
+      },
+      "network_vlan_ranges": "ctlplane",
       "physical_bridge": "br-ctlplane",
       "physical_network": "ctlplane",
-      "network_vlan_ranges": "ctlplane",
-      "bridge_mappings": "ctlplane:br-ctlplane",
-      "fixed_range": "192.0.2.32/29",
-      "ovs_range": "192.0.2.0/24",
-      "tenant_network_type": "vlan",
-      "enable_tunneling": "False"
+      "public_interface": "eth1",
+      "tenant_network_type": "vlan"
     }
   },
   "heat": {

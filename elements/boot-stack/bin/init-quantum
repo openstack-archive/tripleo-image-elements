@@ -1,125 +1,40 @@
 #!/bin/bash
+
+# Initialise the quantum server configuration.
+#
+# This creates initial networks for quantum based on heat metadata and local
+# network configuration.
+#
+# It is not idempotent.
+
 set -eux
 set -o pipefail
 
 PATH=/usr/local/bin:$PATH
 source /root/stackrc
 
-PUBLIC_INTERFACE=$(os-config-applier --key quantum.ovs.public_interface --key-default '')
-OVS_PHYSICAL_BRIDGE=$(os-config-applier --type raw --key quantum.ovs.physical_bridge --key-default '')
-OVS_RANGE=$(os-config-applier --type raw --key quantum.ovs.ovs_range --key-default '')
 PHYSICAL_NETWORK=$(os-config-applier --type raw --key quantum.ovs.physical_network --key-default '')
-FIXED_RANGE=$(os-config-applier --type raw --key quantum.ovs.fixed_range --key-default '')
+ALLOCATION_START=$(os-config-applier --type netaddress --key quantum.ovs.fixed_range.start --key-default '')
+ALLOCATION_END=$(os-config-applier --type netaddress --key quantum.ovs.fixed_range.end --key-default '')
+NETWORK=$(os-config-applier --type netaddress --key quantum.ovs.ovs_range --key-default 'unset')
 
-NETWORK_GATEWAY=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1])[1]' $FIXED_RANGE`
-OVS_FIXED_ADDRESS=${NETWORK_GATEWAY}/${FIXED_RANGE##*/}
-FIXED_RANGE_START=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1])[2]' $FIXED_RANGE`
-FIXED_RANGE_END=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1])[-2]' $FIXED_RANGE`
-ALLOCATION_POOL="start=${FIXED_RANGE_START},end=${FIXED_RANGE_END}"
+if [ "$NETWORK" == "unset" ] ; then
+    # undercloud / seed cloud - lookup the network device
+    BRIDGE=$(os-config-applier --type raw --key quantum.ovs.physical_bridge)
+    # NB: assumes only one network on the device
+    NETWORK=$(ip addr show dev $BRIDGE | grep ' inet ' | awk '{print $2}')
+    # Route traffic to this machine
+    NETWORK_GATEWAY=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1]).ip' $NETWORK`
+fi
+NETWORK_CIDR=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1]).cidr' $NETWORK`
 
-DISTRO=`lsb_release -si`
-
-add_bootstack_network_scripts() {
-    # Create $OVS_PHYSICAL_BRIDGE ifcfg file
-    IFCFG_FILE=/etc/sysconfig/network-scripts/ifcfg-$OVS_PHYSICAL_BRIDGE
-    if ! grep -q boot-stack $IFCFG_FILE; then
-        cat >> $IFCFG_FILE <<eof
-# This interface was installed by the diskimage-builder boot-stack element.
-DEVICE=$OVS_PHYSICAL_BRIDGE
-BOOTPROTO=static
-IPADDR=$OVS_ADDRESS
-NETMASK=$OVS_NETMASK
-ONBOOT=yes
-
-eof
-    fi
-
-    # Create $PUBLIC_INTERFACE ifcfg file
-    IFCFG_FILE=/etc/sysconfig/network-scripts/ifcfg-$PUBLIC_INTERFACE
-    if ! grep -q boot-stack $IFCFG_FILE; then
-        cat >> $IFCFG_FILE <<eof
-# This interface was installed by the diskimage-builder boot-stack element.
-DEVICE=$PUBLIC_INTERFACE
-BOOTPROTO=manual
-ONBOOT=yes
-
-eof
-    fi
-
-    # IFUP Configuration
-    IFUP_FILE=/sbin/ifup-local
-    if ! grep -q boot-stack $IFUP_FILE; then
-        cat >> $IFUP_FILE <<eof
-# This script was installed by the diskimage-builder boot-stack element.
-if [ \${1} = "$OVS_PHYSICAL_BRIDGE" ]; then
-    iptables -t nat -A PREROUTING -d 169.254.169.254 -p tcp -m tcp --dport 80 -j REDIRECT --to-port 8775
-    iptables -t nat -A POSTROUTING  -s $OVS_RANGE ! -d 192.168.122.1/32 -o eth0 -j MASQUERADE
-    ip addr add $OVS_FIXED_ADDRESS dev \${1}
+if [ -n "$ALLOCATION_START" -a -n "$ALLOCATION_END" ] ; then
+    ALLOCATION_POOL="start=${ALLOCATION_START},end=${ALLOCATION_END}"
 fi
 
-if [ \${1} = "$PUBLIC_INTERFACE" ]; then
-    ifconfig \${1} 0.0.0.0 up
-fi
-
-eof
-    fi
-
-    chmod +x $IFUP_FILE
-}
-
-add_bootstack_interfaces() {
-    if ! grep -q boot-stack /etc/network/interfaces && ! grep -q "iface $PUBLIC_INTERFACE" /etc/network/interfaces; then
-      cat >> /etc/network/interfaces <<eof
-
-# This interface was installed by the diskimage-builder boot-stack element.
-auto $OVS_PHYSICAL_BRIDGE
-iface $OVS_PHYSICAL_BRIDGE inet static
-  address $OVS_ADDRESS
-  netmask $OVS_NETMASK
-  pre-up service openvswitch-switch restart
-  up iptables -t nat -A PREROUTING -d 169.254.169.254 -p tcp -m tcp --dport 80 -j REDIRECT --to-port 8775
-  up iptables -t nat -A POSTROUTING  -s $OVS_RANGE -o eth0 -j MASQUERADE
-  up ip addr add $OVS_FIXED_ADDRESS dev \$IFACE
-
-auto $PUBLIC_INTERFACE
-iface $PUBLIC_INTERFACE  inet manual
-    up ifconfig \$IFACE 0.0.0.0 up
-
-# Public Bridge
-#    auto eth2
-#    iface eth2 inet manual
-#    up ifconfig \$IFACE 0.0.0.0 up
-#    up ip link set \$IFACE promisc on
-#    down ifconfig \$IFACE down
-eof
-    elif ! grep -q '# may need to add' /etc/network/interfaces ; then
-        echo "# may need to add 192.0.2.1 to $OVS_PHYSICAL_BRIDGE, see $0" >> /etc/network/interfaces
-    fi
-}
-
-if [ -n "$PUBLIC_INTERFACE" ] && [ -n "$OVS_PHYSICAL_BRIDGE" ] ; then
-    OVS_ADDRESS=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1])[1]' $OVS_RANGE`
-    OVS_NETMASK=`python -c 'import netaddr, sys; print netaddr.IPNetwork(sys.argv[1]).netmask' $OVS_RANGE`
-
-    if [[ "Fedora RedHatEnterpriseServer" =~ "$DISTRO" ]]; then
-        add_bootstack_network_scripts
-    elif [[ "Debian Ubuntu" =~ "$DISTRO" ]]; then
-        add_bootstack_interfaces
-    fi
-fi
-
-init-quantum-ovs
-
-if [[ "Fedora RedHatEnterpriseServer" =~ "$DISTRO" ]]; then
-    service network restart
-elif [[ "Debian Ubuntu" =~ "$DISTRO" ]]; then
-    service networking restart
-fi
-
-service nova-bm-dnsmasq restart
+# Hackish: ensure the server is running. XXX: Test without this.
 service quantum-server restart
 
-# TODO: configurable
 TENANT_ID=$(keystone tenant-list | grep ' admin ' | awk '{print $2}')
 
 NET_EXTRA="--shared"
@@ -143,8 +58,4 @@ while ! NET_ID=$(quantum net-create $NET_NAME $NET_EXTRA | grep ' id ' | awk '{p
     sleep 1
 done
 
-SUBNET_ID=$(quantum subnet-create $SUBNET_EXTRA --ip_version 4 ${ALLOCATION_POOL:+--allocation-pool $ALLOCATION_POOL} --gateway $NETWORK_GATEWAY $NET_ID $FIXED_RANGE | grep ' id ' | awk '{print $4}')
-
-if [ -n "$OVS_PHYSICAL_BRIDGE" ] ; then
-    ifconfig $OVS_PHYSICAL_BRIDGE up
-fi
+SUBNET_ID=$(quantum subnet-create $SUBNET_EXTRA --ip_version 4 ${ALLOCATION_POOL:+--allocation-pool $ALLOCATION_POOL} ${NETWORK_GATEWAY:+--gateway $NETWORK_GATEWAY} $NET_ID $NETWORK_CIDR | grep ' id ' | awk '{print $4}')

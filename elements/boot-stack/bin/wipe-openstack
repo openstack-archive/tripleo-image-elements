@@ -12,6 +12,6 @@ service glance-reg restart
 service nova-api restart
 
 init-nova
+os-refresh-config
 init-quantum
 
-os-refresh-config

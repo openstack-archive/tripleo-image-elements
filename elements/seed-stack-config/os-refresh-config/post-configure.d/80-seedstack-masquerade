@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eux
+
+RULES_SCRIPT=/var/opt/seed-stack/masquerade
+
+. $RULES_SCRIPT
