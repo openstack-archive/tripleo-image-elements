@@ -80,7 +80,7 @@ if [ -n "$PHYSICAL_INTERFACE" ] ; then
     IPS=$(ip addr show dev $PHYSICAL_INTERFACE | grep ' inet ' | awk '{print $2}')
     # Strictly speaking this doesn't grab all routes, but for now it's
     # sufficient.
-    ROUTES=$(ip route show dev $PHYSICAL_INTERFACE | grep via)
+    ROUTES=$(ip route show dev $PHYSICAL_INTERFACE | grep via || true)
     for IP in $IPS ; do
       if ! ip addr show $EXTERNAL_BRIDGE | grep $IP; then
         ip addr add $IP dev $EXTERNAL_BRIDGE
