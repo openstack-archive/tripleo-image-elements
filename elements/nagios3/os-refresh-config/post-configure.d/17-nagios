@@ -6,11 +6,8 @@ DEFAULTS=/etc/nagios3/nova_access_info
 [ -e $DEFAULTS ] || exit 0
 source $DEFAULTS
 echo "defaults loaded."
-# set the nagiosadmin web password
-passwd_cmd="htpasswd -bc /etc/nagios3/htpasswd.users nagiosadmin $nagiosadmin_pass"
-cmd_run=$($passwd_cmd)
-get_ip_cmd="nova list | awk -F'|' '/$split_key/ { split(\$5,x,\"=\"); print x[2] }'"
-nova_ip_list=$(eval $get_ip_cmd)
+htpasswd -bc /etc/nagios3/htpasswd.users nagiosadmin $nagiosadmin_pass
+nova_ip_list=$(nova list | awk -F"|" '/'$split_key'/ { split($7,x,"="); print x[2] }')
 echo "Found $nova_ip_list"
 for node_ip in $nova_ip_list
 do
