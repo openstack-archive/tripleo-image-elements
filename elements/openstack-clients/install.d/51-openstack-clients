@@ -1,0 +1,37 @@
+#!/bin/bash
+set -eux
+
+install-packages git build-essential python-dev libssl-dev python-pip
+
+client_install_list="\
+glance \
+heat \
+nova \
+quantum"
+
+for client in $client_install_list; do
+    repo=python-${client}client
+
+    virtualenv --system-site-packages /opt/stack/venvs/$repo
+    set +u
+    source /opt/stack/venvs/$repo/bin/activate
+    set -u
+
+    git clone --depth 1 https://github.com/openstack/$repo.git /opt/stack/$repo
+
+    pushd /opt/stack/$repo
+    if [ -e requirements.txt ]; then
+        PIP_INDEX_URL=http://pypi.openstack.org/openstack/ \
+            pip install -r requirements.txt
+    elif [ -e tools/pip-requires ]; then
+        PIP_INDEX_URL=http://pypi.openstack.org/openstack/ \
+            pip install -r tools/pip-requires
+    fi
+    python setup.py develop --script-dir /usr/local/bin
+    popd
+
+    set +u
+    deactivate
+    set -u
+
+done

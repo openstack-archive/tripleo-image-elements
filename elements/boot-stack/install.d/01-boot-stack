@@ -19,34 +19,6 @@ sudo pip install -U git+https://github.com/openstack-dev/pbr.git
 install -m 0755 -o root -g root $(dirname $0)/../stackrc /root/stackrc
 echo "source /root/stackrc" >> /root/.bash_profile
 
-# client tools
-for client in nova quantum glance heat; do
-  repo=python-${client}client
-
-  virtualenv --system-site-packages /opt/stack/venvs/$repo
-  set +u
-  source /opt/stack/venvs/$repo/bin/activate
-  set -u
-
-  git clone --depth 1 https://github.com/openstack/$repo.git /opt/stack/$repo
-
-  pushd /opt/stack/$repo
-  if [ -e requirements.txt ]; then
-    PIP_INDEX_URL=http://pypi.openstack.org/openstack/ \
-      pip install -r requirements.txt
-  elif [ -e tools/pip-requires ]; then
-    PIP_INDEX_URL=http://pypi.openstack.org/openstack/ \
-      pip install -r tools/pip-requires
-  fi
-  python setup.py develop --script-dir /usr/local/bin
-  popd
-
-  set +u
-  deactivate
-  set -u
-
-done
-
 # image toolchain
 git clone https://github.com/stackforge/diskimage-builder.git /opt/stack/diskimage-builder
 
@@ -67,7 +39,7 @@ function deps {
     apt-get update
   fi
   install-packages screen ccze
-  install-packages git ipmitool python-dev python-pip python-greenlet python-mysqldb libxml2-dev libxslt-dev python-zmq
+  install-packages git ipmitool python-dev python-pip python-greenlet libxml2-dev libxslt-dev python-zmq
   install-packages openvswitch-common openvswitch-controller openvswitch-switch open-iscsi
   install-packages python-numpy python-lxml
 }
