@@ -70,11 +70,30 @@ if [ -n "$PHYSICAL_INTERFACE" ] ; then
 fi
 
 if [ -n "$PHYSICAL_INTERFACE" ] ; then
-    # Right now we probably are disconnected, need to move all IPs from public interface to bridge
-    for IP in $(ip addr show dev $PHYSICAL_INTERFACE | grep ' inet ' | awk '{print $2}'); do
+    # Right now we probably are disconnected, need to move all IPs and routers
+    # from interface to bridge.
+    # Add all the IP addresses, so that we can add routes.
+    # Then add routes
+    # Then remove IP addresses
+    # This way, if we are interrupted, nothing has been lost: we're temporarily
+    # multipathed is all.
+    IPS=$(ip addr show dev $PHYSICAL_INTERFACE | grep ' inet ' | awk '{print $2}')
+    # Strictly speaking this doesn't grab all routes, but for now it's
+    # sufficient.
+    ROUTES=$(ip route show dev $PHYSICAL_INTERFACE | grep via)
+    for IP in $IPS ; do
       if ! ip addr show $EXTERNAL_BRIDGE | grep $IP; then
         ip addr add $IP dev $EXTERNAL_BRIDGE
       fi
+    done
+    ORIG_IFS=$IFS
+    IFS=
+    for ROUTE in $ROUTES ; do
+        IFS=$ORIG_IFS
+        ip route prepend dev $EXTERNAL_BRIDGE $ROUTE
+	ip route del dev $PHYSICAL_INTERFACE $ROUTE
+    done
+    for IP in $IPS ; do
       ip addr del $IP dev $PHYSICAL_INTERFACE
     done
 fi
