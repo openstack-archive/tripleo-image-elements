@@ -1,0 +1,12 @@
+#!/bin/bash
+set -eux
+
+mkdir -p /tftpboot/pxelinux.cfg/
+if [ -f /usr/lib/syslinux/pxelinux.0 ]; then
+  cp /usr/lib/syslinux/pxelinux.0 /tftpboot/ # Ubuntu
+elif [ -f /usr/share/syslinux/pxelinux.0 ]; then
+  cp /usr/share/syslinux/pxelinux.0 /tftpboot/ # Fedora/RHEL
+else
+  echo "Failed to find pxelinux.0."
+  exit 1
+fi

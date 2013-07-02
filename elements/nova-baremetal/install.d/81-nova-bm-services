@@ -1,0 +1,75 @@
+#!/bin/bash
+set -eux
+
+function install_dnsmasq_upstart {
+  cat > /etc/init/nova-bm-dnsmasq.conf << eof
+start on runlevel [2345]
+stop on runlevel [016]
+pre-start script
+  mkdir -p /tftpboot
+  chown -R nova:nova /tftpboot
+  killall -9 dnsmasq || echo 'no dnsmasq running'
+end script
+
+respawn
+respawn limit 2 5
+
+script
+  exec dnsmasq --conf-file= \\
+               --keep-in-foreground \\
+               --port=0 \\
+               --enable-tftp \\
+               --tftp-root=/tftpboot \\
+               --dhcp-boot=pxelinux.0 \\
+               --bind-interfaces \\
+               --pid-file=/var/run/dnsmasq.pid \\
+               --interface=br-ctlplane \\
+               --dhcp-range=192.0.2.65,192.0.2.69,29
+end script
+post-start exec sleep 1
+eof
+}
+
+function install_dnsmasq_systemd {
+  cat > /lib/systemd/system/nova-bm-dnsmasq.service << eof
+[Unit]
+Description=Nova dnsmasq service
+After=openvswitch.service
+
+[Service]
+Type=forking
+ExecStartPre=/bin/mkdir -p /tftpboot
+ExecStartPre=/bin/chown -R nova:nova /tftpboot
+-ExecStartPre=/bin/killall -9 dnsmasq
+ExecStartPre=/sbin/ifup br-ctlplane
+ExecStart=/sbin/dnsmasq --conf-file= \\
+                  --port=0 \\
+                  --enable-tftp \\
+                  --tftp-root=/tftpboot \\
+                  --dhcp-boot=pxelinux.0 \\
+                  --bind-interfaces \\
+                  --pid-file=/var/run/dnsmasq.pid \\
+                  --interface=br-ctlplane \\
+                  --dhcp-range=192.0.2.65,192.0.2.69,29
+
+[Install]
+WantedBy=multi-user.target
+Alias=nova-bm-dnsmasq.service
+eof
+
+  # Make systemd take notice of it
+  systemctl daemon-reload
+
+  # Enable the service
+  systemctl enable nova-bm-dnsmasq.service
+
+}
+
+if [ -d /etc/init ]; then
+  install_dnsmasq_upstart
+elif [ -d /lib/systemd/system ]; then
+  install_dnsmasq_systemd
+fi
+
+os-svc-daemon nova-baremetal-deploy-helper nova nova-baremetal-deploy-helper "--config-dir /etc/nova"
+
