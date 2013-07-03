@@ -2,7 +2,6 @@ keystone
 glance
 nova-api
 nova-compute
-openstack-db
 quantum-server
 quantum-openvswitch-agent
 heat-api

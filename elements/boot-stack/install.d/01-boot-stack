@@ -34,6 +34,11 @@ fi
 
 sed -i 's/127.0.0.1/0.0.0.0/g' $my_cnf
 
+# Remove this once the cinder element can be added as a dependency of this element.
+# https://bugs.launchpad.net/tripleo/+bug/1197048
+# https://bugs.launchpad.net/tripleo/+bug/1197371
+os-svc-install -u cinder   -r https://github.com/openstack/cinder.git
+
 function deps {
   if hash apt-get &> /dev/null; then
     apt-get update
