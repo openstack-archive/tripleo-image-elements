@@ -1,0 +1,14 @@
+#!/bin/bash
+set -uex
+
+system_hostname=$(hostname -f)
+
+if [ -f /etc/debian_version ]; then
+    mailname_file="/etc/mailname"
+    if [ -f $mailname_file ]; then
+        mailname_data=$(cat $mailname_file)
+        if [ "$mailname_data" != "$system_hostname" ]; then
+            echo "Provided hostname and domain do not match system's. Local mail may not be delivered."
+        fi
+    fi
+fi
