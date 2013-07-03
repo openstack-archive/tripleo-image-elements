@@ -35,5 +35,5 @@ with open('/run/os-refresh-config-cfn-hup.lock', 'a') as lock:
     try:
         subprocess.check_call(['cfn-hup', '--no-daemon'])
     except subprocess.CalledProcessError as e:
-        sys.stderr.write("%s\n", e)
+        sys.stderr.write("%s\n" % e)
         sys.exit(e.returncode)
