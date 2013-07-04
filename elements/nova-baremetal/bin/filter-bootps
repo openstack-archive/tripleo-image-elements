@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Idempotently build an IPTables chain which will filter to only permitted MAC
+# addresses, on incoming BOOTP requests on the control plane interface.
 
 set -eux
 
@@ -8,18 +11,21 @@ MACS=$(for node in $(nova baremetal-node-list | grep -v '+\|ID' | awk ' { print 
 
 # In case this script crashed earlier, flush, unlink and delete the temp chain.
 iptables -F FILTERBOOTPSNEW || true
-iptables -D INPUT -i $INTERFACE -j FILTERBOOTPSNEW || true
+iptables -D INPUT -i $INTERFACE -p udp --dport 67 -j FILTERBOOTPSNEW || true
 iptables -X FILTERBOOTPSNEW || true
 iptables -N FILTERBOOTPSNEW
 # Build the chain we want.
 for MAC in $MACS; do
- iptables -A FILTERBOOTPSNEW -i $INTERFACE -p udp -m mac ! --mac-source $MAC -m udp --dport 67 -j DROP
+ iptables -A FILTERBOOTPSNEW -m mac --mac-source $MAC -j ACCEPT
 done
+# Drop rather than reject as this is a broadcast protocol: we'd just be
+# creating noise on the network.
+iptables -A FILTERBOOTPSNEW -j DROP
 # Link it in.
-iptables -I INPUT -i $INTERFACE -j FILTERBOOTPSNEW
+iptables -I INPUT -i $INTERFACE -p udp --dport 67 -j FILTERBOOTPSNEW
 # Delete the old chain if present.
 iptables -F FILTERBOOTPS || true
-iptables -D INPUT -i $INTERFACE -j FILTERBOOTPS || true
+iptables -D INPUT -i $INTERFACE -p udp --dport 67 -j FILTERBOOTPS || true
 iptables -X FILTERBOOTPS || true
 # Rename the new chain into permanence.
 iptables -E FILTERBOOTPSNEW FILTERBOOTPS
