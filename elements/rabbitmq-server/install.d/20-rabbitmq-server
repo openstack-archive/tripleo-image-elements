@@ -23,6 +23,9 @@ if [ $DISTRO = "Fedora" ]; then
     # Delay the rc-local.service start-up until rabbitmq-server.service is started up
     sed -i 's/\[Unit\]/\[Unit\]\nBefore=rc-local.service/g' /lib/systemd/system/rabbitmq-server.service
 
+    # Respawn rabbitmq-server in case the process exits with an nonzero exit code
+    sed -i 's/\[Service\]/\[Service\]\nRestart=on-failure/g' /lib/systemd/system/rabbitmq-server.service
+
     # Make systemd take notice of it
     systemctl daemon-reload
 
