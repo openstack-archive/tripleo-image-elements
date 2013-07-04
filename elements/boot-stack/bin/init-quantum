@@ -49,7 +49,7 @@ fi
 # quantum-server might not be fully started yet, so we're going to
 # call `quantum net-create` in a loop until it returns true
 t=0
-while ! NET_ID=$(quantum net-create $NET_NAME $NET_EXTRA | grep ' id ' | awk '{print $4}'); do
+while ! NET_ID=$(neutron net-create $NET_NAME $NET_EXTRA | grep ' id ' | awk '{print $4}'); do
     if [ $t -eq 10 ]; then
         echo "Failed to create network $NET_NAME"
         exit 1
@@ -58,4 +58,4 @@ while ! NET_ID=$(quantum net-create $NET_NAME $NET_EXTRA | grep ' id ' | awk '{p
     sleep 1
 done
 
-SUBNET_ID=$(quantum subnet-create $SUBNET_EXTRA --ip_version 4 ${ALLOCATION_POOL:+--allocation-pool $ALLOCATION_POOL} ${NETWORK_GATEWAY:+--gateway $NETWORK_GATEWAY} $NET_ID $NETWORK_CIDR | grep ' id ' | awk '{print $4}')
+SUBNET_ID=$(neutron subnet-create $SUBNET_EXTRA --ip_version 4 ${ALLOCATION_POOL:+--allocation-pool $ALLOCATION_POOL} ${NETWORK_GATEWAY:+--gateway $NETWORK_GATEWAY} $NET_ID $NETWORK_CIDR | grep ' id ' | awk '{print $4}')

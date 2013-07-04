@@ -17,7 +17,7 @@ find_cidr() {
     local cidr=$1
     # Determine subnet ID
     local id=""
-    local subnets=$(quantum subnet-list --quote none -f csv -F id -F cidr)
+    local subnets=$(neutron subnet-list --quote none -f csv -F id -F cidr)
     for subnet in $subnets; do
         id=${subnet%%,*}
         this_cidr=${subnet##*,}
@@ -44,33 +44,33 @@ fi
 echo $FIXED_RANGE has id $id
 
 # Ensure tenant network has route to metadata
-if ! quantum router-show default-router >/dev/null 2>&1 ; then
-    quantum router-create default-router
+if ! neutron router-show default-router >/dev/null 2>&1 ; then
+    neutron router-create default-router
 fi
 
-if ! quantum router-port-list default-router -f csv -F fixed_ips | grep -q "$id" ; then
-    quantum router-interface-add default-router $id
+if ! neutron router-port-list default-router -f csv -F fixed_ips | grep -q "$id" ; then
+    neutron router-interface-add default-router $id
 fi
 
 # Ensure defined floating ip range exists
 FLOATING_RANGE=$(os-config-applier --key quantum.floatingip_range --type netaddress --key-default '')
 if [ -n "$FLOATING_RANGE" ] ; then
     # External net?
-    if ! quantum net-show ext-net >/dev/null 2>&1 ; then
-        quantum net-create ext-net --router:external=True
+    if ! neutron net-show ext-net >/dev/null 2>&1 ; then
+        neutron net-create ext-net --router:external=True
     fi
     id=$(find_cidr $FLOATING_RANGE)
     if [ -z "$id" ] ; then
         # id is set by command below
 	POOL_START=$(os-config-applier --key quantum.floatingip_start --type netaddress)
 	POOL_END=$(os-config-applier --key quantum.floatingip_end --type netaddress)
-        eval $(quantum subnet-create ext-net $FLOATING_RANGE --disable-dhcp \
+        eval $(neutron subnet-create ext-net $FLOATING_RANGE --disable-dhcp \
 	    --allocation-pool start=$POOL_START,end=$POOL_END -f shell -c id|grep '^id=')
     fi
     # Attach it to default-router
-    if ! quantum router-port-list default-router -f csv -F fixed_ips | grep -q "$id" ; then
+    if ! neutron router-port-list default-router -f csv -F fixed_ips | grep -q "$id" ; then
         # Make ext-net the gateway
-        quantum router-gateway-set default-router ext-net
+        neutron router-gateway-set default-router ext-net
     fi
 fi
 
