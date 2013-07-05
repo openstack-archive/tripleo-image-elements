@@ -25,6 +25,8 @@ elif [ -d /lib/systemd/system ] ; then
     cat > /lib/systemd/system/os-refresh-config.service <<eof
 [Unit]
 Description=Refresh Config on state change
+After=cloud-final.service
+Before=crond.service
 
 [Service]
 ExecStart=/bin/os-refresh-config
