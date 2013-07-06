@@ -1,6 +1,7 @@
 #!/bin/bash
 set -eu
 
+PATH=/usr/local/bin:$PATH
 
 # This key is to be retrieved to allow nova to ssh
 # into the host machine when using VirtualPowerManager
@@ -9,10 +10,9 @@ if [ ! -e $KEYPATH ] ; then
     ssh-keygen -t rsa -f $KEYPATH \
         -N '' -C 'boot-stack key for use with nova VirtualPowerDriver'
 fi
-chown nova:nova /opt/stack/boot-stack/virtual-power-key*
-chmod 400 /opt/stack/boot-stack/virtual-power-key*
-
-PATH=/usr/local/bin:$PATH
+chown nova:nova ${KEYPATH}*
+chmod 400 ${KEYPATH}*
+chmod a+r ${KEYPATH}.pub
 
 os-apply-config
 
