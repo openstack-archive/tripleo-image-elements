@@ -1,2 +1,0 @@
-#!/bin/bash
-touch /opt/stack/boot-stack/boot-stack.done

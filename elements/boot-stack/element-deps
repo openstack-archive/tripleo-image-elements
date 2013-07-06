@@ -1,10 +1,11 @@
-keystone
 glance
-nova-api
-nova-compute
-quantum-server
-quantum-openvswitch-agent
 heat-api
 heat-engine
-rabbitmq-server
+keystone
+nova-api
+nova-compute
 openstack-clients
+os-refresh-config
+quantum-openvswitch-agent
+quantum-server
+rabbitmq-server
