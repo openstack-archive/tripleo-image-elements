@@ -4,7 +4,7 @@ set -eux
 DISTRO=`lsb_release -si` || true
 
 install-packages openvswitch-switch openvswitch-datapath-dkms
-os-svc-install -n quantum -u quantum -r https://github.com/openstack/quantum.git
+os-svc-install -n quantum -u quantum -r https://github.com/openstack/neutron.git
 
 mkdir -p /var/lib/quantum && chown -R quantum:quantum /var/lib/quantum
 
