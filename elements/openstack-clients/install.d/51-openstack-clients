@@ -7,7 +7,7 @@ client_install_list="\
 glance \
 heat \
 nova \
-quantum"
+neutron"
 
 for client in $client_install_list; do
     repo=python-${client}client
