@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-install-packages lvm2
+install-packages lvm2 iscsitarget iscsitarget-dkms
 os-svc-install -n cinder -u cinder -r https://github.com/openstack/cinder.git -c cinder-all
 
 os-svc-daemon cinder-api cinder cinder-api "--config-dir /etc/cinder"
