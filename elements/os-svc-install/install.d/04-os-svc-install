@@ -1,7 +1,8 @@
 #!/bin/bash
 set -eux
 
-install-packages python-pip
+# Mysqlclient-dev is needed for MySQL-python which os-svc-install installs.
+install-packages python-pip libmysqlclient-dev
 
 pip install -U distribute # required by virtualenv
 pip install virtualenv
