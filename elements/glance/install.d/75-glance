@@ -3,7 +3,7 @@ set -eux
 
 install-packages python-mysqldb
 
-os-svc-install -n glance -u glance -r https://github.com/openstack/glance.git
+os-svc-install -n glance -u glance -r /opt/stack/glance
 
 mkdir -p /var/lib/glance/images && chown -R glance:glance /var/lib/glance/images
 os-svc-daemon glance-api glance glance-api "--debug --log-config /etc/glance/logging.conf"
