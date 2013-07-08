@@ -1,0 +1,1 @@
+keystone git /opt/stack/keystone https://github.com/openstack/keystone.git
