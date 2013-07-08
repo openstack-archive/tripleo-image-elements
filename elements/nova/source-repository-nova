@@ -1,0 +1,1 @@
+nova git /opt/stack/nova https://github.com/openstack/nova.git

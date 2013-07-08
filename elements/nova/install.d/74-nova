@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-os-svc-install -n nova -u nova -r https://github.com/openstack/nova.git
+os-svc-install -n nova -u nova -r /opt/stack/nova
 
 mkdir -p /var/run/nova/keys && chown -R nova:nova /var/run/nova/keys
 mkdir -p /var/lib/nova && chown -R nova:nova /var/lib/nova
