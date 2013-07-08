@@ -1,0 +1,1 @@
+devstack git /home/stack/devstack https://github.com/openstack-dev/devstack.git
