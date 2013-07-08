@@ -6,7 +6,6 @@ install-packages \
     python-pip python-psutil python-virtualenv
 
 mkdir -p /opt/stack/venvs
-git clone --depth=1 https://github.com/openstack/heat-cfntools.git /opt/stack/heat-cfntools
 
 VENV=/opt/stack/venvs/heat-cfntools
 virtualenv $VENV --system-site-packages

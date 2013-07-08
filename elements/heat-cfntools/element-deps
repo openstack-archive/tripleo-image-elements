@@ -1,2 +1,3 @@
 os-apply-config
 os-refresh-config
+source-repositories
