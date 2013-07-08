@@ -11,9 +11,6 @@ for f in `ls $(dirname $0)/../bin`; do
   install -m 0755 -o root -g root $(dirname $0)/../bin/$f /usr/local/bin/$f
 done
 
-# TODO: remove when pbr is fixed in version 0.5.10
-sudo pip install -U git+https://github.com/openstack-dev/pbr.git
-
 # openstack creds
 # TODO: generate random creds.
 install -m 0755 -o root -g root $(dirname $0)/../stackrc /root/stackrc
