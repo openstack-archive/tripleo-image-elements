@@ -4,7 +4,7 @@ install-packages python-setuptools python-eventlet python-greenlet \
     python-httplib2 python-iso8601 python-lxml python-sqlalchemy \
     python-paste python-routes python-webob python-yaml
 
-os-svc-install -n heat -u heat -r https://github.com/openstack/heat.git
+os-svc-install -n heat -u heat -r /opt/stack/heat
 
 install -d -m 0770 -o root -g heat /var/log/heat
 install -d -m 0750 -o root -g heat /etc/heat
