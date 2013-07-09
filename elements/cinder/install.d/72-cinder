@@ -11,6 +11,10 @@ mkdir -p /etc/tgt/conf.d
 echo 'include /etc/tgt/conf.d/cinder_tgt.conf' > /etc/tgt/targets.conf
 echo 'include /var/run/cinder/volumes/*' > /etc/tgt/conf.d/cinder_tgt.conf
 
-echo "cinder ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/cinder
+cp -a /opt/stack/cinder/etc/cinder/rootwrap* /etc/cinder
+
+ln -sf /opt/stack/venvs/cinder/bin/cinder-rootwrap /usr/local/bin/cinder-rootwrap
+
+echo "cinder ALL=(root) NOPASSWD: /usr/local/bin/cinder-rootwrap" > /etc/sudoers.d/cinder
 chmod 0440 /etc/sudoers.d/cinder
 visudo -c
