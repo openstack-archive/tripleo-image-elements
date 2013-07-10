@@ -4,6 +4,7 @@ set -eu
 PATH=/usr/local/bin:$PATH
 
 reset-db
+service keystone restart
 init-keystone
 
 # after resetting keystone, we must make API services reconnect
