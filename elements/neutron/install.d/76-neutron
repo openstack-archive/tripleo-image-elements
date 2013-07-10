@@ -1,0 +1,21 @@
+#!/bin/bash
+set -eux
+
+DISTRO=`lsb_release -si` || true
+
+install-packages openvswitch-switch openvswitch-datapath-dkms
+os-svc-install -n neutron -u neutron -r https://github.com/openstack/neutron.git
+
+mkdir -p /var/lib/neutron && chown -R neutron:neutron /var/lib/neutron
+
+ln -sf /opt/stack/venvs/neutron/bin/neutron-rootwrap /usr/bin/neutron-rootwrap
+ln -sf /opt/stack/venvs/neutron/etc/neutron/rootwrap.d /etc/neutron/rootwrap.d
+
+echo "neutron ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/neutron
+chmod 0440 /etc/sudoers.d/neutron
+visudo -c
+
+if [ $DISTRO = "Fedora" ]; then
+    systemctl enable openvswitch.service
+fi
+

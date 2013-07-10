@@ -27,7 +27,7 @@ Jenkins
  * bootstrap VM via image-build chain (archive bm-cloud.qcow2).
 
         disk-image-create vm base glance nova-bm swift mysql haproxy-api \
-        haproxy-mysql cinder quantum rabbitmq -o bootstrap-prod
+        haproxy-mysql cinder neutron rabbitmq -o bootstrap-prod
 
  * baremetal SPOF node build (archive the resulting image).
 
@@ -36,7 +36,7 @@ Jenkins
 
  * baremetal demo node build (archive the resulting image).
 
-        disk-image-create base vm glance nova-bm swift cinder quantum \
+        disk-image-create base vm glance nova-bm swift cinder neutron \
         -o bootstrap-prod
 
  * ramdisk deploy image build

@@ -1,0 +1,3 @@
+#!/bin/bash
+set -eux
+service neutron-server restart

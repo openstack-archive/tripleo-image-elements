@@ -1,0 +1,80 @@
+#!/bin/bash
+set -eux
+set -o pipefail
+
+. /root/stackrc
+
+PUBLIC_INTERFACE=$(os-config-applier --key neutron.ovs.public_interface --key-default '')
+
+ovs-vsctl --no-wait -- --may-exist add-br br-ex
+ovs-vsctl --no-wait br-set-external-id br-ex bridge-id br-ex
+
+if [ -n "$PUBLIC_INTERFACE" ] ; then
+    ovs-vsctl --no-wait -- --may-exist add-port br-ex $PUBLIC_INTERFACE
+fi
+
+find_cidr() {
+    local cidr=$1
+    # Determine subnet ID
+    local id=""
+    local subnets=$(neutron subnet-list --quote none -f csv -F id -F cidr)
+    for subnet in $subnets; do
+        id=${subnet%%,*}
+        this_cidr=${subnet##*,}
+        # Remove trailing \r from csv format
+        this_cidr=${this_cidr%?}
+        if [ "$this_cidr" = "$cidr" ] ; then
+            break
+        else
+            id=""
+        fi
+    done
+    echo $id
+}
+
+FIXED_RANGE=$(os-config-applier --key neutron.ovs.fixed_range --key-default '' --type netaddress)
+
+# Determine subnet ID
+id=$(find_cidr $FIXED_RANGE)
+if [ -z "$id" ] ; then
+    echo "Could not find $FIXED_RANGE in existing subnets. Aborting..."
+    exit 1
+fi
+
+echo $FIXED_RANGE has id $id
+
+# Ensure tenant network has route to metadata
+if ! neutron router-show default-router >/dev/null 2>&1 ; then
+    neutron router-create default-router
+fi
+
+if ! neutron router-port-list default-router -f csv -F fixed_ips | grep -q "$id" ; then
+    neutron router-interface-add default-router $id
+fi
+
+# Ensure defined floating ip range exists
+FLOATING_RANGE=$(os-config-applier --key neutron.floatingip_range --type netaddress --key-default '')
+if [ -n "$FLOATING_RANGE" ] ; then
+    # External net?
+    if ! neutron net-show ext-net >/dev/null 2>&1 ; then
+        neutron net-create ext-net --router:external=True
+    fi
+    id=$(find_cidr $FLOATING_RANGE)
+    if [ -z "$id" ] ; then
+        # id is set by command below
+	POOL_START=$(os-config-applier --key neutron.floatingip_start --type netaddress)
+	POOL_END=$(os-config-applier --key neutron.floatingip_end --type netaddress)
+        eval $(neutron subnet-create ext-net $FLOATING_RANGE --disable-dhcp \
+	    --allocation-pool start=$POOL_START,end=$POOL_END -f shell -c id|grep '^id=')
+    fi
+    # Attach it to default-router
+    if ! neutron router-port-list default-router -f csv -F fixed_ips | grep -q "$id" ; then
+        # Make ext-net the gateway
+        neutron router-gateway-set default-router ext-net
+    fi
+fi
+
+
+service neutron-metadata-agent restart
+service neutron-l3-agent restart
+service neutron-dhcp-agent restart

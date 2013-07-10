@@ -28,8 +28,8 @@
 # * ADMIN_PASSWORD is used to set the password for the admin and demo accounts.
 # * SERVICE_PASSWORD is used to set the password for the service accounts.
 #
-# Enable the Swift and Quantum accounts by setting ENABLE_SWIFT and/or
-# ENABLE_QUANTUM environment variables.
+# Enable the Swift and Neutron accounts by setting ENABLE_SWIFT and/or
+# ENABLE_NEUTRON environment variables.
 #
 # Enable creation of endpoints by setting ENABLE_ENDPOINTS environment variable.
 # Works with Catalog SQL backend. Do not use with Catalog Templated backend
@@ -43,7 +43,7 @@
 # admin                admin     admin
 # service              glance    admin
 # service              nova      admin
-# service              quantum   admin        # if enabled
+# service              neutron   admin        # if enabled
 # service              swift     admin        # if enabled
 # demo                 admin     admin
 # demo                 demo      Member,sysadmin,netadmin
@@ -69,7 +69,7 @@ CONTROLLER_INTERNAL_ADDRESS=$BOOTSTRAP_IP
 source /root/stackrc
 
 ENABLE_ENDPOINTS=yes
-ENABLE_QUANTUM=yes
+ENABLE_NEUTRON=yes
 ENABLE_SWIFT=yes
 ENABLE_HEAT=yes
 
@@ -242,20 +242,20 @@ if [[ -n "$ENABLE_SWIFT" ]]; then
     fi
 fi
 
-if [[ -n "$ENABLE_QUANTUM" ]]; then
-    QUANTUM_SERVICE=$(get_id \
-    keystone service-create --name=quantum \
+if [[ -n "$ENABLE_NEUTRON" ]]; then
+    NEUTRON_SERVICE=$(get_id \
+    keystone service-create --name=neutron \
                             --type=network \
-                            --description="Quantum Service")
-    QUANTUM_USER=$(get_id keystone user-create --name=quantum \
+                            --description="Neutron Service")
+    NEUTRON_USER=$(get_id keystone user-create --name=neutron \
                                                --pass="$SERVICE_PASSWORD" \
                                                --tenant-id $SERVICE_TENANT \
-                                               --email=quantum@example.com)
+                                               --email=neutron@example.com)
     keystone user-role-add --tenant-id $SERVICE_TENANT \
-                           --user-id $QUANTUM_USER \
+                           --user-id $NEUTRON_USER \
                            --role-id $ADMIN_ROLE
     if [[ -n "$ENABLE_ENDPOINTS" ]]; then
-        keystone endpoint-create --region RegionOne --service-id $QUANTUM_SERVICE \
+        keystone endpoint-create --region RegionOne --service-id $NEUTRON_SERVICE \
             --publicurl   "http://$CONTROLLER_PUBLIC_ADDRESS:9696" \
             --adminurl    "http://$CONTROLLER_ADMIN_ADDRESS:9696" \
             --internalurl "http://$CONTROLLER_INTERNAL_ADDRESS:9696"

@@ -6,6 +6,6 @@ nova-api
 nova-compute
 openstack-clients
 os-refresh-config
-quantum-openvswitch-agent
-quantum-server
+neutron-openvswitch-agent
+neutron-server
 rabbitmq-server

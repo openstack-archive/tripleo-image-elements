@@ -48,9 +48,9 @@
     "db": "mysql://cinder:unset@localhost/cinder",
     "volume_size_mb": "5000"
   },
-  "quantum": {
+  "neutron": {
     "host": "127.0.0.1",
-    "ovs_db": "mysql://quantum:unset@localhost/ovs_quantum?charset=utf8",
+    "ovs_db": "mysql://neutron:unset@localhost/ovs_neutron?charset=utf8",
     "ovs": {
       "bridge_mappings": "ctlplane:br-ctlplane",
       "dnsmasq_range": ["192.0.2.4", "192.0.2.4"],

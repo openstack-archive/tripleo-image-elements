@@ -1,3 +1,0 @@
-#!/bin/bash
-set -eux
-service quantum-server restart

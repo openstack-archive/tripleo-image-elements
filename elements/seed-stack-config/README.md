@@ -15,7 +15,7 @@ Usage
 Edit config.json to customise it for your deployment environment. The default
 is configured for nova-baremetal operation in a seed VM. The configuration
 options are documented in the actual elements that use the configuration - e.g.
-nova, quantum etc.
+nova, neutron etc.
 
 Configuration keys
 ------------------

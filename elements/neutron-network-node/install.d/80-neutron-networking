@@ -1,0 +1,9 @@
+#!/bin/bash
+set -eux
+
+os-svc-daemon -n neutron-l3-agent -u neutron -c neutron-l3-agent -- --config-file /etc/neutron/l3_agent.ini --config-dir /etc/neutron
+os-svc-daemon -n neutron-dhcp-agent -u neutron -c neutron-dhcp-agent -- --config-file /etc/neutron/dhcp_agent.ini --config-dir /etc/neutron
+os-svc-daemon -n neutron-metadata-agent -u neutron -c neutron-metadata-agent -- --config-file /etc/neutron/metadata_agent.ini --config-dir /etc/neutron
+
+# This has to be on the path of the agent that runs it http://pad.lv/1182704
+ln -sf /opt/stack/venvs/neutron/bin/neutron-ns-metadata-proxy /usr/bin

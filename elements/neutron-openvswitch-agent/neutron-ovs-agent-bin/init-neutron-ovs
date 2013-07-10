@@ -1,0 +1,101 @@
+#!/bin/bash
+
+# Idempotent script to apply heat configuration to the running network
+# environment.
+#
+# If a bootstrap public_interface_ip is defined in metadata and not attached to
+# any device then it will be added to the public_interface device if one is
+# defined.
+#
+# An integration bridge for neutron-ovs-agent is created.
+#
+# If no physical bridge is defined in metadata, the script will have no
+# further effect.
+#
+# If the defined physical_bridge is not present on the system, one will be
+# defined via ovs-vsctl.
+#
+# The physical bridge will be brought up.
+#
+# If a public_interface is defined in metadata:
+#   - it will be made a member of the physical_bridge.
+#   - an ip addresses on public_interface are moved onto physical_bridge.
+#
+# An iptables rule to redirect incoming metadata server requests on the public
+# bridge device is inserted if not present.
+#
+# Note that no persistent config file is written to the OS : ovs-vsctl modifies
+# a persistent database so the bridge device will persist across reboots, but
+# [on Ubuntu at least] early boot does not bring up ovs-vswitch early enough,
+# and metadata access will fail.
+
+set -eux
+
+PATH=/usr/local/bin:$PATH
+
+EXTERNAL_BRIDGE=$(os-config-applier --key neutron.ovs.physical_bridge --type raw --key-default '')
+PHYSICAL_INTERFACE=$(os-config-applier --key neutron.ovs.public_interface --type raw  --key-default '')
+PHYSICAL_INTERFACE_IP=$(os-config-applier --key bootstack.public_interface_ip --type netaddress  --key-default '')
+
+if [ -n "$PHYSICAL_INTERFACE_IP" -a -n "$PHYSICAL_INTERFACE" ] ; then
+    if ! (ip addr show | grep -q $PHYSICAL_INTERFACE_IP) ; then
+        ip addr add $PHYSICAL_INTERFACE_IP dev $PHYSICAL_INTERFACE
+    fi
+fi
+
+# Hacky: ensure the switch is running : we should instead arrange for this
+# script to not be run before it's started.
+service openvswitch-switch restart || service openvswitch restart
+
+ovs-vsctl --no-wait -- --may-exist add-br br-int
+ovs-vsctl --no-wait br-set-external-id br-int bridge-id br-int
+
+if [ -z "$EXTERNAL_BRIDGE" ] ; then
+    exit 0
+fi
+
+ovs-vsctl -- --may-exist add-br $EXTERNAL_BRIDGE
+
+ip link set dev $EXTERNAL_BRIDGE up
+
+if [ -n "$PHYSICAL_INTERFACE" ] ; then
+    if ovs-vsctl port-to-br $PHYSICAL_INTERFACE ; then
+        EXISTING_PORT=$(ovs-vsctl port-to-br $PHYSICAL_INTERFACE)
+	if [ "$EXISTING_PORT" != "$PHYSICAL_INTERFACE" ] ; then
+	    ovs-vsctl del-port $EXTERNAL_BRIDGE $PHYSICAL_INTERFACE
+	fi
+    fi
+    ovs-vsctl add-port $EXTERNAL_BRIDGE $PHYSICAL_INTERFACE
+    ip link set dev $PHYSICAL_INTERFACE up
+fi
+
+if [ -n "$PHYSICAL_INTERFACE" ] ; then
+    # Right now we probably are disconnected, need to move all IPs and routers
+    # from interface to bridge.
+    # Add all the IP addresses, so that we can add routes.
+    # Then add routes
+    # Then remove IP addresses
+    # This way, if we are interrupted, nothing has been lost: we're temporarily
+    # multipathed is all.
+    IPS=$(ip addr show dev $PHYSICAL_INTERFACE | grep ' inet ' | awk '{print $2}')
+    # Strictly speaking this doesn't grab all routes, but for now it's
+    # sufficient.
+    ROUTES=$(ip route show dev $PHYSICAL_INTERFACE | grep via || true)
+    for IP in $IPS ; do
+      if ! ip addr show $EXTERNAL_BRIDGE | grep $IP; then
+        ip addr add $IP dev $EXTERNAL_BRIDGE
+      fi
+    done
+    ORIG_IFS=$IFS
+    IFS=
+    for ROUTE in $ROUTES ; do
+        IFS=$ORIG_IFS
+        ip route prepend dev $EXTERNAL_BRIDGE $ROUTE
+	ip route del dev $PHYSICAL_INTERFACE $ROUTE
+    done
+    for IP in $IPS ; do
+      ip addr del $IP dev $PHYSICAL_INTERFACE
+    done
+fi
+
+iptables -t nat -C PREROUTING -d 169.254.169.254/32 -i $EXTERNAL_BRIDGE -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8775 || iptables -t nat -I PREROUTING -d 169.254.169.254/32 -i $EXTERNAL_BRIDGE -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8775

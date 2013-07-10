@@ -17,5 +17,5 @@ init-nova
 # Reentering into os-refresh-config is a little terrifying : later refactoring
 # should remove this.
 os-refresh-config
-init-quantum
+init-neutron
 

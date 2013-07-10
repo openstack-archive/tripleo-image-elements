@@ -1,3 +1,0 @@
-#!/bin/bash
-os-svc-daemon quantum-server quantum quantum-server \
-    "--config-file /etc/quantum/quantum.conf  --config-file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini --config-dir /etc/quantum"

@@ -8,4 +8,4 @@ Installed clients are:
     python-glanceclient
     python-heatclient
     python-novaclient
-    python-quantumclient
+    python-neutronclient
