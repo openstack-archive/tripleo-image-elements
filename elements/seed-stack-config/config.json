@@ -42,7 +42,7 @@
   },
   "bootstack": {
     "public_interface_ip": "192.0.2.1/24",
-    "masquerade_networks": ["192.0.2.0"]
+    "masquerade_networks": ["192.0.2.0/24"]
   },
   "cinder": {
     "db": "mysql://cinder:unset@localhost/cinder",
