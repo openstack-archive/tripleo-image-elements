@@ -6,8 +6,9 @@ install-packages git build-essential python-dev libssl-dev python-pip
 client_install_list="\
 glance \
 heat \
-nova \
-neutron"
+keystone \
+neutron \
+nova"
 
 for client in $client_install_list; do
     repo=python-${client}client
