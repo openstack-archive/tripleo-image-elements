@@ -26,7 +26,6 @@ Upon first boot, scripts will be automatically run to perform the following:
 - database initialization
 - service restarts
 - default keystone accounts
-- default nova flavors/images
 - default network configuration.
 
 The output of the first-boot scripts can be viewed in
@@ -70,11 +69,3 @@ Note that if you are feeding this Metadata to ControllerResource it
 will not be fed into the process until the Heat Metadata is refreshed,
 since the initial Metadata copy will have '0.0.0.0' (as we don't know
 the address until after we create a server record).
-
-
-For setting up the list of elements to include in the ramdisk must be
-configured as a space separated list of elements.
-For example:
-
-    dib:
-      ramdisk_elements: "deploy mellanox"

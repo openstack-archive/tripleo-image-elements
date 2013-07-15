@@ -28,7 +28,6 @@
     },
     "baremetal": {
       "db": "mysql://nova:unset@localhost/nova_bm",
-      "arch": "i386",
       "power_manager": "nova.virt.baremetal.virtual_power_driver.VirtualPowerManager",
       "pxe_deploy_timeout": "1200",
       "virtual_power": {
@@ -79,8 +78,5 @@
   "swift": {
     "store_user": "unset",
     "store_key": "unset"
-  },
-  "dib": {
-    "ramdisk_elements": "deploy"
   }
 }

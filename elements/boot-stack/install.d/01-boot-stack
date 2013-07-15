@@ -2,7 +2,6 @@
 set -eux
 
 install-packages git build-essential python-dev libssl-dev python-netaddr
-install-packages tgt busybox # to run diskimage-builder for deploy ramdisk
 
 install -m 0755 -o root -g root -d /opt/stack/boot-stack
 
@@ -15,9 +14,6 @@ done
 # TODO: generate random creds.
 install -m 0755 -o root -g root $(dirname $0)/../stackrc /root/stackrc
 echo "source /root/stackrc" >> /root/.bash_profile
-
-# image toolchain
-git clone https://github.com/stackforge/diskimage-builder.git /opt/stack/diskimage-builder
 
 # db
 install-packages mysql-server python-mysqldb

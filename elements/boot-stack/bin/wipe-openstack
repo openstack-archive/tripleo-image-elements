@@ -12,7 +12,6 @@ service glance-api restart
 service glance-reg restart
 service nova-api restart
 
-init-nova
 # XXX: Is this still needed ?
 # Reentering into os-refresh-config is a little terrifying : later refactoring
 # should remove this.
