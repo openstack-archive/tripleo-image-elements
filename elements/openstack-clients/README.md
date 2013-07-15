@@ -7,5 +7,6 @@ access to installing them in a uniform way.
 Installed clients are:
     python-glanceclient
     python-heatclient
-    python-novaclient
+    python-keystone
     python-neutronclient
+    python-novaclient
