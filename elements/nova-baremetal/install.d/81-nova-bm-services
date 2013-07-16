@@ -40,7 +40,7 @@ After=openvswitch.service
 Type=forking
 ExecStartPre=/bin/mkdir -p /tftpboot
 ExecStartPre=/bin/chown -R nova:nova /tftpboot
--ExecStartPre=/bin/killall -9 dnsmasq
+ExecStartPre=-/bin/killall -9 dnsmasq
 ExecStart=/sbin/dnsmasq --conf-file= \\
                   --port=0 \\
                   --enable-tftp \\
