@@ -1,20 +1,21 @@
 #!/bin/bash
 set -eu
 
-PATH=/usr/local/bin:$PATH
+OK=/opt/stack/boot-stack/init-openstack.ok
 
-OK_FILE=/opt/stack/boot-stack.ok
-WIPING_FILE=/opt/stack/boot-stack.wiping
-
-if [ -e $OK_FILE -o -e $WIPING_FILE ] ; then
+if [ -e $OK ] ; then
     exit 0
 fi
 
-touch $WIPING_FILE
+PATH=/usr/local/bin:$PATH
 
-wipe-openstack
+reset-db
+service keystone restart
+init-keystone
 
-rm $WIPING_FILE
+# after resetting keystone, we must make API services reconnect
+service glance-api restart
+service glance-reg restart
+service nova-api restart
 
-touch $OK_FILE
-
+touch $OK

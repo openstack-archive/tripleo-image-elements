@@ -4,11 +4,15 @@
 #
 # This creates initial networks for neutron based on heat metadata and local
 # network configuration.
-#
-# It is not idempotent.
 
 set -eux
 set -o pipefail
+
+OK=/opt/stack/boot-stack/init-neutron.ok
+
+if [ -e $OK ] ; then
+    exit 0
+fi
 
 PATH=/usr/local/bin:$PATH
 source /root/stackrc
@@ -59,3 +63,5 @@ while ! NET_ID=$(neutron net-create $NET_NAME $NET_EXTRA | grep ' id ' | awk '{p
 done
 
 SUBNET_ID=$(neutron subnet-create $SUBNET_EXTRA --ip_version 4 ${ALLOCATION_POOL:+--allocation-pool $ALLOCATION_POOL} ${NETWORK_GATEWAY:+--gateway $NETWORK_GATEWAY} $NET_ID $NETWORK_CIDR | grep ' id ' | awk '{print $4}')
+
+touch $OK
