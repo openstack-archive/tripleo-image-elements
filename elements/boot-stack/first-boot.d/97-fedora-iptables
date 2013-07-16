@@ -15,13 +15,17 @@ if [[ "Fedora" = $DISTRO ]]; then
 
         # Openstack services
         iptables -I INPUT -p tcp --dport 8774 -j ACCEPT
+        iptables -I INPUT -p tcp --dport 8775 -j ACCEPT
         iptables -I INPUT -p tcp --dport 9292 -j ACCEPT
         iptables -I INPUT -p tcp --dport 5000 -j ACCEPT
         iptables -I INPUT -p tcp --dport 35357 -j ACCEPT
         iptables -I INPUT -p tcp --dport 8004 -j ACCEPT
+        iptables -I INPUT -p tcp --dport 9696  -j ACCEPT
+
+        # AMQP
+        iptables -I INPUT -p tcp --dport 5672  -j ACCEPT
 
         # DHCP, TFTP
-        iptables -I INPUT -m udp -p udp --dport 67 -j ACCEPT
         iptables -I INPUT -m udp -p udp --dport 69 -j ACCEPT
 
         # ISCSI
