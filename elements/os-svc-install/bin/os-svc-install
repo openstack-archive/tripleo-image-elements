@@ -58,7 +58,13 @@ function install-os-service() {
   local svc_root=/opt/stack/$user
   local git_dir="--git-dir $svc_root/.git"
 
-  if [ ! -e $svc_root ]; then
+  # if the repository is an absolute local path then
+  # we assume its present, on the correct branch and use it
+  # this would be the case when the source was retrieved by
+  # the source-repositories element
+  if [ "${repo:0:1}" = "/" ] ; then
+    python-install $user $repo
+  elif [ ! -e $svc_root ]; then
     git clone --depth=1 -b $branch $repo $svc_root
     python-install $user $svc_root
   else
