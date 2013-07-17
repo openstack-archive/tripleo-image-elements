@@ -1,0 +1,1 @@
+heat git /opt/stack/heat https://github.com/openstack/heat.git
