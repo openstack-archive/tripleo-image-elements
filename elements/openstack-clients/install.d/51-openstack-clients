@@ -18,8 +18,6 @@ for client in $client_install_list; do
     source /opt/stack/venvs/$repo/bin/activate
     set -u
 
-    git clone --depth 1 https://github.com/openstack/$repo.git /opt/stack/$repo
-
     pushd /opt/stack/$repo
     if [ -e requirements.txt ]; then
         PIP_INDEX_URL=http://pypi.openstack.org/openstack/ \

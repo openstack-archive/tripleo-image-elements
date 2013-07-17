@@ -1,0 +1,5 @@
+python-glanceclient git /opt/stack/python-glanceclient https://github.com/openstack/python-glanceclient.git
+python-heatclient git /opt/stack/python-heatclient https://github.com/openstack/python-heatclient.git
+python-keystoneclient git /opt/stack/python-keystoneclient https://github.com/openstack/python-keystoneclient.git
+python-neutronclient git /opt/stack/python-neutronclient https://github.com/openstack/python-neutronclient.git
+python-novaclient git /opt/stack/python-novaclient https://github.com/openstack/python-novaclient.git
