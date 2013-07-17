@@ -1,0 +1,1 @@
+glance git /opt/stack/glance https://github.com/openstack/glance.git
