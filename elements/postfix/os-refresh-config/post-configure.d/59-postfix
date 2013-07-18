@@ -1,4 +1,4 @@
 #!/bin/bash
 set -uex
 
-service postfix restart
+service postfix reload
