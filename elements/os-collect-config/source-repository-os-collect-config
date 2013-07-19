@@ -1,0 +1,1 @@
+os-collect-config git /opt/stack/os-collect-config https://github.com/stackforge/os-collect-config.git
