@@ -1,9 +1,12 @@
 #!/bin/bash
-install -m 0755 -o root -g root $(dirname $0)/cfn-hup-wrapper /usr/local/bin/cfn-hup-wrapper
+# This cannot be an os-apply-config template as this is what runs
+# os-apply-config for the first time.
 cat > /etc/cron.d/cfn-hup <<EOF
-# This is a workaround for cfn-hup not actually being a daemon
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-*/5 * * * * root cfn-hup-wrapper
+# Ensure cfn-hup has a configuration
+@reboot root os-refresh-config 2>&1 | logger -t os-refresh-config
+# This is a workaround for cfn-hup not actually being a daemon
+*/5 * * * * root cfn-hup --no-daemon
 EOF
