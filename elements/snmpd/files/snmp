@@ -1,0 +1,1 @@
+snmp ALL=(root) NOPASSWD: /usr/bin/lsof
