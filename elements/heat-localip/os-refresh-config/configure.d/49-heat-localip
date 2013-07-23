@@ -10,6 +10,6 @@ if [ -z "$local_ip" ]; then
 fi
 for f in /var/lib/heat-cfntools/cfn-init-data /var/cache/heat-cfntools/last_metadata ; do
     if [ -e $f ] ; then
-        sed -i "s/0\.0\.0\.0/$local_ip/g" $f
+        sed -i "s/\<0\.0\.0\.0\>/$local_ip/g" $f
     fi
 done
