@@ -15,26 +15,6 @@
 
 import setuptools
 
-with open("README.md", 'rt') as readme:
-    readme_text = readme.read()
-
 setuptools.setup(
-    name='tripleo_image_elements',
-    version='0.0.1',
-    description="""Disk image elements for deploying OpenStack.""",
-    long_description=readme_text,
-    license='Apache License (2.0)',
-    author='HP Cloud Services',
-    author_email='nobody@hp.com',
-    url='https://github.com/stackforge/tripleo-image-elements',
-    packages=setuptools.find_packages(),
-    include_package_data=True,
-    classifiers=[
-        'Development Status :: 3 - Alpha',
-        'License :: OSI Approved :: Apache Software License',
-        'Operating System :: POSIX :: Linux',
-        'Programming Language :: Other',
-        'Environment :: Console',
-    ],
-    scripts=[],
-    py_modules=[])
+    setup_requires=['d2to1>=0.2.10,<0.3', 'pbr>=0.5.10,<0.6'],
+    d2to1=True)

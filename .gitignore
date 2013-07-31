@@ -6,3 +6,6 @@
 *.egg-info
 dist
 *.qcow2
+build
+AUTHORS
+ChangeLog
