@@ -5,6 +5,12 @@ install-packages python-pip build-essential libxslt-dev libxml2-dev python-dev
 
 pip install /opt/stack/os-collect-config
 
+# Minimal static config for bootstrapping
+cat > /etc/os-collect-config.conf <<eof
+[DEFAULT]
+command=os-refresh-config
+eof
+
 # Upstart
 if [ -d /etc/init ] ; then
     cat > /etc/init/os-collect-config.conf <<eof
