@@ -1,6 +1,6 @@
 # This file controls the activity of snmpd and snmptrapd
 # enable a default MIB
-export MIBS={{snmp.MIB}}
+export MIBS={{snmpd.export_MIB}}
 
 # snmpd control (yes means start daemon).
 SNMPDRUN=yes

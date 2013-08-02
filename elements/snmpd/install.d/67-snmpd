@@ -1,4 +1,7 @@
 #!/bin/bash
 set -eux
 
-install-packages snmpd snmp-mibs-downloader lm-sensors
+install-packages snmpd snmp-mibs-downloader lm-sensors nagios-plugins-basic
+# install our snmp check script
+install -m 0755 -o root -g root $(dirname $0)/../files/check_proc_open_files.py /usr/lib/nagios/plugins/check_proc_open_files.py
+install -m 0440 -o root -g root $(dirname $0)/../files/snmp /etc/sudoers.d/snmp
