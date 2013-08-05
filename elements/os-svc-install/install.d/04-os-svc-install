@@ -5,7 +5,9 @@ set -eux
 install-packages python-pip libmysqlclient-dev
 
 pip install -U distribute # required by virtualenv
-pip install virtualenv
+# required to ensure clean distribute -> setuptools migration
+pip install -U setuptools
+pip install -U virtualenv
 
 install -m 0755 -o root -g root $(dirname $0)/../bin/os-svc-install /usr/local/bin/os-svc-install
 install -m 0755 -o root -g root $(dirname $0)/../bin/os-svc-daemon  /usr/local/bin/os-svc-daemon
