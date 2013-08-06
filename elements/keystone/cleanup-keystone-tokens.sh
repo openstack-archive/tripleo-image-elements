@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eux
+set -eu
 
 KEYSTONE_DB=$(os-config-applier --key keystone.db --type dsn)
 
@@ -18,7 +18,7 @@ KEYSTONE_DB_P2=${KEYSTONE_DB_P2%%\?*}
 KEYSTONE_DB_HOST=${KEYSTONE_DB_P2%%/*}
 KEYSTONE_DB_NAME=${KEYSTONE_DB_P2##*/}
 
-pt-archiver --source h=$KEYSTONE_DB_HOST,p=$KEYSTONE_DB_PASS,D=$KEYSTONE_DB_NAME,t=token \
+pt-archiver --source h=$KEYSTONE_DB_HOST,u=$KEYSTONE_DB_USER,p=$KEYSTONE_DB_PASS,D=$KEYSTONE_DB_NAME,t=token \
     --charset utf8 \
     --where "expires < UTC_TIMESTAMP()" \
     --purge \
