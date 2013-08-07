@@ -10,10 +10,10 @@ mkdir -p /opt/stack/venvs
 VENV=/opt/stack/venvs/heat-cfntools
 virtualenv $VENV --system-site-packages
 
-$VENV/bin/pip install -r /opt/stack/heat-cfntools/requirements.txt
+$VENV/bin/pip install heat-cfntools
 
-pushd /opt/stack/heat-cfntools
-$VENV/bin/python setup.py install --install-scripts=/usr/local/bin
-popd
+# symlink to /opt/aws/bin
+$VENV/bin/cfn-create-aws-symlinks --source $VENV/bin
 
-cfn-create-aws-symlinks --source /usr/local/bin
+# also symlink to /usr/local/bin
+$VENV/bin/cfn-create-aws-symlinks --source $VENV/bin --target /usr/local/bin

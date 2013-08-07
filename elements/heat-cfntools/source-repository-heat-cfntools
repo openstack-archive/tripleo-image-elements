@@ -1,1 +1,0 @@
-heat-cfntools git /opt/stack/heat-cfntools https://github.com/openstack/heat-cfntools.git
