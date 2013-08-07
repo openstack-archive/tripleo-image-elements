@@ -1,4 +1,10 @@
 #!/bin/sh
 
 sed -i -e 's/ console=ttyS0//' /etc/default/grub
-sed -i -e 's/ console=ttyS0//' /boot/grub/grub.cfg
+
+GRUB_CONFIG_FILE=/boot/grub/grub.cfg
+if [ ! -e $GRUB_CONFIG_FILE ] ; then
+    # Fedora grub config file location
+    GRUB_CONFIG_FILE=/boot/grub/grub.conf
+fi
+sed -i -e 's/ console=ttyS0//' $GRUB_CONFIG_FILE
