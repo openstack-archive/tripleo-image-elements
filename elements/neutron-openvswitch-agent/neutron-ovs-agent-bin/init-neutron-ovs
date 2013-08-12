@@ -55,6 +55,7 @@ if [ -z "$EXTERNAL_BRIDGE" ] ; then
 fi
 
 ovs-vsctl -- --may-exist add-br $EXTERNAL_BRIDGE
+ovs-vsctl --no-wait br-set-external-id $EXTERNAL_BRIDGE bridge-id $EXTERNAL_BRIDGE
 
 ip link set dev $EXTERNAL_BRIDGE up
 
