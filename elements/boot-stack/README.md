@@ -26,7 +26,6 @@ Upon first boot, scripts will be automatically run to perform the following:
 - database initialization
 - service restarts
 - default keystone accounts
-- default network configuration.
 
 The output of the first-boot scripts can be viewed in
 `/var/log/first-boot.d.log`.  The file `/opt/stack/boot-stack/boot-stack.ok`

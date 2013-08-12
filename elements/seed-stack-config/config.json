@@ -55,10 +55,6 @@
       "bridge_mappings": "ctlplane:br-ctlplane",
       "dnsmasq_range": ["192.0.2.4", "192.0.2.4"],
       "enable_tunneling": "False",
-      "fixed_range": {
-        "start": "192.0.2.2",
-        "end": "192.0.2.3"
-      },
       "network_vlan_ranges": "ctlplane",
       "physical_bridge": "br-ctlplane",
       "physical_network": "ctlplane",
