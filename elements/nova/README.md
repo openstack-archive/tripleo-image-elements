@@ -10,3 +10,5 @@ nova:
     virtual_power:
       type: "virsh"
         - what virtual power driver to use. "virsh" or "vbox"
+  compute_libvirt_type: "qemu"
+    - what libvirt compute type. Unset will use the nova default.
