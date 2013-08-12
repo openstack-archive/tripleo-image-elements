@@ -1,0 +1,12 @@
+#!/bin/bash
+set -eux
+set -o pipefail
+
+PUBLIC_INTERFACE=$(os-config-applier --key neutron.ovs.public_interface --key-default '')
+
+ovs-vsctl --no-wait -- --may-exist add-br br-ex
+ovs-vsctl --no-wait br-set-external-id br-ex bridge-id br-ex
+
+if [ -n "$PUBLIC_INTERFACE" ] ; then
+    ovs-vsctl --no-wait -- --may-exist add-port br-ex $PUBLIC_INTERFACE
+fi
