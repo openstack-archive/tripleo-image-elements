@@ -3,11 +3,14 @@ Install components for Neutron network node.
 Configuration
 -------------
 
-The configuration path neutron.ovs.public\_interface will be added
-to br-ex.
+No network-node specific configuration exists. See the
+neutron-openvswitch-agent element for configuration parameters.
 
-  neutron:
-    ovs:
-      public_interface: eth1
+A typical ovs configuration will set:
 
-In the example above, eth1 will be added as a port for br-ex.
+    neutron:
+      ovs:
+        enable_tunneling: 'True'
+        public_interface: eth0
+        physical_bridge: br-ex
+        tenant_network_type: gre
