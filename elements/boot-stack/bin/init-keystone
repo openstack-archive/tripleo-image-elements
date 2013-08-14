@@ -80,14 +80,12 @@ CONTROLLER_INTERNAL_ADDRESS=${CONTROLLER_INTERNAL_ADDRESS:-localhost}
 TOOLS_DIR=$(cd $(dirname "$0") && pwd)
 KEYSTONE_CONF=${KEYSTONE_CONF:-/etc/keystone/keystone.conf}
 if [[ -r "$KEYSTONE_CONF" ]]; then
-    EC2RC="$(dirname "$KEYSTONE_CONF")/ec2rc"
+    ;
 elif [[ -r "$TOOLS_DIR/../etc/keystone.conf" ]]; then
     # assume git checkout
     KEYSTONE_CONF="$TOOLS_DIR/../etc/keystone.conf"
-    EC2RC="$TOOLS_DIR/../etc/ec2rc"
 else
     KEYSTONE_CONF=""
-    EC2RC="ec2rc"
 fi
 
 # Extract some info from Keystone's configuration file
@@ -281,22 +279,3 @@ if [[ -n "$ENABLE_HEAT" ]]; then
             --internalurl "http://$CONTROLLER_INTERNAL_ADDRESS:8004/v1/%(tenant_id)s"
     fi
 fi
-
-
-# create ec2 creds and parse the secret and access key returned
-RESULT=$(keystone ec2-credentials-create --tenant-id=$ADMIN_TENANT --user-id=$ADMIN_USER)
-ADMIN_ACCESS=`echo "$RESULT" | grep access | awk '{print $4}'`
-ADMIN_SECRET=`echo "$RESULT" | grep secret | awk '{print $4}'`
-
-RESULT=$(keystone ec2-credentials-create --tenant-id=$DEMO_TENANT --user-id=$DEMO_USER)
-DEMO_ACCESS=`echo "$RESULT" | grep access | awk '{print $4}'`
-DEMO_SECRET=`echo "$RESULT" | grep secret | awk '{print $4}'`
-
-
-# write the secret and access to ec2rc
-cat > $EC2RC <<EOF
-ADMIN_ACCESS=$ADMIN_ACCESS
-ADMIN_SECRET=$ADMIN_SECRET
-DEMO_ACCESS=$DEMO_ACCESS
-DEMO_SECRET=$DEMO_SECRET
-EOF
