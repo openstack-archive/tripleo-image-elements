@@ -102,7 +102,6 @@ function get_id () {
 ADMIN_TENANT=$(get_id keystone tenant-create --name=admin)
 SERVICE_TENANT=$(get_id keystone tenant-create --name=service)
 DEMO_TENANT=$(get_id keystone tenant-create --name=demo)
-INVIS_TENANT=$(get_id keystone tenant-create --name=invisible_to_admin)
 
 
 # Users
@@ -128,7 +127,6 @@ keystone user-role-add --user-id $ADMIN_USER --role-id $ADMIN_ROLE --tenant-id $
 keystone user-role-add --user-id $DEMO_USER --role-id $MEMBER_ROLE --tenant-id $DEMO_TENANT
 keystone user-role-add --user-id $DEMO_USER --role-id $SYSADMIN_ROLE --tenant-id $DEMO_TENANT
 keystone user-role-add --user-id $DEMO_USER --role-id $NETADMIN_ROLE --tenant-id $DEMO_TENANT
-keystone user-role-add --user-id $DEMO_USER --role-id $MEMBER_ROLE --tenant-id $INVIS_TENANT
 keystone user-role-add --user-id $ADMIN_USER --role-id $ADMIN_ROLE --tenant-id $DEMO_TENANT
 
 # TODO(termie): these two might be dubious
