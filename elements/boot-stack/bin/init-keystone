@@ -78,21 +78,11 @@ CONTROLLER_ADMIN_ADDRESS=${CONTROLLER_ADMIN_ADDRESS:-localhost}
 CONTROLLER_INTERNAL_ADDRESS=${CONTROLLER_INTERNAL_ADDRESS:-localhost}
 
 TOOLS_DIR=$(cd $(dirname "$0") && pwd)
-KEYSTONE_CONF=${KEYSTONE_CONF:-/etc/keystone/keystone.conf}
-if [[ -r "$KEYSTONE_CONF" ]]; then
-    ;
-elif [[ -r "$TOOLS_DIR/../etc/keystone.conf" ]]; then
-    # assume git checkout
-    KEYSTONE_CONF="$TOOLS_DIR/../etc/keystone.conf"
-else
-    KEYSTONE_CONF=""
-fi
+KEYSTONE_CONF=/etc/keystone/keystone.conf
 
 # Extract some info from Keystone's configuration file
-if [[ -r "$KEYSTONE_CONF" ]]; then
-    CONFIG_SERVICE_TOKEN=$(sed 's/[[:space:]]//g' $KEYSTONE_CONF | grep ^admin_token= | cut -d'=' -f2)
-    CONFIG_ADMIN_PORT=$(sed 's/[[:space:]]//g' $KEYSTONE_CONF | grep ^admin_port= | cut -d'=' -f2)
-fi
+CONFIG_SERVICE_TOKEN=$(sed 's/[[:space:]]//g' $KEYSTONE_CONF | grep ^admin_token= | cut -d'=' -f2)
+CONFIG_ADMIN_PORT=$(sed 's/[[:space:]]//g' $KEYSTONE_CONF | grep ^admin_port= | cut -d'=' -f2)
 
 export SERVICE_TOKEN=${SERVICE_TOKEN:-$CONFIG_SERVICE_TOKEN}
 if [[ -z "$SERVICE_TOKEN" ]]; then
