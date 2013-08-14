@@ -1,13 +1,18 @@
 #!/bin/bash
 set -eu
 
+OK=/opt/stack/boot-stack/fedora-iptables.ok
+
+if [ -e $OK ] ; then
+    exit 0
+fi
+
 DISTRO=`lsb_release -si` || true
 
 if [[ "Fedora" = $DISTRO ]]; then
 
     # Check if the iptables service is active
-    systemctl is-active iptables.service
-    if [ $? -eq 0 ];then
+    if systemctl is-active iptables.service ; then
         IPT_FILE=/etc/sysconfig/iptables
         if [ -f $IPT_FILE ]; then
             iptables-restore < $IPT_FILE
@@ -35,3 +40,5 @@ if [[ "Fedora" = $DISTRO ]]; then
     fi
 
 fi
+
+touch $OK
