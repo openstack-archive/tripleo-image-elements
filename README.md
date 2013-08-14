@@ -24,7 +24,48 @@ Always include heat-cfntools in images that you intend to boot via heat : if
 that is not done, then the user ssh keys are not reliably pulled down from the
 metadata server due to interactions with cloud-init.
 
-To be written.
+Architecture
+------------
+
+OpenStack images are intended to be deployed and maintained using Nova + Heat.
+
+As such they should strive to be stateless, maintained entirely via automation.
+
+Configuration
+-------------
+
+In a running OpenStack there are several categories of config.
+
+ - per user - e.g. ssh key registration with nova: we repeat this sort
+   of config everytime we add a user.
+ - local node - e.g. nova.conf or ovs-vsctl add-br br-ex : settings that
+   apply individually to machines
+ - inter-node - e.g. credentials on rabbitmq for a given nova compute node
+ - application state - e.g. 'quantum net-create ...' : settings that
+   apply to the whole cluster not on a per-user / per-tenant basis
+
+We have five places we can do configuration in TripleO:
+ - image build time
+ - in-instance heat-driven (ORC scripts)
+ - in-instance first-boot scripts [deprecated]
+ - from outside via APIs
+ - orchestrated by Heat
+
+Our current heuristic for deciding where to do any particular configuration
+step:
+ - per user config should be done from the outside via APIs, even for
+   users like 'admin' that we know we'll have. Note that service accounts
+   are different - they are a form of inter-node configuration.
+ - local node configuration should be done via ORC driven by Heat and/or
+   configuration management system metadata.
+ - inter-node configuration should be done by working through Heat. For
+   instance, creating a rabbit account for a nova compute node is something
+   that Heat should arrange, though the act of creating is probably done by a
+   script on the rabbit server - triggered by Heat - and applying the config is
+   done on the compute node by the local node script - again triggered by Heat.
+ - application state changes should be done from outside via APIs
+ - first-boot scripts should not be used.
+
 
 Copyright
 =========
