@@ -116,22 +116,12 @@ DEMO_USER=$(get_id keystone user-create --name=demo \
 # Roles
 ADMIN_ROLE=$(get_id keystone role-create --name=admin)
 MEMBER_ROLE=$(get_id keystone role-create --name=Member)
-KEYSTONEADMIN_ROLE=$(get_id keystone role-create --name=KeystoneAdmin)
-KEYSTONESERVICE_ROLE=$(get_id keystone role-create --name=KeystoneServiceAdmin)
-SYSADMIN_ROLE=$(get_id keystone role-create --name=sysadmin)
-NETADMIN_ROLE=$(get_id keystone role-create --name=netadmin)
 
 
 # Add Roles to Users in Tenants
 keystone user-role-add --user-id $ADMIN_USER --role-id $ADMIN_ROLE --tenant-id $ADMIN_TENANT
 keystone user-role-add --user-id $DEMO_USER --role-id $MEMBER_ROLE --tenant-id $DEMO_TENANT
-keystone user-role-add --user-id $DEMO_USER --role-id $SYSADMIN_ROLE --tenant-id $DEMO_TENANT
-keystone user-role-add --user-id $DEMO_USER --role-id $NETADMIN_ROLE --tenant-id $DEMO_TENANT
 keystone user-role-add --user-id $ADMIN_USER --role-id $ADMIN_ROLE --tenant-id $DEMO_TENANT
-
-# TODO(termie): these two might be dubious
-keystone user-role-add --user-id $ADMIN_USER --role-id $KEYSTONEADMIN_ROLE --tenant-id $ADMIN_TENANT
-keystone user-role-add --user-id $ADMIN_USER --role-id $KEYSTONESERVICE_ROLE --tenant-id $ADMIN_TENANT
 
 
 # Services
