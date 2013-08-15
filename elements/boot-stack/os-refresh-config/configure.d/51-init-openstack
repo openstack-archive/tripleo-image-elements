@@ -14,8 +14,6 @@ service keystone restart
 init-keystone
 
 # after resetting keystone, we must make API services reconnect
-service glance-api restart
-service glance-reg restart
 service nova-api restart
 
 touch $OK
