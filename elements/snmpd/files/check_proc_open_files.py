@@ -14,10 +14,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import itertools
 import shlex
 import subprocess
 import sys
-import itertools
 
 warn_limit = 90
 crit_limit = 95
@@ -89,5 +89,5 @@ if not output_msg:
     output_msg = "OK - All processes open files with in limits."
     exit_code = status['OK']
 
-print output_msg
+print(output_msg)
 sys.exit(exit_code)
