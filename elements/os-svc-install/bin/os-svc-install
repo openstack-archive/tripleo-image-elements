@@ -1,7 +1,9 @@
 #!/bin/bash
 set -eux
 
-pypi_mirror=http://pypi.openstack.org/
+# Use the pypi mirror, it's reliable and all openstack svc's have their
+# dependencies in it.
+pypi_mirror=http://pypi.openstack.org/openstack/
 pip_install="pip install -i $pypi_mirror "
 
 
@@ -31,8 +33,7 @@ function python-install() {
   fi
 
   if [ -n "$reqs" ] ; then
-    PIP_INDEX_URL=http://pypi.openstack.org/openstack/ \
-       pip install -r $reqs
+       $pip_install -r $reqs
        # FIXME: pip requires doesn't include MySQL-python
        pip install MySQL-python
   fi
