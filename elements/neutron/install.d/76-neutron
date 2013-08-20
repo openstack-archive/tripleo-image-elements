@@ -4,7 +4,7 @@ set -eux
 DISTRO=`lsb_release -si` || true
 
 install-packages openvswitch-switch openvswitch-datapath-dkms
-os-svc-install -n neutron -u neutron -r https://github.com/openstack/neutron.git
+os-svc-install -n neutron -u neutron -r /opt/stack/neutron
 
 mkdir -p /var/lib/neutron && chown -R neutron:neutron /var/lib/neutron
 

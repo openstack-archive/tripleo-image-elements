@@ -1,0 +1,1 @@
+neutron git /opt/stack/neutron https://github.com/openstack/neutron.git
