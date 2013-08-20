@@ -5,6 +5,11 @@ install-packages python-pip python-virtualenv
 
 virtualenv --setuptools /opt/stack/venvs/os-apply-config
 
+# bug #1201253 : virtualenv-1.10.1 embeds setuptools-0.9.8, which
+# doesn't manage correctly HTTPS sockets when downloading pbr from
+# https://pypi.python.org/simple/ if using http_proxy and https_proxy
+# envvars
+/opt/stack/venvs/os-apply-config/bin/pip install -U 'setuptools>=1.0'
 /opt/stack/venvs/os-apply-config/bin/pip install -U os-apply-config
 
 ln -s /opt/stack/venvs/os-apply-config/bin/os-apply-config /usr/local/bin/os-apply-config

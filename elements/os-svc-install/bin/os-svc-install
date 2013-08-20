@@ -32,6 +32,12 @@ function python-install() {
     reqs=""
   fi
 
+  # bug #1201253 : virtualenv-1.10.1 embeds setuptools-0.9.8, which
+  # doesn't manage correctly HTTPS sockets when downloading pbr from
+  # https://pypi.python.org/simple/ if using http_proxy and
+  # https_proxy envvars
+  pip install -U 'setuptools>=1.0'
+
   if [ -n "$reqs" ] ; then
        $pip_install -r $reqs
        # FIXME: pip requires doesn't include MySQL-python
