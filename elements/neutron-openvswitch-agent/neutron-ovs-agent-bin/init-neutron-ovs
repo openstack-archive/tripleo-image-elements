@@ -62,9 +62,9 @@ ip link set dev $EXTERNAL_BRIDGE up
 if [ -n "$PHYSICAL_INTERFACE" ] ; then
     if ovs-vsctl port-to-br $PHYSICAL_INTERFACE ; then
         EXISTING_PORT=$(ovs-vsctl port-to-br $PHYSICAL_INTERFACE)
-	if [ "$EXISTING_PORT" != "$PHYSICAL_INTERFACE" ] ; then
-	    ovs-vsctl del-port $EXTERNAL_BRIDGE $PHYSICAL_INTERFACE
-	fi
+        if [ "$EXISTING_PORT" != "$PHYSICAL_INTERFACE" ] ; then
+            ovs-vsctl del-port $EXTERNAL_BRIDGE $PHYSICAL_INTERFACE
+        fi
     fi
     ovs-vsctl add-port $EXTERNAL_BRIDGE $PHYSICAL_INTERFACE
     ip link set dev $PHYSICAL_INTERFACE up
@@ -92,7 +92,7 @@ if [ -n "$PHYSICAL_INTERFACE" ] ; then
     for ROUTE in $ROUTES ; do
         IFS=$ORIG_IFS
         ip route prepend dev $EXTERNAL_BRIDGE $ROUTE
-	ip route del dev $PHYSICAL_INTERFACE $ROUTE
+        ip route del dev $PHYSICAL_INTERFACE $ROUTE
     done
     for IP in $IPS ; do
       ip addr del $IP dev $PHYSICAL_INTERFACE
