@@ -16,6 +16,11 @@ if [ -x "$venvs/cinder/bin/cinder-manage" ] ; then
     $venvs/cinder/bin/cinder-manage db sync
 fi
 
+if [ -x "$venvs/ironic/bin/ironic-dbsync" ] ; then
+    os-db-create ironic ironic $db_pass
+    $venvs/ironic/bin/ironic-dbsync --config-file /etc/ironic/ironic.conf
+fi
+
 os-db-create nova nova $db_pass
 $venvs/nova/bin/nova-manage db sync
 
