@@ -1,0 +1,11 @@
+#!/bin/bash
+set -eux
+
+install -o root -g root -m 0755 -d /etc/ironic
+install -o root -g root -m 0644 /opt/stack/ironic/etc/ironic/policy.json /etc/ironic
+
+# Setup Ironic's rootwrap.
+install -o root -g root -m 0755 -d /etc/ironic/rootwrap.d
+install -o root -g root -m 0644 -t /etc/ironic/rootwrap.d /opt/stack/ironic/etc/ironic/rootwrap.d/*
+install -o root -g root -m 0644 /opt/stack/ironic/etc/ironic/rootwrap.conf /etc/ironic/rootwrap.conf
+
