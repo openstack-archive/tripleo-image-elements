@@ -9,10 +9,10 @@ Metadata changes.
 To cause a script to be run on every os-refresh-config run, install
 it into one of the following directories:
 ````
-/opt/stack/os-refresh-config/pre-configure.d
-/opt/stack/os-refresh-config/configure.d
-/opt/stack/os-refresh-config/migration.d
-/opt/stack/os-refresh-config/post-configure.d
+/opt/stack/os-config-refresh/pre-configure.d
+/opt/stack/os-config-refresh/configure.d
+/opt/stack/os-config-refresh/migration.d
+/opt/stack/os-config-refresh/post-configure.d
 ```
 
 If you want to have os-refresh-config run on any updates to a particular
