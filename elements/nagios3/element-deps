@@ -1,6 +1,5 @@
 os-apply-config
 os-refresh-config
-heat-cfntools
 postfix
 apache2
 openstack-clients
