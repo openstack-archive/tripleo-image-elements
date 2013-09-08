@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -eu
+
+PYPIURL=http://pypi.openstack.org/openstack/
+mkdir -p ~/.pip
+
+if [ -e ~/.pip/pip.conf ]; then
+    mv ~/.pip/pip.conf{,.orig}
+fi
+
+if [ -e ~/.pydistutils.cfg ]; then
+    mv ~/.pydistutils.cfg{,.orig}
+fi
+
+cat <<EOF > ~/.pip/pip.conf
+[global]
+index-url = $PYPIURL
+log = $HOME/pip.log
+EOF
+
+cat <<EOF > ~/.pydistutils.cfg
+[easy_install]
+index_url = $PYPIURL
+EOF
