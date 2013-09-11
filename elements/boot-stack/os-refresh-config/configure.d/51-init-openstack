@@ -10,7 +10,5 @@ fi
 PATH=/usr/local/bin:$PATH
 
 reset-db
-service keystone restart
-init-keystone
 
 touch $OK
