@@ -1,8 +1,8 @@
 {
   "OpenStack::Heat::Stack": {
   },
-  "admin-token": "unset",
   "admin-password": "unset",
+  "admin-token": "unset",
   "service-password": "unset",
   "db-password": "unset",
   "keystone": {
@@ -60,6 +60,7 @@
       "physical_network": "ctlplane",
       "public_interface": "eth1",
       "tenant_network_type": "vlan"
+    "service-password": "unset",
     }
   },
   "heat": {
