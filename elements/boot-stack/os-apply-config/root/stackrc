@@ -1,7 +1,7 @@
 # TODO: generate random credentials.
 # TODO: inject via heat: https://bugs.launchpad.net/tripleo/+bug/1210857
 export NOVA_VERSION=1.1
-export OS_PASSWORD=unset
+export OS_PASSWORD={{admin-password}}
 export OS_AUTH_URL=http://localhost:5000/v2.0
 export OS_USERNAME=admin
 export OS_TENANT_NAME=admin

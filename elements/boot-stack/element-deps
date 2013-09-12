@@ -4,6 +4,7 @@ heat-engine
 keystone
 nova-api
 openstack-clients
+os-apply-config
 os-refresh-config
 neutron-openvswitch-agent
 neutron-server

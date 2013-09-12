@@ -35,9 +35,9 @@ will be touched upon the scripts' completion.
 Credentials
 -----------
 
-OpenStack credentials are installed to /root/stackrc in the boot-stack machine.
-All services listen on a wildcard address, so that the credentials may be
-copied out and used from outside the boot-stack machine.
+OpenStack credentials are installed to /root/stackrc in the boot-stack machine,
+for automation needing them w/in the instance. Credentials are set from
+metadata, so consult config.json or your heat parameters.
 
 
 Utilities
