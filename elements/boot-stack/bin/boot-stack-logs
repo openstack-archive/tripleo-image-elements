@@ -17,7 +17,6 @@ cat > $scr_file <<eof
 startup_message off
 hardstatus alwayslastline "%w"
 caption always "%{-b ..}%-w%{+b ..}[[%n%f*%t]]%{-}%+w"
-source $this_dir/../stackrc
 eof
 
 for f in \
@@ -29,6 +28,5 @@ for f in \
 done
 
 echo "screen -t dnsmasq sh -c \"tail -f /var/log/syslog | grep dnsmasq\"" >> $scr_file
-echo "screen -t nova-list sh -c \"watch nova list\"" >> $scr_file
 
 exec screen -c $scr_file
