@@ -39,7 +39,8 @@
         "type": "virsh"
       }
     },
-    "metadata-proxy": "false"
+    "metadata-proxy": "false",
+    "service-password": "unset"
   },
   "bootstack": {
     "public_interface_ip": "192.0.2.1/24",
