@@ -3,7 +3,6 @@
   },
   "admin-password": "unset",
   "admin-token": "unset",
-  "service-password": "unset",
   "db-password": "unset",
   "keystone": {
     "host": "127.0.0.1",
