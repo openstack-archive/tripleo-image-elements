@@ -15,7 +15,8 @@
   },
   "glance": {
     "host": "127.0.0.1",
-    "db": "mysql://glance:unset@localhost/glance"
+    "db": "mysql://glance:unset@localhost/glance",
+    "service-password": "unset"
   },
   "nova": {
     "compute_hostname": "ubuntu",
