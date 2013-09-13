@@ -46,7 +46,8 @@
   },
   "cinder": {
     "db": "mysql://cinder:unset@localhost/cinder",
-    "volume_size_mb": "5000"
+    "volume_size_mb": "5000",
+    "service-password": "unset"
   },
   "neutron": {
     "host": "127.0.0.1",
