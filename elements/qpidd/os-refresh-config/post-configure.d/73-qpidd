@@ -1,0 +1,10 @@
+#!/bin/bash
+set -eu
+
+username=$(os-apply-config --key qpid.username)
+password=$(os-apply-config --key qpid.password)
+
+sasldb_file=$(grep sasldb_path /etc/sasl2/qpidd.conf | cut -d \: -f 2 | cut -d " " -f 2)
+echo "$password" | saslpasswd2 -c -p -f $sasldb_file -u QPID $username
+
+service qpidd restart

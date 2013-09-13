@@ -1,0 +1,40 @@
+# QPID policy file
+#
+# User definition:
+#   user = <user-name>[@domain[/realm]]
+#
+# User/Group lists:
+#   user-list = user1 user2 user3 ...
+#   group-name-list = group1 group2 group3 ...
+#
+# Group definition:
+#   group <group-name> = [user-list] [group-name-list]
+#
+# ACL definition:
+#   permission = [allow|allow-log|deny|deny-log]
+#   action = [consume|publish|create|access|bind|unbind|delete|purge|update]
+#   object = [virtualhost|queue|exchange|broker|link|route|method]
+#   property = [name|durable|owner|routingkey|passive|autodelete|exclusive|type|alternate|queuename|schemapackage|schemaclass]
+#
+# acl permission {<group-name>|<user-name>|"all"} {action|"all"} [object|"all"] [property=<property-value>]
+#
+# Example:
+#
+# group client = user1@QPID user2@QPID
+# acl allow client publish routingkey=exampleQueue exchange=amq.direct
+#
+# Will allow the group "client" containing of "user1" and "user2" be able to
+# make use of the routing key "exampleQueue" on the "amq.direct" exchange.
+
+# Group definitions
+group admin admin@QPID
+
+# Admin is allowed to do everything
+acl allow admin all
+
+{{#qpid}}
+acl allow {{username}}@QPID all all
+{{/qpid}}
+
+# Deny everything else by default
+acl deny all all
