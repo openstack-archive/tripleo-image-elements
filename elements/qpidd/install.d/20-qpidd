@@ -1,0 +1,34 @@
+#!/bin/bash
+
+install-packages qpidd qpid-tools qpid-client
+
+function install_qpidd_upstart {
+  cat > /etc/init/qpidd.conf << eof
+start on runlevel [2345]
+stop on runlevel [016]
+
+respawn
+respawn limit 2 5
+
+script
+  exec qpidd --config=/etc/qpid/qpidd.conf
+end script
+post-start exec sleep 1
+eof
+}
+
+function install_qpidd_systemd {
+  cat > /etc/systemd/system/qpidd.service << eof
+.include /lib/systemd/system/qpidd.service
+[Unit]
+Before=rc-local.service
+Restart=on-failure
+eof
+}
+
+
+if [ -d /etc/init ]; then
+    install_qpidd_upstart
+elif [ -d /lib/systemd/system ]; then
+    install_qpidd_systemd
+fi
