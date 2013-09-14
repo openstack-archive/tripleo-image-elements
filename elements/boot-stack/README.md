@@ -45,8 +45,7 @@ Utilities
 
 The following utilities are available in the running boot-stack machine:
 
-`wipe-openstack` - Clear all openstack databases, and return
-                   nova/keystone/neutron/etc. to their default states.
+`reset-db` - Clear all openstack databases.
 
 `boot-stack-logs` - Start a screen session which tails important logs.
 
