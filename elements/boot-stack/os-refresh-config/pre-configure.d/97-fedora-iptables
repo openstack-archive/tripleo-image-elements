@@ -38,6 +38,11 @@ if [[ "Fedora" = $DISTRO ]]; then
         # ISCSI
         iptables -I INPUT -p tcp --dport 10000 -j ACCEPT
 
+        # Forward packets to the private ctlplane network
+        iptables -I FORWARD -d 192.0.2.0/24 -j ACCEPT
+        # Forward packets to the hosts libvirt network
+        iptables -I FORWARD -d 192.168.122.0/24 -j ACCEPT
+
         iptables-save > $IPT_FILE
     fi
 
