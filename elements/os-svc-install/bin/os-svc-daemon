@@ -4,7 +4,7 @@ set -eu
 DEFAULT_POSTSTART="exec sleep 1"
 
 usage() {
-  echo "Usage: os-svc-daemon [ -ph ] [ -s POSTSTART ] -n SERVICENAME -u RUNAS -c RUNCMD -- [arg [arg...]]"
+  echo "Usage: os-svc-daemon [ -ph ] [ -s POSTSTART ] [ -e ENV ] -n SERVICENAME -u RUNAS -c RUNCMD -- [arg [arg...]]"
   echo ""
   echo "SERVICENAME, RUNAS, RUNCMD, and POSTSTART can be set via the"
   echo "environment as well. Command line arguments will override"
@@ -14,6 +14,7 @@ usage() {
   echo "  -p             Print the job file instead of writing to disk"
   echo "  -s POSTSTART   post_start will be added to the upstart job. Ignored with systemd."
   echo "                 default: $DEFAULT_POSTSTART"
+  echo "  -e ENV         Environment name=value entries to set in the service/job"
   echo "  -n SERVICENAME Name of job/service file."
   echo "  -u RUNAS       User to run main executable as."
   echo "  -c RUNCMD      Command to execute. Must stay in foreground."
@@ -25,6 +26,7 @@ usage() {
 SERVICENAME=${SERVICENAME:-""}
 RUNAS=${RUNAS:-""}
 RUNCMD=${RUNCMD:-""}
+ENV=${ENV:-""}
 # The default helps avoid race with daemon listening. http://pad.lv/1179766
 POSTSTART=${POSTSTART:-$DEFAULT_POSTSTART}
 
@@ -39,12 +41,13 @@ print_to_file() {
 OUTPUT=print_to_file
 
 nshift=0
-while getopts "phs:n:u:c:" opt; do
+while getopts "phs:n:u:c:e:" opt; do
     case "$opt" in
         n) SERVICENAME=$OPTARG;;
         u) RUNAS=$OPTARG;;
         c) RUNCMD=$OPTARG;;
         s) POSTSTART=$OPTARG;;
+        e) ENV=$OPTARG;;
         p) OUTPUT=print_only;;
         h) usage; exit 0;;
         \?) usage; exit 1;;
@@ -72,9 +75,18 @@ function install_upstart {
   local cmd=$3
   shift; shift; shift
   local args=$*
+
+  local env_entries=''
+  if [ -n "$ENV" ]; then
+    local env_pad=" $ENV"
+    env_entries=${env_pad// /
+env }
+  fi
+
   $OUTPUT /etc/init/$name.conf <<EOF
 start on runlevel [2345]
 stop on runlevel [016]
+$env_entries
 
 pre-start script
   mkdir -p /var/run/$user
@@ -98,6 +110,14 @@ function install_systemd {
   local cmd=$3
   shift; shift; shift
   local args=$*
+
+  local env_entries=''
+  if [ -n "$ENV" ]; then
+    local env_pad=" $ENV"
+    env_entries=${env_pad// /
+Environment=}
+  fi
+
   $OUTPUT /lib/systemd/system/$name.service <<EOF
 [Unit]
 Description=$name Service
@@ -107,6 +127,7 @@ Requires=$name-create-dir.service
 [Service]
 ExecStart=/opt/stack/venvs/$user/bin/$cmd $args
 User=$user
+$env_entries
 
 [Install]
 WantedBy=multi-user.target
