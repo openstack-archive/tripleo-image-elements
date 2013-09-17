@@ -4,7 +4,9 @@ set -eux
 # Used by all compute
 install-packages dnsmasq dnsmasq-utils ebtables qemu-utils syslinux
 
-os-svc-daemon nova-compute  nova nova-compute          "--config-dir /etc/nova"
+# LIBVIRT_DEFAULT_URI needs to be set due to
+# https://bugs.launchpad.net/tripleo/+bug/1226310
+os-svc-daemon -e "LIBVIRT_DEFAULT_URI=qemu:///system" nova-compute  nova nova-compute          "--config-dir /etc/nova"
 
 chown -R nova:nova /var/lib/misc/
 
