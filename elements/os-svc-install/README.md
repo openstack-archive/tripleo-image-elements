@@ -13,6 +13,6 @@ Given a system service command line and run-as user, generate and install system
 os-svc-install -u nova -n nova-all -c 'nova-all --someoption' -r https://github.com/openstack/nova.git
 
 # install a system-start script for nova-api
-os-svc-daemon -n nova-api -u nova -c /opt/stack/venvs/nova/bin/nova-api -- --config-dir /etc/nova
+os-svc-daemon -e 'foo=bar bar=baz' -n nova-api -u nova -c /opt/stack/venvs/nova/bin/nova-api -- --config-dir /etc/nova
 ```
 
