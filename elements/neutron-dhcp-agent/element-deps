@@ -1,4 +1,3 @@
 neutron
-neutron-dhcp-agent
 neutron-openvswitch-agent
 os-refresh-config
