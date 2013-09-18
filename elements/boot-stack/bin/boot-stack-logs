@@ -27,6 +27,7 @@ for f in \
   fi
 done
 
+# XXX: Note that this is obsolete if the Neutron DHCP agent is in use.
 echo "screen -t dnsmasq sh -c \"tail -f /var/log/syslog | grep dnsmasq\"" >> $scr_file
 
 exec screen -c $scr_file
