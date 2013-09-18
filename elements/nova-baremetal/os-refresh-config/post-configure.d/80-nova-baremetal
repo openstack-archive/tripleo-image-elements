@@ -2,4 +2,3 @@
 set -eux
 
 service nova-baremetal-deploy-helper restart
-service nova-bm-dnsmasq restart
