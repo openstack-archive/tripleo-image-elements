@@ -1,0 +1,4 @@
+os-svc-install
+os-refresh-config
+os-apply-config
+source-repositories

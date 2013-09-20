@@ -21,6 +21,11 @@ if [ -x "$venvs/ironic/bin/ironic-dbsync" ] ; then
     $venvs/ironic/bin/ironic-dbsync --config-file /etc/ironic/ironic.conf
 fi
 
+if [ -x "$venvs/tuskar/bin/tuskar-dbsync" ] ; then
+    os-db-create tuskar tuskar $db_pass
+    $venvs/tuskar/bin/tuskar-dbsync --config-file /etc/tuskar/tuskar.conf
+fi
+
 os-db-create nova nova $db_pass
 $venvs/nova/bin/nova-manage db sync
 
