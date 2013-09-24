@@ -4,6 +4,10 @@ set -eux
 DISTRO=`lsb_release -si` || true
 
 install-packages openvswitch-switch openvswitch-datapath-dkms
+
+# for BUG: https://bugs.launchpad.net/neutron/+bug/1225232
+echo "qpid-python" | tee -a /opt/stack/neutron/requirements.txt
+
 os-svc-install -n neutron -u neutron -r /opt/stack/neutron
 
 mkdir -p /var/lib/neutron && chown -R neutron:neutron /var/lib/neutron
@@ -19,4 +23,3 @@ visudo -c
 if [ $DISTRO = "Fedora" ]; then
     systemctl enable openvswitch.service
 fi
-
