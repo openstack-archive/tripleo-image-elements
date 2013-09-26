@@ -1,6 +1,9 @@
 #!/bin/bash
 set -eux
 
+# syslinux is installed by nova-compute, which contains pxelinux.0
+install-packages atftpd xinetd
+
 mkdir -p /tftpboot/pxelinux.cfg/
 if [ -f /usr/lib/syslinux/pxelinux.0 ]; then
   cp /usr/lib/syslinux/pxelinux.0 /tftpboot/ # Ubuntu
@@ -10,3 +13,17 @@ else
   echo "Failed to find pxelinux.0."
   exit 1
 fi
+
+cat > /etc/xinetd.d/tftp << EOF
+service tftp
+{
+  protocol        = udp
+  port            = 69
+  socket_type     = dgram
+  wait            = yes
+  user            = nobody
+  server          = /usr/sbin/in.tftpd
+  server_args     = /tftpboot
+  disable         = no
+}
+EOF
