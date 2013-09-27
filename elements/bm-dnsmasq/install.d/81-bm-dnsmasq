@@ -20,8 +20,6 @@ script
   exec dnsmasq --conf-file= \\
                --keep-in-foreground \\
                --port=0 \\
-               --enable-tftp \\
-               --tftp-root=/tftpboot \\
                --dhcp-boot=pxelinux.0 \\
                --bind-interfaces \\
                --pid-file=/var/run/dnsmasq.pid \\
