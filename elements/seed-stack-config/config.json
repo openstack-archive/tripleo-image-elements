@@ -18,7 +18,7 @@
     "service-password": "unset"
   },
   "nova": {
-    "compute_hostname": "ubuntu",
+    "compute_hostname": "seed",
     "host": "127.0.0.1",
     "db":    "mysql://nova:unset@localhost/nova",
     "compute_driver": "baremetal.driver.BareMetalDriver",
