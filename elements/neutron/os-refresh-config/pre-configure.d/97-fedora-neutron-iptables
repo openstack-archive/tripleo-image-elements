@@ -1,0 +1,23 @@
+#!/bin/bash
+set -eu
+
+# Exit if not Fedora
+DISTRO=`lsb_release -si` || true
+[ "Fedora" != $DISTRO ] && exit 0
+
+# Check if the iptables service is active
+if systemctl is-active iptables.service ; then
+    IPT_FILE=/etc/sysconfig/iptables
+    if [ -f $IPT_FILE ]; then
+        iptables-restore < $IPT_FILE
+    fi
+
+    # Need to allow gre where used (on overcloud)
+    if ! iptables -C INPUT -p gre -j ACCEPT ; then
+        if [ "$(os-apply-config --key neutron.ovs.tenant_network_type)" = 'gre' ] ; then
+            iptables -I INPUT -p gre -j ACCEPT
+        fi
+    fi
+
+    iptables-save > $IPT_FILE
+fi
