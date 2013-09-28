@@ -20,11 +20,9 @@ for client in $client_install_list; do
 
     pushd /opt/stack/$repo
     if [ -e requirements.txt ]; then
-        PIP_INDEX_URL=http://pypi.openstack.org/openstack/ \
-            pip install -r requirements.txt
+        pip install -r requirements.txt
     elif [ -e tools/pip-requires ]; then
-        PIP_INDEX_URL=http://pypi.openstack.org/openstack/ \
-            pip install -r tools/pip-requires
+        pip install -r tools/pip-requires
     fi
     python setup.py develop --script-dir /usr/local/bin
     popd
