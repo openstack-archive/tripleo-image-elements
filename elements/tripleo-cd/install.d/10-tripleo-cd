@@ -1,0 +1,40 @@
+#!/bin/bash
+set -eux
+
+# Upstart
+if [ -d /etc/init ] ; then
+    cat > /etc/init/tripleo-cd.conf <<eof
+start on runlevel [2345]
+stop on runlevel [016]
+respawn
+exec tripleo-cd.sh
+eof
+
+# Systemd
+elif [ -d /lib/systemd/system ] ; then
+    cat > /lib/systemd/system/os-collect-config.service <<eof
+[Unit]
+Description=Deploy an overcloud forever.
+After=cloud-final.service
+Before=crond.service
+
+[Service]
+ExecStart=/bin/tripleo-cd.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+eof
+
+  # Make systemd take notice of it
+  systemctl daemon-reload
+
+  # Enable the service
+  systemctl enable tripleo-cd.service
+
+else
+    echo Only systems with systemd or upstart are supported.
+    exit 1
+fi
+
+install -m 0755 -o root -g root $(dirname $0)/../tripleo-cd.sh /usr/local/bin
