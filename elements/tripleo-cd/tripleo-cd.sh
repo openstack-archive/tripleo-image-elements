@@ -19,5 +19,6 @@ set -eux
 
 while true; do
     source /opt/stack/tripleo-incubator/scripts/setup-env /opt/stack
+    source /root/stackrc
     devtest_overcloud.sh;
 done
