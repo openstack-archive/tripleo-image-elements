@@ -1,0 +1,48 @@
+#!/bin/bash
+# Copyright 2013 Hewlett-Packard Development Company, L.P.
+# All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+set -eux
+
+install-packages libxml2-dev libxslt-dev libmysqlclient-dev libpq-dev \
+libnspr4-dev pkg-config libsqlite3-dev libzmq-dev libffi-dev \
+libldap2-dev libsasl2-dev python-dev python-pip build-essential
+
+pip install /opt/stack/jeepyb
+
+mkdir -p /opt/stack/pypi-mirror
+
+cat <<EOF > /opt/stack/pypi-mirror/mirror.yaml
+cache-root: /opt/stack/pypi-mirror/pypi/download
+
+mirrors:
+ - name: openstack
+   projects:
+     - https://git.openstack.org/openstack/requirements
+   output: /opt/stack/pypi-mirror/pypi/mirror
+EOF
+
+mkdir -p /opt/stack/pypi-mirror/pypi/download
+mkdir -p /opt/stack/pypi-mirror/pypi/mirror
+
+if [ -d /etc/cron.hourly ] ; then
+    target=hourly
+else
+    target=daily
+fi
+cat <<EOF > /etc/cron.$target/pypi-mirror-update
+#!/bin/bash
+run-mirror -b remotes/origin/master --verbose -c /opt/stack/pypi-mirror/mirror.yaml
+EOF
+chmod +x /etc/cron.$target/pypi-mirror-update
