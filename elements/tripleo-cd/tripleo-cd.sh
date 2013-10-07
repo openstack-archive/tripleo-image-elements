@@ -17,6 +17,7 @@
 
 set -eux
 
+export OVERCLOUD_DIB_EXTRA_ARGS=pypi
 while true; do
     source /opt/stack/tripleo-incubator/scripts/refresh-env /opt/stack
     source /root/stackrc
