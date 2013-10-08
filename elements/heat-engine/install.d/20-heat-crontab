@@ -1,0 +1,6 @@
+#!/bin/bash
+# If https://bugs.launchpad.net/heat/+bug/1239377 is ever fixed we can
+# configure heat to purge automatically and remove this.
+cat <<EOF > /etc/cron.d/heat
+30 * * * * heat /opt/stack/venvs/heat/bin/heat-manage purge_deleted 1
+EOF
