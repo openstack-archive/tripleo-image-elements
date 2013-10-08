@@ -19,30 +19,34 @@ install-packages libxml2-dev libxslt-dev libmysqlclient-dev libpq-dev \
 libnspr4-dev pkg-config libsqlite3-dev libzmq-dev libffi-dev \
 libldap2-dev libsasl2-dev python-dev python-pip build-essential
 
-pip install /opt/stack/jeepyb
+# need latest virtualenv
+pip install -U virtualenv
 
-mkdir -p /opt/stack/pypi-mirror
+mkdir -p /opt/stack/venvs
+virtualenv /opt/stack/venvs/jeepyb
+/opt/stack/venvs/jeepyb/bin/pip install -U /opt/stack/jeepyb
+ln -sf /opt/stack/venvs/jeepyb/bin/run-mirror /usr/local/bin/run-mirror
 
-cat <<EOF > /opt/stack/pypi-mirror/mirror.yaml
-cache-root: /opt/stack/pypi-mirror/pypi/download
+useradd pypi-mirror --system -d /var/run/pypi-mirror -s /bin/false
+
+mkdir -p /etc/pypi-mirror
+cat <<EOF > /etc/pypi-mirror/mirror.yaml
+cache-root: /var/cache/pypi-mirror/pypi/download
 
 mirrors:
  - name: openstack
    projects:
      - https://git.openstack.org/openstack/requirements
-   output: /opt/stack/pypi-mirror/pypi/mirror
+   output: /var/cache/pypi-mirror/pypi/mirror
 EOF
 
-mkdir -p /opt/stack/pypi-mirror/pypi/download
-mkdir -p /opt/stack/pypi-mirror/pypi/mirror
+mkdir -p /var/cache/pypi-mirror/pypi/download
+mkdir -p /var/cache/pypi-mirror/pypi/mirror
 
-if [ -d /etc/cron.hourly ] ; then
-    target=hourly
-else
-    target=daily
-fi
-cat <<EOF > /etc/cron.$target/pypi-mirror-update
-#!/bin/bash
-run-mirror -b remotes/origin/master --verbose -c /opt/stack/pypi-mirror/mirror.yaml
+chown -R pypi-mirror.pypi-mirror /var/cache/pypi-mirror
+chmod a+rx /var/cache/pypi-mirror
+
+cat <<EOF > /etc/cron.d/pypi-mirror-update
+SHELL=/bin/sh
+15 * * * * pypi-mirror run-mirror -b remotes/origin/master --verbose -c /etc/pypi-mirror/mirror.yaml
 EOF
-chmod +x /etc/cron.$target/pypi-mirror-update
