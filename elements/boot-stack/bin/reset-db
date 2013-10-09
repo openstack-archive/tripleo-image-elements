@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -eux
 
 db_pass=$(os-config-applier --key db-password)
 
