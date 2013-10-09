@@ -53,8 +53,7 @@ function install-os-service() {
 
   id $user || useradd $user --system -d /var/run/$user -s /bin/false
 
-  mkdir -p /etc/$user
-  chown -R $user:$user /etc/$user
+  install -d -m 0750 -o $user -g $user /etc/$user
 
   local svc_root=/opt/stack/$user
   local git_dir="--git-dir $svc_root/.git"
