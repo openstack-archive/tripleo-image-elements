@@ -20,5 +20,14 @@ set -eux
 while true; do
     source /opt/stack/tripleo-incubator/scripts/setup-env /opt/stack
     source /root/stackrc
-    devtest_overcloud.sh;
+    set +u
+    devtest_overcloud.sh
+    RESULT=$?
+    set -u
+    MSG=$(echo "************** overcloud complete status=$RESULT ************")
+    echo $MSG
+    send-irc tripleo cd-undercloud "$MSG"
+    if [ "0" != "$RESULT" ]; then
+        exit $RESULT
+    fi
 done
