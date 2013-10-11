@@ -3,6 +3,10 @@
 # Idempotent script to apply heat configuration to the running network
 # environment.
 #
+# If a public_interface_raw_device is defined in metadata and public_interface
+# does not exist, the public_interface is used to derived a vlan id and a vlan
+# interface is configured.
+#
 # If a bootstrap public_interface_ip is defined in metadata and not attached to
 # any device then it will be added to the public_interface device if one is
 # defined.
@@ -36,6 +40,16 @@ PATH=/usr/local/bin:$PATH
 EXTERNAL_BRIDGE=$(os-config-applier --key neutron.ovs.physical_bridge --type raw --key-default '')
 PHYSICAL_INTERFACE=$(os-config-applier --key neutron.ovs.public_interface --type raw  --key-default '')
 PHYSICAL_INTERFACE_IP=$(os-config-applier --key bootstack.public_interface_ip --type netaddress  --key-default '')
+PHYSICAL_INTERFACE_RAW_DEVICE=$(os-config-applier --key neutron.ovs.public_interface_raw_device --type raw --key-default '')
+
+if [ -n "$PHYSICAL_INTERFACE_RAW_DEVICE" ]; then
+  if ! (ip link show dev $PHYSICAL_INTERFACE) ; then
+    VLAN_ID=$(echo $PHYSICAL_INTERFACE | sed s/vlan//)
+    vconfig set_name_type VLAN_PLUS_VID_NO_PAD
+    vconfig add $PHYSICAL_INTERFACE_RAW_DEVICE $VLAN_ID
+  fi
+  ip link set $PHYSICAL_INTERFACE up
+fi
 
 if [ -n "$PHYSICAL_INTERFACE_IP" -a -n "$PHYSICAL_INTERFACE" ] ; then
     if ! (ip addr show | grep -q $PHYSICAL_INTERFACE_IP) ; then
