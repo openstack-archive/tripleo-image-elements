@@ -21,7 +21,7 @@ while true; do
     source /opt/stack/tripleo-incubator/scripts/setup-env /opt/stack
     source /root/stackrc
     set +u
-    devtest_overcloud.sh
+    devtest_overcloud.sh vlan25 138.35.77.4/25 eth2 138.35.77.1
     RESULT=$?
     set -u
     MSG=$(echo "************** overcloud complete status=$RESULT ************")
