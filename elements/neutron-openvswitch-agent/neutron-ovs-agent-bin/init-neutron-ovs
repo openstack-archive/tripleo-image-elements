@@ -25,9 +25,6 @@
 #   - it will be made a member of the physical_bridge.
 #   - an ip addresses on public_interface are moved onto physical_bridge.
 #
-# An iptables rule to redirect incoming metadata server requests on the public
-# bridge device is inserted if not present.
-#
 # If public_interface_route is set then the current default route is
 # specialised to a 169.254.169.254/32 only route and a default route via
 # public_interface_route is added on the public interface.
