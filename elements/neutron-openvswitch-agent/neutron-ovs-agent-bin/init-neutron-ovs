@@ -28,6 +28,10 @@
 # An iptables rule to redirect incoming metadata server requests on the public
 # bridge device is inserted if not present.
 #
+# If public_interface_route is set then the current default route is
+# specialised to a 169.254.169.254/32 only route and a default route via
+# public_interface_route is added on the public interface.
+#
 # Note that no persistent config file is written to the OS : ovs-vsctl modifies
 # a persistent database so the bridge device will persist across reboots, but
 # [on Ubuntu at least] early boot does not bring up ovs-vswitch early enough,
@@ -41,6 +45,7 @@ EXTERNAL_BRIDGE=$(os-config-applier --key neutron.ovs.physical_bridge --type raw
 PHYSICAL_INTERFACE=$(os-config-applier --key neutron.ovs.public_interface --type raw  --key-default '')
 PHYSICAL_INTERFACE_IP=$(os-config-applier --key bootstack.public_interface_ip --type netaddress  --key-default '')
 PHYSICAL_INTERFACE_RAW_DEVICE=$(os-config-applier --key neutron.ovs.public_interface_raw_device --type raw --key-default '')
+PUBLIC_INTERFACE_ROUTE=$(os-config-applier --key neutron.ovs.public_interface_route --type netaddress --key-default '')
 
 if [ -n "$PHYSICAL_INTERFACE_RAW_DEVICE" ]; then
   if ! (ip link show dev $PHYSICAL_INTERFACE) ; then
@@ -111,4 +116,13 @@ if [ -n "$PHYSICAL_INTERFACE" ] ; then
     for IP in $IPS ; do
       ip addr del $IP dev $PHYSICAL_INTERFACE
     done
+    # Handle default route replacement.
+    if [ -n "$PUBLIC_INTERFACE_ROUTE" ]; then
+        DEFAULT_VIA=$(ip route show | awk '/default / { print $3 }')
+        if [ "$DEFAULT_VIA" != "$PUBLIC_INTERFACE_ROUTE" ]; then
+          ip route add 169.254.169.254/32 via $DEFAULT_VIA
+          ip route prepend dev $EXTERNAL_BRIDGE default via $PUBLIC_INTERFACE_ROUTE
+          ip route del default via $DEFAULT_VIA
+        fi
+    fi
 fi
