@@ -21,7 +21,8 @@ while true; do
     source /opt/stack/tripleo-incubator/scripts/refresh-env /opt/stack
     source /root/stackrc
     set +e
-    devtest_overcloud.sh vlan25 138.35.77.4/25 eth2 138.35.77.1 138.35.77.131 \
+    OVERCLOUD_LIBVIRT_TYPE=";NovaComputeLibvirtType=kvm" \
+        devtest_overcloud.sh vlan25 138.35.77.4/25 eth2 138.35.77.1 138.35.77.131 \
         138.35.77.254 138.35.77.128/25 \
         $TRIPLEO_ROOT/tripleo-incubator/tripleo-cloud/tripleo-cd-admins \
         $TRIPLEO_ROOT/tripleo-incubator/tripleo-cloud/tripleo-cd-users
