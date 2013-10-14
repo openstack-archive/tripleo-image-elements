@@ -28,7 +28,7 @@ while true; do
     RESULT=$?
     set -e
     MSG=$(echo "************** overcloud complete status=$RESULT ************")
-    echo $MSG
+    echo "$MSG"
     send-irc tripleo cd-undercloud "$MSG"
     if [ "0" != "$RESULT" ]; then
         exit $RESULT
