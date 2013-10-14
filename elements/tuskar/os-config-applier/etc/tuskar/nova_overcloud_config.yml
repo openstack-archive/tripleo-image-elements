@@ -2,4 +2,4 @@ keystone_url: "http://{{keystone.host}}:5000/v2.0/"
 nova_username: "admin"
 nova_tenantname: "admin"
 # NOTE(rpodolyaka): limitation of tuskar-api, see https://bugs.launchpad.net/tuskar/+bug/1235236
-nova_password: "{{tuskar.overcloud-admin-passsword}}"
+nova_password: "{{tuskar.overcloud-admin-password}}"
