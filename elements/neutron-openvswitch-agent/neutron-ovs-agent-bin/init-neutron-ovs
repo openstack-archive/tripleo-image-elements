@@ -26,8 +26,10 @@
 #   - an ip addresses on public_interface are moved onto physical_bridge.
 #
 # If public_interface_route is set then the current default route is
-# specialised to a 169.254.169.254/32 only route and a default route via
-# public_interface_route is added on the public interface.
+# specialised to a 169.254.169.254/32 only route (unless there is already a
+# 169.254.169.254 route - such as a neutron network with host routes can
+# create) and a default route via public_interface_route is added on the public
+# interface.
 #
 # Note that no persistent config file is written to the OS : ovs-vsctl modifies
 # a persistent database so the bridge device will persist across reboots, but
@@ -117,7 +119,10 @@ if [ -n "$PHYSICAL_INTERFACE" ] ; then
     if [ -n "$PUBLIC_INTERFACE_ROUTE" ]; then
         DEFAULT_VIA=$(ip route show | awk '/default / { print $3 }')
         if [ "$DEFAULT_VIA" != "$PUBLIC_INTERFACE_ROUTE" ]; then
-          ip route add 169.254.169.254/32 via $DEFAULT_VIA
+          if [ -z "$(ip route show 169.254.169.254)" ]; then
+            # No explicit route to 169.254.169.254 - set one.
+            ip route add 169.254.169.254/32 via $DEFAULT_VIA
+          fi
           ip route prepend dev $EXTERNAL_BRIDGE default via $PUBLIC_INTERFACE_ROUTE
           ip route del default via $DEFAULT_VIA
         fi

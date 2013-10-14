@@ -27,6 +27,6 @@ os-collect-config configuration.
 
 Once the public interface is configured, public\_interface\_route (if set)
 will replace the default route's next hop. The hop this replaces will be
-added as the next hop for 169.254.169.254/32.
+added as the next hop for 169.254.169.254/32 (unless one already exists).
 This permits routing default traffic out through a hardware router without
 breaking the ability to contact a bare metal metadata server.
