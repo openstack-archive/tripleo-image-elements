@@ -1,1 +1,1 @@
-jeepyb git /opt/stack/jeepyb https://git.openstack.org/cgit/openstack-infra/jeepyb
+pypi-mirror git /opt/stack/pypi-mirror https://git.openstack.org/cgit/openstack-infra/pypi-mirror

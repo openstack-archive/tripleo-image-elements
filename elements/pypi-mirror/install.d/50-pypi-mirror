@@ -15,17 +15,15 @@
 # under the License.
 set -eux
 
-install-packages libxml2-dev libxslt-dev libmysqlclient-dev libpq-dev \
-libnspr4-dev pkg-config libsqlite3-dev libzmq-dev libffi-dev \
-libldap2-dev libsasl2-dev python-dev python-pip build-essential
+install-packages libyaml-dev pkg-config python-dev python-pip build-essential
 
 # need latest virtualenv
 pip install -U virtualenv
 
 mkdir -p /opt/stack/venvs
-virtualenv /opt/stack/venvs/jeepyb
-/opt/stack/venvs/jeepyb/bin/pip install -U /opt/stack/jeepyb
-ln -sf /opt/stack/venvs/jeepyb/bin/run-mirror /usr/local/bin/run-mirror
+virtualenv /opt/stack/venvs/pypi-mirror
+/opt/stack/venvs/pypi-mirror/bin/pip install -U /opt/stack/pypi-mirror
+ln -sf /opt/stack/venvs/pypi-mirror/bin/run-mirror /usr/local/bin/run-mirror
 
 useradd pypi-mirror --system -d /var/run/pypi-mirror -s /bin/false
 
