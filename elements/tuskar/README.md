@@ -18,3 +18,14 @@ tuskar:
       - the password of the user to deploy the overcloud on behalf of
     tenant_name:
       - the tenant name of the user to deploy the overcloud on behalf of
+
+Tuskar API uses Heat templates provided by tripleo-heat-templates project.
+One can set the following environment variables to customize how templates
+are obtained:
+
+    - *DIB_REPOTYPE_tuskar-templates* type of repo (git, tar)
+      Defaults to: git
+    - *DIB_REPOLOCATION_tuskar-templates* repo location (uri)
+      Defaults to: git://git.openstack.org/openstack/tripleo-heat-templates
+    - *DIB_REPOREF_tuskar-templates* ref to checkout (for git repos: branch/tag/commit id)
+      Defaults to: master

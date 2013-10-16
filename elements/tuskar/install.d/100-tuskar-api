@@ -6,5 +6,6 @@ os-svc-install -n tuskar -u tuskar -r /opt/stack/tuskar
 
 install -d -m 0750 -o tuskar -g tuskar /etc/tuskar
 cp -a /opt/stack/tuskar/etc/tuskar/policy.json /etc/tuskar
+cp -a /opt/stack/tuskar/etc/tuskar/tripleo-heat-templates /etc/tuskar
 
 os-svc-daemon tuskar-api tuskar tuskar-api "--config-dir /etc/tuskar"
