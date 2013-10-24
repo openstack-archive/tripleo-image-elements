@@ -106,7 +106,7 @@ if [ -n "$PHYSICAL_INTERFACE" ] ; then
       fi
     done
     ORIG_IFS=$IFS
-    IFS=
+    IFS=$'\n'
     for ROUTE in $ROUTES ; do
         IFS=$ORIG_IFS
         ip route prepend dev $EXTERNAL_BRIDGE $ROUTE
