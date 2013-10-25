@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eux
+
+if [ -d /etc/systemd/system ]; then
+  systemctl enable httpd.service
+fi

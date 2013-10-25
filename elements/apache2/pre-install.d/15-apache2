@@ -1,7 +1,0 @@
-#!/bin/bash
-set -eux
-
-if [ ! -f /etc/debian_version ]; then
-    echo "Apache2 element currently supports Debian based environments only."
-    exit 1
-fi
