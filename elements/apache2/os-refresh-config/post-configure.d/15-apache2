@@ -1,7 +1,6 @@
 #!/bin/bash
 set -eux
 
-
 if [ -f /etc/debian_version ]; then
     openssl_cmd="openssl"
     cert_create_cmd="make-ssl-cert generate-default-snakeoil --force-overwrite"
@@ -30,6 +29,12 @@ if [ -f /etc/debian_version ]; then
             # error setting up ssl
             echo "Error encountered setting up SSL (exit_error=$exit_error)"
         fi
-        service apache2 reload
     fi
+fi
+
+# Pick up on any config changes other elements may have done
+if [ -f /etc/debian_version ]; then
+    service apache2 reload
+elif [ -f /etc/yum.conf ]; then
+    service httpd reload
 fi
