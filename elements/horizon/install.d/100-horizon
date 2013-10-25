@@ -1,0 +1,10 @@
+#!/bin/bash
+set -eux
+
+install-packages libapache2-mod-wsgi
+os-svc-install -n horizon -u horizon -r /opt/stack/horizon
+
+# Django won't start otherwise:
+touch /etc/horizon/.secret_key_store
+chmod 600 /etc/horizon/.secret_key_store
+chown horizon:horizon /etc/horizon/.secret_key_store

@@ -78,6 +78,9 @@
     "admin_user": "heat",
     "admin_password": "unset"
   },
+  "horizon": {
+    "secret_key": "unset___________"
+  },
   "swift": {
     "store_user": "unset",
     "store_key": "unset"

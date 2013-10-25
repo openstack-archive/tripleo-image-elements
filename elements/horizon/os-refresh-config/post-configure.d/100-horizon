@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+# TODO(shadower) workaround for:
+# https://bugs.launchpad.net/os-apply-config/+bug/1246266
+chmod 600 /etc/horizon/.secret_key_store
+chown horizon:horizon /etc/horizon/.secret_key_store
+
+# Precompile the Horizon assets. Can't do it in install.d because it depends on
+# the local_settings.py config file.
+source /opt/stack/venvs/horizon/bin/activate
+DJANGO_SETTINGS_MODULE=openstack_dashboard.settings django-admin.py compress
