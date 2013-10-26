@@ -4,6 +4,7 @@
   "admin-password": "unset",
   "admin-token": "unset",
   "db-password": "unset",
+  "local-ipv4": "192.0.2.1",
   "keystone": {
     "host": "127.0.0.1",
     "db": "mysql://keystone:unset@localhost/keystone"
@@ -31,6 +32,7 @@
       "db": "mysql://nova:unset@localhost/nova_bm",
       "power_manager": "nova.virt.baremetal.virtual_power_driver.VirtualPowerManager",
       "pxe_deploy_timeout": "2400",
+      "use_file_injection": "False",
       "virtual_power": {
         "user": "stack",
         "key": "/opt/stack/boot-stack/virtual-power-key",
@@ -52,6 +54,7 @@
   },
   "neutron": {
     "host": "127.0.0.1",
+    "native_pxe": true,
     "ovs_db": "mysql://neutron:unset@localhost/ovs_neutron?charset=utf8",
     "ovs": {
       "bridge_mappings": "ctlplane:br-ctlplane",
