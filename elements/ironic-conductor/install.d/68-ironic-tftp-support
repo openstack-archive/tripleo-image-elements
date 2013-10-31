@@ -1,0 +1,38 @@
+#!/bin/bash
+set -eux
+
+# setup tftp directory structure
+if [ -f /usr/lib/syslinux/pxelinux.0 ]; then
+    # Ubuntu
+    pxe_zero="/usr/lib/syslinux/pxelinux.0"
+elif [ -f /usr/share/syslinux/pxelinux.0 ]; then
+    # Fedora/RHEL
+    pxe_zero="/usr/share/syslinux/pxelinux.0"
+else
+    echo "Failed to find pxelinux.0."
+    exit 1
+fi
+
+# create tftp directory
+install -d -m 0744 -o ironic -g ironic /tftpboot/pxelinux.cfg/
+install -o ironic -g ironic -m 744 $pxe_zero /tftpboot/pxelinux.0
+
+# Disable the tftp-hpa upstart job, we're using xinetd
+[ -f /etc/init/tftpd-hpa.conf ] && echo "manual" > /etc/init/tftpd-hpa.override
+
+cat > /etc/xinetd.d/tftp << EOF
+service tftp
+{
+  protocol        = udp
+  port            = 69
+  socket_type     = dgram
+  wait            = yes
+  user            = root
+  server          = /usr/sbin/in.tftpd
+  server_args     = --map-file /tftpboot/map-file /tftpboot
+  disable         = no
+}
+EOF
+
+# Adds support for tftp requests that don't include the directory name.
+echo 'r ^([^/]) /tftpboot/\1' > /tftpboot/map-file

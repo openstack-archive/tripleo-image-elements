@@ -1,0 +1,8 @@
+#!/bin/bash
+set -eux
+
+echo "ironic ALL=(root) NOPASSWD: /opt/stack/venvs/ironic/bin/ironic-rootwrap" > /etc/sudoers.d/ironic
+chmod 0440 /etc/sudoers.d/ironic
+visudo -c
+
+os-svc-daemon ironic-conductor ironic ironic-conductor "--debug --verbose --log-config /etc/ironic/logging-conductor.conf --config-file /etc/ironic/ironic.conf"
