@@ -54,7 +54,6 @@
   },
   "neutron": {
     "host": "127.0.0.1",
-    "native_pxe": true,
     "ovs_db": "mysql://neutron:unset@localhost/ovs_neutron?charset=utf8",
     "ovs": {
       "bridge_mappings": "ctlplane:br-ctlplane",
