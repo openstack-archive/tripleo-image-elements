@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -eu
+set -o pipefail
+
+PARTPOWER=$(os-config-applier --key swift.part-power --key-default 10)
+REPLICAS=$(os-config-applier --key swift.replicas --key-default 1)
+DEVICES=$(os-config-applier --key swift.devices --key-default "" --type raw)
+
+if [ -z "$DEVICES" ] ; then
+    echo "No swift devices to configure"
+    exit 1
+fi
+
+swift-ring-builder /etc/swift/object.builder create $PARTPOWER $REPLICAS 1
+swift-ring-builder /etc/swift/container.builder create $PARTPOWER $REPLICAS 1
+swift-ring-builder /etc/swift/account.builder create $PARTPOWER $REPLICAS 1
+
+for DEVICE in ${DEVICES//,/ } ; do
+    swift-ring-builder /etc/swift/object.builder add ${DEVICE/\%PORT\%/6000} 100
+    swift-ring-builder /etc/swift/container.builder add ${DEVICE/\%PORT\%/6001} 100
+    swift-ring-builder /etc/swift/account.builder add ${DEVICE/\%PORT\%/6002} 100
+done
+
+swift-ring-builder /etc/swift/object.builder rebalance 999
+swift-ring-builder /etc/swift/container.builder rebalance 999
+swift-ring-builder /etc/swift/account.builder rebalance 999
+
