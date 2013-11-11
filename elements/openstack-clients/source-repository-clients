@@ -4,3 +4,4 @@ python-ironicclient git /opt/stack/python-ironicclient https://github.com/openst
 python-keystoneclient git /opt/stack/python-keystoneclient https://github.com/openstack/python-keystoneclient.git
 python-neutronclient git /opt/stack/python-neutronclient https://github.com/openstack/python-neutronclient.git
 python-novaclient git /opt/stack/python-novaclient https://github.com/openstack/python-novaclient.git
+python-swiftclient git /opt/stack/python-swiftclient https://github.com/openstack/python-swiftclient.git

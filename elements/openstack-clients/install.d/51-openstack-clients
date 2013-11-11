@@ -9,7 +9,8 @@ heat \
 ironic \
 keystone \
 neutron \
-nova"
+nova \
+swift"
 
 for client in $client_install_list; do
     repo=python-${client}client
