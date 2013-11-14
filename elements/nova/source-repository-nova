@@ -1,1 +1,1 @@
-nova git /opt/stack/nova https://github.com/openstack/nova.git
+nova git /opt/stack/nova https://git.openstack.org/openstack/nova.git
