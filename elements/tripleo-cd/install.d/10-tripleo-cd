@@ -1,8 +1,7 @@
 #!/bin/bash
 set -eux
 
-# Upstart
-if [ -d /etc/init ] ; then
+if [ "$DIB_INIT_SYSTEM" == "upstart" ] ; then
     cat > /etc/init/tripleo-cd.conf <<eof
 start on runlevel [2345]
 stop on runlevel [016]
@@ -10,8 +9,7 @@ respawn
 exec tripleo-cd.sh
 eof
 
-# Systemd
-elif [ -d /lib/systemd/system ] ; then
+elif [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
     cat > /lib/systemd/system/os-collect-config.service <<eof
 [Unit]
 Description=Deploy an overcloud forever.

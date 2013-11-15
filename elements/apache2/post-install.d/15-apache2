@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eux
 
-if [ -d /etc/systemd/system ]; then
+if [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
   systemctl enable httpd.service
 fi

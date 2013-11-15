@@ -151,9 +151,10 @@ EOF
 }
 
 # TODO: SysV init fallback support
-if [ -d /etc/init ]; then
+DIB_INIT_SYSTEM=$(dib-init-system)
+if [ "$DIB_INIT_SYSTEM" == "upstart" ]; then
   install_upstart $SERVICENAME $RUNAS $RUNCMD $*
-elif [ -d /etc/systemd/system ]; then
+elif [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
   if [ "$POSTSTART" != "$DEFAULT_POSTSTART" ] ; then
       echo "WARNING: post start is ignored with systemd." >&2
   fi

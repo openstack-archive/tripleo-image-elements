@@ -27,8 +27,8 @@ eof
 }
 
 
-if [ -d /etc/init ]; then
+if [ "$DIB_INIT_SYSTEM" == "upstart" ]; then
     install_qpidd_upstart
-elif [ -d /lib/systemd/system ]; then
+elif [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
     install_qpidd_systemd
 fi
