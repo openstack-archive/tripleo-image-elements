@@ -16,7 +16,7 @@ Basic Usage
 -----------
 
 See this doc for basic usage instructions:
-  https://github.com/tripleo/incubator/blob/master/devtest.md
+  http://docs.openstack.org/developer/tripleo-incubator/devtest.html
 
 
 First Boot
