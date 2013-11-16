@@ -19,7 +19,7 @@ post-start exec /usr/sbin/rabbitmqctl wait >/dev/null 2>&1
 eof
 fi
 
-if [ $DISTRO = "Fedora" ]; then
+if [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
     # Delay the rc-local.service start-up until rabbitmq-server.service is started up
     sed -i 's/\[Unit\]/\[Unit\]\nBefore=rc-local.service/g' /lib/systemd/system/rabbitmq-server.service
 

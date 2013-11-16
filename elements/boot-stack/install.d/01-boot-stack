@@ -39,9 +39,7 @@ eof
 }
 
 function enable_services {
-  DISTRO=`lsb_release -si` || true
-
-  if [ $DISTRO = "Fedora" ]; then
+  if [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
       systemctl enable mysqld.service
   fi
 }
