@@ -15,6 +15,8 @@ mkdir -p /var/lib/neutron && chown -R neutron:neutron /var/lib/neutron
 ln -sf /opt/stack/venvs/neutron/bin/neutron-rootwrap /usr/bin/neutron-rootwrap
 ln -sf /opt/stack/venvs/neutron/etc/neutron/rootwrap.d /etc/neutron/rootwrap.d
 
+cp /opt/stack/neutron/etc/api-paste.ini /etc/neutron/api-paste.ini
+
 echo "neutron ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/neutron
 echo "Defaults:neutron !requiretty" >> /etc/sudoers.d/neutron
 chmod 0440 /etc/sudoers.d/neutron
