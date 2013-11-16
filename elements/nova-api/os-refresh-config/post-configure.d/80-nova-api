@@ -9,6 +9,8 @@ chown -R nova:nova /var/run/openstack
 mkdir -p /var/run/nova
 chown -R nova:nova /var/run/nova
 
+/opt/stack/venvs/nova/bin/nova-manage db sync
+
 service nova-conductor restart
 service nova-api restart
 service nova-cert restart
