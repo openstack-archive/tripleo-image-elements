@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -eux
+
+install-packages gearman-job-server
+
+if [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
+  systemctl enable gearmand.service
+fi
