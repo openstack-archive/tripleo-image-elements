@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eux
+
+# This is only needed if using keystone auth, so isn't in requirements.txt
+/opt/stack/venvs/swift/bin/pip install python-keystoneclient
+
+os-svc-daemon swift-proxy swift swift-proxy-server "/etc/swift/proxy-server.conf"

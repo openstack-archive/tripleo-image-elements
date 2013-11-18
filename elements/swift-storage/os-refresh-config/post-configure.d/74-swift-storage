@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eu
+
+service swift-account restart
+service swift-container restart
+service swift-object restart

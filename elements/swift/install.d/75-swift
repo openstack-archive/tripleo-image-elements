@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -eux
+
+install-packages libffi-dev
+
+os-svc-install -n swift -u swift -r /opt/stack/swift
+
+install -m 0755 -o root -g root /opt/stack/venvs/swift/bin/swift-ring-builder /usr/local/bin
