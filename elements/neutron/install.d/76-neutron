@@ -22,6 +22,6 @@ echo "Defaults:neutron !requiretty" >> /etc/sudoers.d/neutron
 chmod 0440 /etc/sudoers.d/neutron
 visudo -c
 
-if [ $DISTRO = "Fedora" ]; then
+if [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
     systemctl enable openvswitch.service
 fi
