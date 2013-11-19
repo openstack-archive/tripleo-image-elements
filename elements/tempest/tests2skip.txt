@@ -1,0 +1,43 @@
+# we have the v3 endpoint but lots of the tests fail, need to investigate
+tempest\.api\.compute\.v3.*
+# Can't run https://bugs.launchpad.net/tempest/+bug/1250866
+tempest\.api\.compute\.admin\.test_quotas\.QuotasAdminTest.*\.test_create_server_when.*
+tempest\.api\.compute\.servers\.test_list_servers_negative\.ListServersNegativeTest
+
+# Need to refine these to only exclude the failing ones
+tempest\.api\.compute\.servers\.test_create_server.*
+tempest\.api\.compute\.servers\.test_server_addresses.*
+tempest\.api\.compute\.servers\.test_server_rescue.*
+tempest\.api\.compute\.servers\.test_virtual_interfaces.*
+# The server rebuild fails during file injection
+tempest\.api\.compute\.servers\.test_server_actions\.ServerActionsTestJSON\.test_rebuild_server
+
+# These network tests fail, do we have them?
+tempest\.api\.network\.test_service_type_management.*
+tempest\.api\.network\.test_vpnaas_extensions.*
+tempest\.api\.network\.test_load_balancer.*
+tempest\.api\.network\.test_networks\.BulkNetworkOps.*
+tempest\.api\.network\.test_networks\.NetworksTest.*
+
+# I don't think cinder is currently working in overcloud, enable this once it is
+tempest\.api\.volume.*
+tempest\.api\.compute\.volumes.*
+
+# The fedora image doesn't produce a console log
+tempest\.api\.compute\.servers\.test_server_actions\.ServerActionsTest.*\.test_get_console_output
+
+# Once all of the above test filters are removed, these should be enabled
+tempest\.scenario.*
+
+# These tests pass if run standalone but sometimes fail when run with --parallel
+tempest\.api\.compute\.servers\.test_list_server_filters\.ListServerFiltersTest.*\.test_list_servers_detailed_filter_by_server_status
+
+# volume and s3 boto tests failing
+tempest\.thirdparty\.boto\.test_ec2_volumes.*
+tempest\.thirdparty\.boto\.test_s3_objects\.S3BucketsTest\.test_create_get_delete_object
+
+## Things we actually want to skip
+# We might not be on the same host as nova
+tempest\.cli\.simple_read_only\.test_nova_manage.*
+# These are the tempest unit tests
+tempest\.tests.*

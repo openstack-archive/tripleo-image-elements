@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+#
+# Copyright 2013 Red Hat
+# All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+set -eux
+set -o pipefail
+
+cd /opt/stack/tempest
+
+# Tempest needs 2 users, we add them here so that we know their passwords
+keystone tenant-get demo_t1 || keystone tenant-create --name demo_t1
+keystone user-get demo_t1 || keystone user-create --name demo_t1 --tenant demo_t1 --pass secret
+keystone tenant-get demo_t2 || keystone tenant-create --name demo_t2
+keystone user-get demo_t2 || keystone user-create --name demo_t2 --tenant demo_t2 --pass secret
+
+# the orchestration tests need this
+keystone user-role-add --user admin --role admin --tenant demo_t1 || true
+
+# Users need either this or the admin role to use swift
+keystone user-role-add --user demo_t1 --role swiftoperator --tenant demo_t1 || true
+keystone user-role-add --user demo_t2 --role swiftoperator --tenant demo_t2 || true
+
+# We require that a image is present with a name of user
+USER_IMAGE_ID=$(nova image-show user | grep id | awk '$2=="id" {print $4}')
+
+# And then copy it for tempest test that require a second image
+if ! nova image-show user-copy 2> /dev/null ; then
+    glance image-download user | glance image-create --name user-copy --disk-format qcow2 --container-format bare --is-public 1
+fi
+
+USER_IMAGE_ID2=$(nova image-show user-copy | grep id | awk '$2=="id" {print $4}')
+
+EXTNET=$(neutron net-show ext-net | awk '/ id / {print $4}')
+
+# tempest requires two distinct flavors to use, but using m1.small would
+# increase the amount of memory needed on the compute node. Instead we create
+# an alternative m1.tiny, this will allow tests with only 4G of memory on
+# compute nodes.
+nova flavor-create m1.tiny_alt 99 512 2 1 || true
+
+LOCK_PATH=`mktemp -d`
+trap "rm -rf $LOCK_PATH" EXIT
+
+# TODO : see what other defaults can be used
+# cp the tempest config file and edit the settings
+cp etc/tempest.conf.sample etc/tempest.conf
+cat - <<EOF | augtool --noautoload
+set /augeas/load/PythonPaste/lens "PythonPaste.lns"
+set /augeas/load/PythonPaste/incl "/opt/stack/tempest/etc/tempest.conf"
+load
+
+set /files/opt/stack/tempest/etc/tempest.conf/DEFAULT/lock_path $LOCK_PATH
+set /files/opt/stack/tempest/etc/tempest.conf/DEFAULT/debug true
+set /files/opt/stack/tempest/etc/tempest.conf/DEFAULT/use_stderr false
+set /files/opt/stack/tempest/etc/tempest.conf/DEFAULT/log_file tempest.log
+
+set /files/opt/stack/tempest/etc/tempest.conf/identity/uri $OS_AUTH_URL
+set /files/opt/stack/tempest/etc/tempest.conf/identity/region regionOne
+
+set /files/opt/stack/tempest/etc/tempest.conf/identity/admin_password $OS_PASSWORD
+set /files/opt/stack/tempest/etc/tempest.conf/identity/username demo_t1
+set /files/opt/stack/tempest/etc/tempest.conf/identity/tenant_name demo_t1
+set /files/opt/stack/tempest/etc/tempest.conf/identity/password secret
+set /files/opt/stack/tempest/etc/tempest.conf/identity/alt_username demo_t2
+set /files/opt/stack/tempest/etc/tempest.conf/identity/alt_password secret
+set /files/opt/stack/tempest/etc/tempest.conf/identity/alt_tenant_name demo_t2
+
+set /files/opt/stack/tempest/etc/tempest.conf/compute/image_ref $USER_IMAGE_ID
+set /files/opt/stack/tempest/etc/tempest.conf/compute/image_ref_alt $USER_IMAGE_ID2
+set /files/opt/stack/tempest/etc/tempest.conf/compute/flavor_ref_alt 99
+
+set /files/opt/stack/tempest/etc/tempest.conf/compute/allow_tenant_isolation false
+set /files/opt/stack/tempest/etc/tempest.conf/compute/fixed_network_name default-net
+set /files/opt/stack/tempest/etc/tempest.conf/compute/network_for_ssh $EXTNET
+set /files/opt/stack/tempest/etc/tempest.conf/compute-admin/password $OS_PASSWORD
+set /files/opt/stack/tempest/etc/tempest.conf/compute-feature-enabled/resize false
+set /files/opt/stack/tempest/etc/tempest.conf/network/public_network_id $EXTNET
+set /files/opt/stack/tempest/etc/tempest.conf/service_available/cinder false
+set /files/opt/stack/tempest/etc/tempest.conf/service_available/heat true
+set /files/opt/stack/tempest/etc/tempest.conf/service_available/neutron true
+set /files/opt/stack/tempest/etc/tempest.conf/service_available/ceilometer false
+set /files/opt/stack/tempest/etc/tempest.conf/service_available/horizon false
+set /files/opt/stack/tempest/etc/tempest.conf/stress/max_instances 4
+set /files/opt/stack/tempest/etc/tempest.conf/stress/default_thread_number_per_action 2
+set /files/opt/stack/tempest/etc/tempest.conf/network/tenant_network_cidr 172.16.0.0/16
+
+save
+EOF
+
+# activate throws errors if nounset is set
+set +u
+. /opt/stack/venvs/tempest/bin/activate
+set -u
+testr run --parallel $(python tests2skip.py tests2skip.txt)
