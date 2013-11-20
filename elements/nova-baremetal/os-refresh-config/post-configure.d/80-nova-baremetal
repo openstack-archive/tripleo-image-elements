@@ -1,4 +1,6 @@
 #!/bin/bash
 set -eux
 
+/opt/stack/venvs/nova/bin/nova-baremetal-manage db sync
+
 service nova-baremetal-deploy-helper restart
