@@ -26,9 +26,6 @@ if [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
     # Respawn rabbitmq-server in case the process exits with an nonzero exit code
     sed -i 's/\[Service\]/\[Service\]\nRestart=on-failure/g' /lib/systemd/system/rabbitmq-server.service
 
-    # Make systemd take notice of it
-    systemctl daemon-reload
-
     # Enable the service
     systemctl enable rabbitmq-server.service
 fi
