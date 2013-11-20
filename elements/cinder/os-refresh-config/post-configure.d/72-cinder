@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eu
 
+/opt/stack/venvs/cinder/bin/cinder-manage db sync
+
 service cinder-api restart
 service cinder-volume restart
 service cinder-scheduler restart
