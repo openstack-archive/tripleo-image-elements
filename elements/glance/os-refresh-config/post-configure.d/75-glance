@@ -1,5 +1,7 @@
 #!/bin/bash
 set -eu
 
+/opt/stack/venvs/glance/bin/glance-manage db_sync
+
 service glance-api restart
 service glance-reg restart
