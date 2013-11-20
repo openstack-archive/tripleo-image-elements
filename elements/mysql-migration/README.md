@@ -1,5 +1,5 @@
 Migrate data from another MySQL server into the local one using
-os-config-applier and os-refresh-config.
+os-apply-config and os-refresh-config.
 
 Please note the migration process is *destructive* to any data currently
 in the MySQL database running on the target host. Safeguards are in

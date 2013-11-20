@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-db_pass=$(os-config-applier --key db-password)
+db_pass=$(os-apply-config --key db-password)
 
 service mysql restart || service mysqld restart
 

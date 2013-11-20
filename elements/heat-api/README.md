@@ -3,7 +3,7 @@ Run the stateless HTTP Heat API services.
 Configuration
 -------------
 
-We use os-config-applier for writing heat's configuration.
+We use os-apply-config for writing heat's configuration.
 
 Example Heat Metadata:
 
