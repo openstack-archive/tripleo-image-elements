@@ -3,9 +3,9 @@
 set -eu
 set -o pipefail
 
-PARTPOWER=$(os-config-applier --key swift.part-power --key-default 10)
-REPLICAS=$(os-config-applier --key swift.replicas --key-default 1)
-DEVICES=$(os-config-applier --key swift.devices --key-default "" --type raw)
+PARTPOWER=$(os-apply-config --key swift.part-power --key-default 10)
+REPLICAS=$(os-apply-config --key swift.replicas --key-default 1)
+DEVICES=$(os-apply-config --key swift.devices --key-default "" --type raw)
 
 if [ -z "$DEVICES" ] ; then
     echo "No swift devices to configure"

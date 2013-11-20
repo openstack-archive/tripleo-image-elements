@@ -40,11 +40,11 @@ set -eux
 
 PATH=/usr/local/bin:$PATH
 
-EXTERNAL_BRIDGE=$(os-config-applier --key neutron.ovs.physical_bridge --type raw --key-default '')
-PHYSICAL_INTERFACE=$(os-config-applier --key neutron.ovs.public_interface --type raw  --key-default '')
-PHYSICAL_INTERFACE_IP=$(os-config-applier --key bootstack.public_interface_ip --type netaddress  --key-default '')
-PHYSICAL_INTERFACE_RAW_DEVICE=$(os-config-applier --key neutron.ovs.public_interface_raw_device --type raw --key-default '')
-PUBLIC_INTERFACE_ROUTE=$(os-config-applier --key neutron.ovs.public_interface_route --type netaddress --key-default '')
+EXTERNAL_BRIDGE=$(os-apply-config --key neutron.ovs.physical_bridge --type raw --key-default '')
+PHYSICAL_INTERFACE=$(os-apply-config --key neutron.ovs.public_interface --type raw  --key-default '')
+PHYSICAL_INTERFACE_IP=$(os-apply-config --key bootstack.public_interface_ip --type netaddress  --key-default '')
+PHYSICAL_INTERFACE_RAW_DEVICE=$(os-apply-config --key neutron.ovs.public_interface_raw_device --type raw --key-default '')
+PUBLIC_INTERFACE_ROUTE=$(os-apply-config --key neutron.ovs.public_interface_route --type netaddress --key-default '')
 
 if [ -n "$PHYSICAL_INTERFACE_RAW_DEVICE" ]; then
   if ! (ip link show dev $PHYSICAL_INTERFACE) ; then

@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-KEYSTONE_DB=$(os-config-applier --key keystone.db --type dsn)
+KEYSTONE_DB=$(os-apply-config --key keystone.db --type dsn)
 
 KEYSTONE_DB_TYPE=${KEYSTONE_DB%%://*}
 if [ "$KEYSTONE_DB_TYPE" != "mysql" ] ; then
