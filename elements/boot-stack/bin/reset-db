@@ -1,6 +1,11 @@
 #!/bin/bash
 set -eux
 
+RUN_DB_SYNC=${1:-""}
+function run_db_sync() {
+    [ -n "$RUN_DB_SYNC" ]
+}
+
 db_pass=$(os-apply-config --key db-password)
 
 service mysql restart || service mysqld restart
@@ -9,34 +14,34 @@ PATH=/usr/local/bin:$PATH
 venvs=/opt/stack/venvs
 
 os-db-create keystone keystone $db_pass
-$venvs/keystone/bin/keystone-manage db_sync
+run_db_sync && $venvs/keystone/bin/keystone-manage db_sync
 
 if [ -x "$venvs/cinder/bin/cinder-manage" ] ; then
     os-db-create cinder cinder $db_pass
-    $venvs/cinder/bin/cinder-manage db sync
+    run_db_sync && $venvs/cinder/bin/cinder-manage db sync
 fi
 
 if [ -x "$venvs/ironic/bin/ironic-dbsync" ] ; then
     os-db-create ironic ironic $db_pass
-    $venvs/ironic/bin/ironic-dbsync --config-file /etc/ironic/ironic.conf
+    run_db_sync && $venvs/ironic/bin/ironic-dbsync --config-file /etc/ironic/ironic.conf
 fi
 
 if [ -x "$venvs/tuskar/bin/tuskar-dbsync" ] ; then
     os-db-create tuskar tuskar $db_pass
-    $venvs/tuskar/bin/tuskar-dbsync --config-file /etc/tuskar/tuskar.conf
+    run_db_sync && $venvs/tuskar/bin/tuskar-dbsync --config-file /etc/tuskar/tuskar.conf
 fi
 
 os-db-create nova nova $db_pass
-$venvs/nova/bin/nova-manage db sync
+run_db_sync && $venvs/nova/bin/nova-manage db sync
 
 os-db-create nova_bm nova $db_pass
-$venvs/nova/bin/nova-baremetal-manage db sync
+run_db_sync && $venvs/nova/bin/nova-baremetal-manage db sync
 
 os-db-create glance glance $db_pass
-$venvs/glance/bin/glance-manage db_sync
+run_db_sync && $venvs/glance/bin/glance-manage db_sync
 
 os-db-create heat heat $db_pass
-$venvs/heat/bin/heat-manage db_sync
+run_db_sync && $venvs/heat/bin/heat-manage db_sync
 
 os-db-create ovs_neutron neutron $db_pass
 
