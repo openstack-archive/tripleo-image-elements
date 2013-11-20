@@ -1,4 +1,6 @@
 #!/bin/bash
 set -eu
 
+/opt/stack/venvs/ironic/bin/ironic-dbsync --config-file /etc/ironic/ironic.conf
+
 service ironic-api restart
