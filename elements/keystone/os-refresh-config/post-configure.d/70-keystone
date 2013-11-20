@@ -1,3 +1,6 @@
 #!/bin/bash
 set -eu
+
+/opt/stack/venvs/keystone/bin/keystone-manage db_sync
+
 service keystone restart
