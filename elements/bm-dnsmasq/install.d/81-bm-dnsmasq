@@ -56,9 +56,6 @@ WantedBy=multi-user.target
 Alias=nova-bm-dnsmasq.service
 eof
 
-  # Make systemd take notice of it
-  systemctl daemon-reload
-
   # Enable the service
   systemctl enable nova-bm-dnsmasq.service
 

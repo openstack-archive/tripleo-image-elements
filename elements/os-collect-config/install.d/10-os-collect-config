@@ -34,9 +34,6 @@ Restart=on-failure
 WantedBy=multi-user.target
 eof
 
-  # Make systemd take notice of it
-  systemctl daemon-reload
-
   # Enable the service
   systemctl enable os-collect-config.service
 

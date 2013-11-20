@@ -143,9 +143,6 @@ ExecStartPre=/bin/mkdir -p /var/run/$user
 ExecStart=/bin/chown -R $user:$user /var/run/$user
 EOF
 
-  # Make systemd take notice of it
-  systemctl daemon-reload
-
   # Enable the service
   systemctl enable $name.service
 }
