@@ -5,6 +5,8 @@ install-packages python-mysqldb
 
 os-svc-install -n glance -u glance -r /opt/stack/glance
 
+cp /opt/stack/glance/etc/policy.json /etc/glance/policy.json
+
 mkdir -p /var/lib/glance/images && chown -R glance:glance /var/lib/glance/images
 os-svc-daemon glance-api glance glance-api "--debug --log-config /etc/glance/logging.conf"
 os-svc-daemon glance-reg glance glance-registry "--debug --log-config /etc/glance/logging.conf"
