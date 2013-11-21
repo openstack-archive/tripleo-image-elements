@@ -46,5 +46,6 @@ chmod a+rx /var/cache/pypi-mirror
 
 cat <<EOF > /etc/cron.d/pypi-mirror-update
 SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 15 * * * * pypi-mirror run-mirror -b remotes/origin/master --verbose -c /etc/pypi-mirror/mirror.yaml
 EOF
