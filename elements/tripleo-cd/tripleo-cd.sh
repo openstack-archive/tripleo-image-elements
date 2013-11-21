@@ -29,6 +29,12 @@ while true; do
         $TRIPLEO_ROOT/tripleo-incubator/tripleo-cloud/tripleo-cd-admins \
         $TRIPLEO_ROOT/tripleo-incubator/tripleo-cloud/tripleo-cd-users
     RESULT=$?
+    # List relationship between hardware nodes and instance ids.
+    for i in $(nova baremetal-node-list | awk '/^\| / {if ($2 != "ID") {print $2}}') ; do
+        instance_id=$(nova baremetal-node-show $i | awk '/instance_uuid/ {print $4}')
+        echo "$i,$instance_id"
+    done
+    nova list
     set -e
     MSG=$(echo "************** overcloud complete status=$RESULT ************")
     echo "$MSG"
