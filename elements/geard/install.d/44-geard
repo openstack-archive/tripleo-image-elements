@@ -1,0 +1,12 @@
+#!/bin/bash
+set -eux
+
+install-packages python-virtualenv
+
+mkdir -p /opt/stack/venvs
+virtualenv /opt/stack/venvs/gear
+
+/opt/stack/venvs/gear/bin/pip install gear
+
+useradd gear
+os-svc-daemon -n geard -u gear -c geard -- -d
