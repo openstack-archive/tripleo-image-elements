@@ -16,6 +16,7 @@ ln -sf /opt/stack/venvs/neutron/bin/neutron-rootwrap /usr/bin/neutron-rootwrap
 ln -sf /opt/stack/venvs/neutron/etc/neutron/rootwrap.d /etc/neutron/rootwrap.d
 
 cp /opt/stack/neutron/etc/api-paste.ini /etc/neutron/api-paste.ini
+cp /opt/stack/neutron/etc/policy.json /etc/neutron/policy.json
 
 echo "neutron ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/neutron
 echo "Defaults:neutron !requiretty" >> /etc/sudoers.d/neutron
