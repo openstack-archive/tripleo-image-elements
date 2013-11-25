@@ -1,4 +1,4 @@
-A self-contained one-node baremetal openstack.
+A self-contained one-node openstack.
 
 Description
 -----------
