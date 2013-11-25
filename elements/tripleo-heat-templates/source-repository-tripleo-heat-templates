@@ -1,0 +1,1 @@
+tripleo-heat-templates git /opt/stack/tripleo-heat-templates https://git.openstack.org/cgit/openstack/tripleo-heat-templates
