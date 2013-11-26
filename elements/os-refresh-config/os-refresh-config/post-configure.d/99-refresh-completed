@@ -1,8 +1,8 @@
 #!/bin/bash
 set -eux
 
-HANDLE=$(os-apply-config --key completion-handle --type raw)
-ID=$(os-apply-config --key instance-id --type raw)
+HANDLE=$(os-apply-config --key completion-handle --type raw --key-default "")
+ID=$(os-apply-config --key instance-id --type raw --key-default "")
 
 [ -n "$HANDLE" ] || exit 0
 [ -n "$ID" ] || exit 0
