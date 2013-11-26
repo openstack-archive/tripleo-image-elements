@@ -7,6 +7,7 @@ mkdir -p /var/run/nova/keys && chown -R nova:nova /var/run/nova/keys
 mkdir -p /var/lib/nova && chown -R nova:nova /var/lib/nova
 install -d -m 0750 -o nova -g nova /var/lib/nova/instances
 
+cp /opt/stack/nova/etc/nova/policy.json /etc/nova/policy.json
 cp /opt/stack/nova/etc/nova/api-paste.ini /etc/nova/api-paste.ini
 cp -a /opt/stack/nova/etc/nova/rootwrap* /etc/nova
 
