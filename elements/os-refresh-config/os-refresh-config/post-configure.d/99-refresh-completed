@@ -1,0 +1,10 @@
+#!/bin/bash
+set -eux
+
+HANDLE=$(os-apply-config --key completion-handle --type raw)
+ID=$(os-apply-config --key instance-id --type raw)
+
+[ -n "$HANDLE" ] || exit 0
+[ -n "$ID" ] || exit 0
+
+curl -X PUT -H 'Content-Type:' --data-binary "{\"Status\" : \"SUCCESS\",\"Reason\" : \"Configuration Complete\",\"UniqueId\" : \"$ID\",\"Data\" : \"Finished os-refresh-config.\"}"  "$(os-apply-config --key completion-handle --type raw)"

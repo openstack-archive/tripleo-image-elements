@@ -30,3 +30,11 @@ of json in this instance's Metadata:
     }
   }
 }
+
+If you would like to signal a wait condition at the end of
+post-configure.d, a generic name of 'completion-handle' can be used
+like so:
+
+        {
+          "completion-handle": {"Ref": "CompletionHandleName"}
+        }

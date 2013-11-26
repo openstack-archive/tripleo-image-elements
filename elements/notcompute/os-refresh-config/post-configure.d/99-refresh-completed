@@ -1,4 +1,0 @@
-#!/bin/bash
-set -eux
-
-curl -X PUT -H 'Content-Type:' --data-binary '{"Status" : "SUCCESS","Reason" : "Configuration Complete","UniqueId" : "","Data" : "Finished os-refresh-config."}'  "$(os-apply-config --key completion-handle --type raw)"
