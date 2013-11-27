@@ -30,3 +30,87 @@ parameters. All of the others are required for the cfn data source
 to function.
 
 `ec2` and `heat_local` do not require any configuration to work.
+
+Typically the cfn collector is configured via EC2 metadata in a Heat
+template:
+
+    Resources:
+      myserver:
+        Type: OS::Nova::Server
+        Properties:
+          ...
+        Metadata:
+          os-collect-config:
+            cfn:
+              access_key_id:
+                Ref: Key
+              path: MyServerConfig.Metadata
+              secret_access_key:
+                Fn::GetAtt:
+                - Key
+                - SecretAccessKey
+              stack_name:
+                Ref: AWS::StackName
+
+The EC2 collector takes this metadata, passes it to os-apply-config
+which in turn writes it out to /etc/os-collect-config.conf.
+
+Note that the configuration references some other resources - a key
+and access key, which are declared using:
+
+    Resources:
+      Key:
+        Properties:
+          UserName:
+            Ref: User
+        Type: AWS::IAM::AccessKey
+      User:
+        Properties:
+          Policies:
+          - Ref: AccessPolicy
+        Type: AWS::IAM::User
+
+Note also that the IAM::User references an access policy which should
+look like:
+
+    Resources:
+      AccessPolicy:
+        Properties:
+          AllowedResources:
+          - MyServerConfig
+        Type: OS::Heat::AccessPolicy
+
+and, finally, the crucial bit is the MyServerConfig policy which is
+referenced in the cfn collector configuration and the access policy:
+
+    Resources:
+      MyServerConfig:
+        Metadata:
+          os-collect-config:
+            cfn:
+              access_key_id:
+                Ref: Key
+              path: MyServerConfig.Metadata
+              secret_access_key:
+                Fn::GetAtt:
+                - Key
+                - SecretAccessKey
+              stack_name:
+                Ref: AWS::StackName
+          nova:
+            ...
+          keystone:
+            ...
+        Properties:
+          ImageId: '0'
+          InstanceType: foo
+        Type: AWS::AutoScaling::LaunchConfiguration
+
+Essentially, this AutoScaling::LaunchConfiguration resource is a bunch
+of boilerplate gunk to provide a metadata container from where the
+os-collect-config cfn collector can pull configuration which will be
+applied by os-apply-config. There's a os-collect-config section to
+ensure the configuration from the EC2 metadata doesn't get
+overwritten. And the rest is dummy values for the
+LaunchConfiguration's required properties.
+
