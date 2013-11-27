@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -eux
+
+install-packages python-pip
+
+pushd /opt/stack/diskimage-builder
+pip install .
+popd
