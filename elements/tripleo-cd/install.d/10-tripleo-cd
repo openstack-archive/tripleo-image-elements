@@ -10,14 +10,14 @@ exec tripleo-cd.sh
 eof
 
 elif [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
-    cat > /lib/systemd/system/os-collect-config.service <<eof
+    cat > /lib/systemd/system/tripleo-cd.service <<eof
 [Unit]
 Description=Deploy an overcloud forever.
 After=cloud-final.service
 Before=crond.service
 
 [Service]
-ExecStart=/bin/tripleo-cd.sh
+ExecStart=/usr/local/bin/tripleo-cd.sh
 Restart=on-failure
 
 [Install]
