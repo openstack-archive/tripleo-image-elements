@@ -19,7 +19,9 @@ set -eux
 
 export OVERCLOUD_DIB_EXTRA_ARGS=pypi
 export NODE_ARCH=amd64
+THROTTLELOCK=$(mktemp /tmp/tripleo-cd-throttle-XXXXXX.lock)
 while true; do
+    flock -x $THROTTLELOCK sleep 600 &
     source /opt/stack/tripleo-incubator/scripts/refresh-env /opt/stack
     source /root/stackrc
     set +e
@@ -39,7 +41,9 @@ while true; do
     MSG=$(echo "************** overcloud complete status=$RESULT ************")
     echo "$MSG"
     send-irc tripleo cd-undercloud "$MSG"
+    flock -x $THROTTLELOCK echo
     if [ "0" != "$RESULT" ]; then
+        rm -f $THROTTLELOCK
         exit $RESULT
     fi
 done
