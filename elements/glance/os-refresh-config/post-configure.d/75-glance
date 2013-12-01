@@ -3,5 +3,8 @@ set -eu
 
 /opt/stack/venvs/glance/bin/glance-manage db_sync
 
+os-svc-enable -n glance-api
+os-svc-enable -n glance-reg
+
 service glance-api restart
 service glance-reg restart
