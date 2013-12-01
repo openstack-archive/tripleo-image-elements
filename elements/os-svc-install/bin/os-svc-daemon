@@ -157,9 +157,3 @@ elif [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
   fi
   install_systemd $SERVICENAME $RUNAS $RUNCMD $*
 fi
-
-# Ideally we wouldn't enable services until *after* the first
-# time it gets configured. Until we update elements to support
-# this new logic we call os-svc-enable manually here for backwards
-# compatability.
-os-svc-enable -n $SERVICENAME
