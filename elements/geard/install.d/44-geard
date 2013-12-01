@@ -10,3 +10,4 @@ virtualenv /opt/stack/venvs/gear
 
 useradd gear
 os-svc-daemon -n geard -u gear -c geard -- -d
+os-svc-enable -n geard
