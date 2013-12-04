@@ -1,0 +1,3 @@
+#!/bin/bash
+# ntpdate is used when the network is brought up to correct any large time skew
+install-packages ntp ntpdate
