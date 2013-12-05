@@ -1,0 +1,75 @@
+#!/bin/bash
+#
+# Copyright 2013 Hewlett-Packard Development Company, L.P.
+# All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+set -eu
+
+job_name=${1:-}
+action=${2:-}
+
+function usage {
+    echo "usage: $(basename $0) job_name [enable|disable|enabled|clear]"
+}
+
+if [ -z "$job_name" ] || [ -z "$action" ] ; then
+    usage
+    exit 1
+fi
+
+OS_UPSTART_STATE_DIR=${OS_UPSTART_STATE_DIR:-/var/lib/os-svc-enable-upstart}
+
+if [ "$action" != "enabled" ] ; then
+    if ! [ -d "$OS_UPSTART_STATE_DIR" ] ; then
+        if ! mkdir -p $OS_UPSTART_STATE_DIR ; then
+            echo "ERROR: $OS_UPSTART_STATE_DIR does not exist or is not a directory."
+            exit 1
+        fi
+    fi
+
+    if ! [ -w "$OS_UPSTART_STATE_DIR" ] ; then
+        if ! chmod +w $OS_UPSTART_STATE_DIR ; then
+            echo "ERROR: $OS_UPSTART_STATE_DIR is not writable."
+            exit 1
+        fi
+    fi
+fi
+
+if ! [ -e "/etc/init/${job_name}.conf" ] ; then
+    echo "WARNING: $job_name does not exist!"
+fi
+
+enable_file="${OS_UPSTART_STATE_DIR}/${job_name}.enable"
+
+case $action in
+    clear)
+        rm -f $enable_file
+        ;;
+    enable)
+        # Upstart jobs can have sub directories
+        enable_file_home=$(dirname $enable_file)
+        mkdir -p $enable_file_home
+        touch $enable_file
+        ;;
+    disable)
+        rm -f $enable_file
+        ;;
+    enabled)
+        if [ -e "$enable_file" ] ; then
+            exit 0
+        fi
+        exit 1
+        ;;
+esac

@@ -6,6 +6,13 @@ Given a git repo url, pip-install the repo and all of its python dependencies in
 ## os-svc-daemon
 Given a system service command line and run-as user, generate and install system service start script. See output of `os-svc-daemon -h` for online help.
 
+## os-svc-enable-upstart
+Given an upstart job and an action, acts on the enabled or disabled state
+of jobs produced by os-svc-daemon. This requires the os-svc-enable upstart
+job which is installed by this element as well. There is also an action,
+'enabled', which allows checking whether or not a service is enabled;
+the command exits 0 if it is enabled, or 1 if it is not. A disabled
+service will not be started automatically nor can it be manually started.
 
 ## example usage
 ```bash
