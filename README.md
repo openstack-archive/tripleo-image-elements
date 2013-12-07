@@ -41,7 +41,7 @@ In a running OpenStack there are several categories of config.
  - local node - e.g. nova.conf or ovs-vsctl add-br br-ex : settings that
    apply individually to machines
  - inter-node - e.g. credentials on rabbitmq for a given nova compute node
- - application state - e.g. 'quantum net-create ...' : settings that
+ - application state - e.g. 'neutron net-create ...' : settings that
    apply to the whole cluster not on a per-user / per-tenant basis
 
 We have five places we can do configuration in TripleO:
