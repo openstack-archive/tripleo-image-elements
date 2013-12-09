@@ -32,6 +32,7 @@ while true; do
         $TRIPLEO_ROOT/tripleo-incubator/tripleo-cloud/tripleo-cd-users
     RESULT=$?
     # List relationship between hardware nodes and instance ids.
+    set +x
     for i in $(nova baremetal-node-list | awk '/^\| / {if ($2 != "ID") {print $2}}') ; do
         instance_id=$(nova baremetal-node-show $i | awk '/instance_uuid/ {print $4}')
         echo "$i,$instance_id"
@@ -40,6 +41,7 @@ while true; do
     set -e
     MSG=$(echo "************** overcloud complete status=$RESULT ************")
     echo "$MSG"
+    set -x
     send-irc tripleo cd-undercloud "$MSG"
     flock -x $THROTTLELOCK echo
     if [ "0" != "$RESULT" ]; then
