@@ -6,6 +6,8 @@ install-packages python-mysqldb libssl-dev
 os-svc-install -n glance -u glance -r /opt/stack/glance
 
 cp /opt/stack/glance/etc/policy.json /etc/glance/policy.json
+cp /opt/stack/glance/etc/glance-api-paste.ini /etc/glance/glance-api-paste.ini
+cp /opt/stack/glance/etc/glance-registry-paste.ini /etc/glance/glance-registry-paste.ini
 
 mkdir -p /var/lib/glance/images && chown -R glance:glance /var/lib/glance/images
 os-svc-daemon glance-api glance glance-api "--debug --log-config /etc/glance/logging.conf"
