@@ -88,7 +88,7 @@ start on runlevel [2345]
 stop on runlevel [016]
 $env_entries
 
-OS_SVC_ENABLE_CONTROL=1
+env OS_SVC_ENABLE_CONTROL=1
 
 pre-start script
   mkdir -p /var/run/$user
