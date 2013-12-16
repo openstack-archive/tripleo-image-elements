@@ -12,6 +12,7 @@ fi
 usermod -a -G libvirtd nova
 
 os-svc-daemon nova-novncproxy  nova nova-novncproxy          "--config-dir /etc/nova"
+os-svc-enable -n nova-novncproxy
 
 # On Fedora configure polkit to allow nova to use libvirt
 if [ -e /etc/polkit-1/rules.d ] ; then
