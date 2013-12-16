@@ -9,4 +9,6 @@ echo "qpid-python" | tee -a /opt/stack/heat/requirements.txt
 
 os-svc-install -n heat -u heat -r /opt/stack/heat
 
+cp /opt/stack/heat/etc/heat/policy.json /etc/heat/policy.json
+
 install -d -m 0770 -o root -g heat /var/log/heat
