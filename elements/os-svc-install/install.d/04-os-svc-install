@@ -12,6 +12,7 @@ pip install -U virtualenv
 install -m 0755 -o root -g root $(dirname $0)/../bin/os-svc-install /usr/local/bin/os-svc-install
 install -m 0755 -o root -g root $(dirname $0)/../bin/os-svc-daemon  /usr/local/bin/os-svc-daemon
 install -m 0755 -o root -g root $(dirname $0)/../bin/os-db-create   /usr/local/bin/os-db-create
+install -m 0755 -o root -g root $(dirname $0)/../bin/os-svc-enable  /usr/local/bin/os-svc-enable
 if [ "$(dib-init-system)" = "upstart" ] ; then
     install -m 0755 -o root -g root $(dirname $0)/../bin/os-svc-enable-upstart /usr/local/bin/os-svc-enable-upstart
     install -m 0644 -o root -g root $(dirname $0)/../upstart/os-svc-enable.conf /etc/init/os-svc-enable.conf

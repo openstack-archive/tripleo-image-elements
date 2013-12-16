@@ -88,6 +88,8 @@ start on runlevel [2345]
 stop on runlevel [016]
 $env_entries
 
+OS_SVC_ENABLE_CONTROL=1
+
 pre-start script
   mkdir -p /var/run/$user
   chown -R $user:$user /var/run/$user
@@ -143,8 +145,6 @@ ExecStartPre=/bin/mkdir -p /var/run/$user
 ExecStart=/bin/chown -R $user:$user /var/run/$user
 EOF
 
-  # Enable the service
-  systemctl enable $name.service
 }
 
 # TODO: SysV init fallback support
@@ -157,3 +157,9 @@ elif [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
   fi
   install_systemd $SERVICENAME $RUNAS $RUNCMD $*
 fi
+
+# Ideally we wouldn't enable services until *after* the first
+# time it gets configured. Until we update elements to support
+# this new logic we call os-svc-enable manually here for backwards
+# compatability.
+os-svc-enable -n $SERVICENAME

@@ -1,0 +1,61 @@
+#!/bin/bash
+#
+# Copyright 2013 Red Hat, Inc.
+# All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+set -eu
+
+usage() {
+  echo "Usage: os-svc-enable -n SERVICENAME"
+  echo ""
+  echo "  -h             Show help and exit"
+  echo "  -n SERVICENAME Name of job/service file."
+  echo ""
+}
+
+SERVICENAME=${SERVICENAME:-""}
+
+nshift=0
+while getopts "hn:" opt; do
+    case "$opt" in
+        n) SERVICENAME=$OPTARG;;
+        h) usage; exit 0;;
+        \?) usage; exit 1;;
+        :) usage; exit 1;;
+    esac
+done
+
+shift $(($OPTIND-1))
+if [ -z "$SERVICENAME" ] ; then
+    usage
+fi
+
+function enable_upstart_service {
+  local name=$1
+  os-svc-enable-upstart $name enable
+}
+
+function enable_systemd_service {
+  local name=$1
+  systemctl enable $name.service
+}
+
+# TODO: SysV init fallback support
+DIB_INIT_SYSTEM=$(dib-init-system)
+if [ "$DIB_INIT_SYSTEM" == "upstart" ]; then
+  enable_upstart_service $SERVICENAME
+elif [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
+  enable_systemd_service $SERVICENAME
+fi
