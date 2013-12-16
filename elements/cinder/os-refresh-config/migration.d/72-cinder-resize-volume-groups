@@ -12,5 +12,12 @@ if ! vgs $vol_group; then
       truncate -s $size $vol_file
   fi
   dev=`sudo losetup -f --show $vol_file`
+  # This file is fairly complex and platform dependent. However, we need to
+  # accept only this device or volumes created within cinder could be
+  # added to this volume group erroneously.
+  # Note that this will likely break any other element trying to use LVM.
+  sed --in-place=.bak -e \
+      "s|^\(\s*\)filter = \[.*|\1filter = [ \"a\|^${dev}\|\", \"r/.*/\" ]|" \
+      /etc/lvm/lvm.conf
   if ! vgs $vol_group; then vgcreate $vol_group $dev; fi
 fi
