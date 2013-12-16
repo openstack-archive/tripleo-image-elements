@@ -1,3 +1,6 @@
 #!/bin/bash
 set -eux
+
+os-svc-enable -n neutron-openvswitch-agent
+
 service neutron-openvswitch-agent restart

@@ -1,6 +1,10 @@
 #!/bin/bash
 set -eu
 
+os-svc-enable -n swift-account
+os-svc-enable -n swift-container
+os-svc-enable -n swift-object
+
 service swift-account restart
 service swift-container restart
 service swift-object restart

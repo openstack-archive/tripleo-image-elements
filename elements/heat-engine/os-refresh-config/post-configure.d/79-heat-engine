@@ -1,2 +1,5 @@
 #!/bin/bash
+
+os-svc-enable -n heat-engine
+
 service heat-engine restart

@@ -3,4 +3,6 @@ set -eu
 
 /opt/stack/venvs/ironic/bin/ironic-dbsync --config-file /etc/ironic/ironic.conf
 
+os-svc-enable -n ironic-api
+
 service ironic-api restart

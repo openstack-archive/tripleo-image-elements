@@ -11,6 +11,12 @@ chown -R nova:nova /var/run/nova
 
 /opt/stack/venvs/nova/bin/nova-manage db sync
 
+os-svc-enable -n nova-conductor
+os-svc-enable -n nova-api
+os-svc-enable -n nova-cert
+os-svc-enable -n nova-scheduler
+os-svc-enable -n nova-consoleauth
+
 service nova-conductor restart
 service nova-api restart
 service nova-cert restart

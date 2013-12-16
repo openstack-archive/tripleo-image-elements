@@ -1,4 +1,6 @@
 #!/bin/bash
 set -eu
 
+os-svc-enable -n swift-proxy
+
 service swift-proxy restart
