@@ -3,6 +3,10 @@ Installs glance service from git.
 Configuration
 -------------
 glance:
+    verbose: False
+      - Show more verbose log output (sets INFO log level output)
+    debug: False
+      - Show debugging output in logs (sets DEBUG log level output)
     backend: swift
       - The backend store to use
     service-password: password
