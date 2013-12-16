@@ -11,7 +11,12 @@ if ! vgs $vol_group; then
   if ! [ -f $vol_file ] ; then
       truncate -s $size $vol_file
   fi
-  dev=`sudo losetup -f --show $vol_file`
+  dev=$(losetup -j $vol_file)
+  # RACE: will be unstable if other things are running. o-r-c has a
+  # lock though so only manual runners of this script should make it unstable
+  if [ -n "$dev" ] ; then
+      dev=$(sudo losetup -f --show $vol_file)
+  fi
   # This file is fairly complex and platform dependent. However, we need to
   # accept only this device or volumes created within cinder could be
   # added to this volume group erroneously.
