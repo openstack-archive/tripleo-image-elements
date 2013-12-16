@@ -31,6 +31,8 @@ while true; do
         $TRIPLEO_ROOT/tripleo-incubator/tripleo-cloud/tripleo-cd-admins \
         $TRIPLEO_ROOT/tripleo-incubator/tripleo-cloud/tripleo-cd-users
     RESULT=$?
+    # If possible list heat events
+    heat event-list overcloud || :
     # List relationship between hardware nodes and instance ids.
     set +x
     for i in $(nova baremetal-node-list | awk '/^\| / {if ($2 != "ID") {print $2}}') ; do
