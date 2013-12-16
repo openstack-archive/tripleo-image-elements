@@ -2,9 +2,18 @@
 
 sed -i -e 's/ console=ttyS0//' /etc/default/grub
 
-GRUB_CONFIG_FILE=/boot/grub/grub.cfg
-if [ ! -e $GRUB_CONFIG_FILE ] ; then
-    # Fedora grub config file location
-    GRUB_CONFIG_FILE=/boot/grub/grub.conf
+GRUB_CONFIG_FILE=""
+
+if [ -e /boot/grub/grub.cfg ] ; then
+    # Ubuntu and Debian are using /boot/grub/grub.cfg for the grub2
+    # configuration
+    GRUB_CONFIG_FILE=/boot/grub/grub.cfg
+elif [ -e /boot/grub2/grub.cfg ]; then
+    # On openSUSE and recent Fedora releases the grub2 config resides
+    # in /boot/grub2/grub.cfg
+    GRUB_CONFIG_FILE=/boot/grub2/grub.cfg
 fi
-sed -i -e 's/ console=ttyS0//' $GRUB_CONFIG_FILE
+
+if [ "$GRUB_CONFIG_FILE" ]; then
+    sed -i -e 's/ console=ttyS0//' $GRUB_CONFIG_FILE
+fi
