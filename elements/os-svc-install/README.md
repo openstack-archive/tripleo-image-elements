@@ -2,12 +2,15 @@ Command line utilities to simplify installation of OpenStack services.
 
 ## os-svc-install
 Given a git repo url, pip-install the repo and all of its python dependencies into a virtualenv under /opt/stack/venvs.
+NOTE: By default services do not autostart until os-svc-enable is called.
 
 ## os-svc-daemon
 Given a system service command line and run-as user, generate and install system service start script. See output of `os-svc-daemon -h` for online help.
 
 ## os-svc-enable
 Enable the given service name so it starts on boot.
+This is typically called in an os-refresh-config/post-configure.d script to
+enable a service once it has been fully configured.
 
 ## os-svc-enable-upstart (upstart distros only)
 Given an upstart job and an action, acts on the enabled or disabled state
@@ -26,6 +29,5 @@ os-svc-install -u nova -n nova-all -c 'nova-all --someoption' -r https://github.
 os-svc-daemon -e 'foo=bar bar=baz' -n nova-api -u nova -c /opt/stack/venvs/nova/bin/nova-api -- --config-dir /etc/nova
 
 # enable nova-api so that it starts on boot
-# NOTE: for now this is called in os-svc-daemon for legacy element support
 os-svc-enable -n nova-api
 ```
