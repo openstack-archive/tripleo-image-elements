@@ -5,11 +5,14 @@ Upon booting the image, the service should be running on port 5000.
 Configuration
 -------------
 
-Keystone requires the keystone.db key to be set via Heat Metadata.
+NOTE: Keystone requires the keystone.db key to be set via Heat Metadata.
 
-    keystone:
-      db: "mysql://keyuser:keypass@localhost/keystone"
-
+keystone:
+  db: "mysql://keyuser:keypass@localhost/keystone"
+  verbose: False
+    - Print more verbose output
+  debug: False
+    - Print debugging output (includes plaintext request logging, potentially including passwords)
 
 NOTE: Token cleanup will cause poor performance until the upstream
 bug (https://bugs.launchpad.net/keystone/+bug/1188378) is fixed. This

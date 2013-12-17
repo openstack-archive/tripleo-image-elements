@@ -4,7 +4,7 @@ set -eux
 DISTRO=`lsb_release -si` || true
 
 os-svc-install -n keystone -u keystone -r /opt/stack/keystone
-os-svc-daemon keystone keystone keystone-all "--config-dir /etc/keystone --log-config /etc/keystone/logging.conf"
+os-svc-daemon keystone keystone keystone-all "--config-dir /etc/keystone"
 install -m 0755 -o keystone -g keystone -d /etc/keystone/ssl
 
 cp /opt/stack/keystone/etc/policy.json /etc/keystone/policy.json
