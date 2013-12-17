@@ -23,11 +23,14 @@ if [ ! -e "/var/lib/use-ephemeral/stateful-paths" ]; then
 fi
 
 while read -r; do
-    state_path="/mnt/state/$REPLY"
+    state_path="/mnt/state$REPLY"
     state_dir=$(dirname "$state_path")
-    reference_path="/var/lib/use-ephemeral/$REPLY"
+    reference_path="/var/lib/use-ephemeral$REPLY"
     mkdir -p "$state_dir"
     if [ -e "$reference_path" -a ! -L "$state_path" -a ! -e "$state_path" ]; then
-        rsync -av "$reference_path" "$state_path"
+        if [ -d "$reference_path" ] ; then
+            reference_path="${reference_path}/"
+        fi
+        rsync -av "${reference_path}" "$state_path"
     fi
 done < "/var/lib/use-ephemeral/stateful-paths"
