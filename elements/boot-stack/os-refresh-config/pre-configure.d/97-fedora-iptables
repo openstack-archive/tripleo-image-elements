@@ -9,7 +9,7 @@ fi
 
 DISTRO=`lsb_release -si` || true
 
-if [[ "Fedora" = $DISTRO ]]; then
+if [[ "Fedora" = "$DISTRO" ]]; then
 
     # Check if the iptables service is active
     if systemctl is-active iptables.service ; then

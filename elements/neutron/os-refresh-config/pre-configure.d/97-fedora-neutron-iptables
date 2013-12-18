@@ -3,7 +3,7 @@ set -eu
 
 # Exit if not Fedora
 DISTRO=`lsb_release -si` || true
-[ "Fedora" != $DISTRO ] && exit 0
+[ "Fedora" != "$DISTRO" ] && exit 0
 
 # Check if the iptables service is active
 if systemctl is-active iptables.service ; then
