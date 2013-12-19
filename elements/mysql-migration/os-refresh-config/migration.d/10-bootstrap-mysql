@@ -33,7 +33,7 @@ if [ -e $DONE_FILE ] ; then
 fi
 
 # MySQL may be stopped pre-configuration, so try to start it
-if [ -d /etc/init ] && [ $DISTRO = "Ubuntu" ] ; then
+if [ -d /etc/init ] && [ "$DISTRO" = "Ubuntu" ] ; then
     # Upstart: During initial boot, mysql will start in parallel with os-refresh-config
     # wait-for-state is a job that allows blocking until a particular state is reached.
     start wait-for-state WAIT_FOR=mysql WAITER=$(basename $0) WAIT_FOREVER=Y TARGET_GOAL=start WAIT_STATE=running
