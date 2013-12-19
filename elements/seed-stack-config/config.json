@@ -80,5 +80,8 @@
   },
   "horizon": {
     "secret_key": "unset___________"
+  },
+  "os-collect-config": {
+    "collectors": "heat_local"
   }
 }
