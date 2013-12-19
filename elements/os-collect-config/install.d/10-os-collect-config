@@ -27,7 +27,7 @@ After=cloud-final.service
 Before=crond.service
 
 [Service]
-ExecStart=/bin/os-collect-config
+ExecStart=/usr/bin/os-collect-config
 Restart=on-failure
 
 [Install]
