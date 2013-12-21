@@ -17,7 +17,7 @@
 
 set -eux
 
-export OVERCLOUD_DIB_EXTRA_ARGS=pypi
+export OVERCLOUD_DIB_EXTRA_ARGS="pypi -u"
 export NODE_ARCH=amd64
 export DIB_COMMON_ELEMENTS="pypi-openstack pip-cache stackuser"
 THROTTLELOCK=$(mktemp /tmp/tripleo-cd-throttle-XXXXXX.lock)
