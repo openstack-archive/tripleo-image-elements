@@ -11,16 +11,7 @@ for f in `ls $(dirname $0)/../bin`; do
 done
 
 # db
-install-packages mysql-server python-mysqldb
-
-my_cnf=
-if [ -f /etc/mysql/my.cnf ]; then
-  my_cnf=/etc/mysql/my.cnf # Ubuntu
-elif [ -f /etc/my.cnf ]; then
-  my_cnf=/etc/my.cnf # Fedora/RHEL
-fi
-
-sed -i 's/127.0.0.1/0.0.0.0/g' $my_cnf
+install-packages python-mysqldb
 
 function deps {
   if hash apt-get &> /dev/null; then
