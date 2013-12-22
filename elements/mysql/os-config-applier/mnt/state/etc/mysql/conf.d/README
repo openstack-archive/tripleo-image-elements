@@ -1,0 +1,9 @@
+Other elements can drop templates in a matching path to this to influence
+the mysql configuration if need-be.
+
+This file also serves as a place holder. my.cnf has an include line
+which references it. The code in MySQL that implements the include bits
+can't deal with an empty directory. We still want the conf.d though,
+so that other elements can drop mysql configs in (such as a "mysql
+go faster in dev" element which would disable InnoDB's sync-on-commit
+durability protections).

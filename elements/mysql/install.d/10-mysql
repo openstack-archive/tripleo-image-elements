@@ -5,11 +5,23 @@
 set -e
 set -o xtrace
 
-install -D -m 0644 -o root -g root  $(dirname $0)/my.cnf /etc/mysql/my.cnf
 if [ "$(dib-init-system)" = "upstart" ] ; then
     install $(dirname $0)/mysql-set-server-id.upstart /etc/init/mysql-set-server-id.conf
 else
     echo WARNING: server-id will not be set on systems that boot this image!
 fi
-
 install-packages sysstat mytop percona-toolkit mysql-server-5.5 mysql-client-5.5 python-mysqldb
+# Templates write the configs into /mnt/state. However, MySQL makes it very
+# difficult not to use this as the directory for configs.
+rm -rf /etc/mysql
+ln -s /mnt/state/etc/mysql /etc/mysql
+if [ -e /etc/apparmor.d/usr.sbin.mysqld ] ; then
+    sed -i -e 's,/var/lib/mysql/,/mnt/state/var/lib/mysql/,g' /etc/apparmor.d/usr.sbin.mysqld
+    sed -i -e 's,/var/log/mysql/,/mnt/state/var/log/mysql/,g' /etc/apparmor.d/usr.sbin.mysqld
+    sed -i -e 's,/etc/mysql/,/mnt/state/etc/mysql/,g' /etc/apparmor.d/usr.sbin.mysqld
+fi
+register-state-path /var/lib/mysql
+# We need to setup the directory with appropriate permissions and then
+# the first time we boot a particular state partition we rsync this in.
+[ -d /var/log/mysql ] || install -d -o root -g mysql -m 0775 /var/log/mysql
+register-state-path /var/log/mysql
