@@ -20,6 +20,8 @@ if [ -e /etc/apparmor.d/usr.sbin.mysqld ] ; then
     sed -i -e 's,/var/log/mysql/,/mnt/state/var/log/mysql/,g' /etc/apparmor.d/usr.sbin.mysqld
     sed -i -e 's,/etc/mysql/,/mnt/state/etc/mysql/,g' /etc/apparmor.d/usr.sbin.mysqld
 fi
+# Fedora/RHEL install /etc/my.cnf but we do not want any unmanaged configs
+rm -f /etc/my.cnf
 register-state-path /var/lib/mysql
 # We need to setup the directory with appropriate permissions and then
 # the first time we boot a particular state partition we rsync this in.
