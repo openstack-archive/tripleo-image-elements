@@ -3,7 +3,7 @@
 
 set -eux
 
-ephemeraldisk=$(os-apply-config --key block-device-mapping.ephemeral0 --type raw --default '')
+ephemeraldisk=$(os-apply-config --key block-device-mapping.ephemeral0 --type raw --key-default '')
 [ -n "$ephemeraldisk" ] || exit 0
 
 if grep -q "^$ephemeraldisk " /proc/mounts ; then
