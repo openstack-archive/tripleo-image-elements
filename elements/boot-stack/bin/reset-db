@@ -8,6 +8,19 @@ function run_db_sync() {
 
 db_pass=$(os-apply-config --key db-password)
 
+STATEDIR=/mnt/state/var/lib/mysql
+DONE=${STATEDIR}/db.initialized
+if [ -e ${DONE} ] ; then
+  echo "DB files already initialized."
+else
+  mv ${STATEDIR}/ibdata1 ${STATEDIR}/ibdata1.bak
+  mv ${STATEDIR}/ib_logfile0 ${STATEDIR}/ib_logfile0.bak
+  mv ${STATEDIR}/ib_logfile1 ${STATEDIR}/ib_logfile1.bak
+  # Sometimes packages make the files ownership wrong
+  chown -R mysql.mysql ${STATEDIR}
+  touch ${DONE}
+fi
+
 service mysql restart || service mysqld restart
 
 PATH=/usr/local/bin:$PATH
