@@ -29,12 +29,5 @@ net.ipv4.ip_forward=1
 eof
 }
 
-function enable_services {
-  if [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
-      systemctl enable mysqld.service
-  fi
-}
-
 deps
 ip_forwarding
-enable_services

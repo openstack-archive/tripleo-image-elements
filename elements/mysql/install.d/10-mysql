@@ -27,3 +27,7 @@ register-state-path /var/lib/mysql
 # the first time we boot a particular state partition we rsync this in.
 [ -d /var/log/mysql ] || install -d -o root -g mysql -m 0775 /var/log/mysql
 register-state-path /var/log/mysql
+
+if [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
+    systemctl enable mysqld.service
+fi
