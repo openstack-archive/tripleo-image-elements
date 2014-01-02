@@ -46,6 +46,11 @@ if [ -x "$venvs/tuskar/bin/tuskar-dbsync" ] ; then
     run_db_sync && $venvs/tuskar/bin/tuskar-dbsync --config-file /etc/tuskar/tuskar.conf
 fi
 
+if [ -x "$venvs/ceilometer/bin/ceilometer-dbsync" ] ; then
+    os-db-create ceilometer ceilometer $db_pass
+    run_db_sync && $venvs/ceilometer/bin/ceilometer-dbsync --config-file /etc/ceilometer/ceilometer.conf
+fi
+
 os-db-create nova nova $db_pass
 run_db_sync && $venvs/nova/bin/nova-manage db sync
 

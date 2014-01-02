@@ -4,6 +4,7 @@ set -eux
 install-packages git build-essential python-dev libssl-dev python-pip
 
 client_install_list="\
+ceilometer \
 cinder \
 glance \
 heat \

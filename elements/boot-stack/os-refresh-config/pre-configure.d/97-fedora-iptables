@@ -12,6 +12,7 @@ add-rule INPUT -p tcp --dport 8003 -j ACCEPT  # heat-api-cloudwatch
 add-rule INPUT -p tcp --dport 8004 -j ACCEPT  # heat-api
 add-rule INPUT -p tcp --dport 9696  -j ACCEPT # neutron
 add-rule INPUT -p tcp --dport 6385 -j ACCEPT  # ironic
+add-rule INPUT -p tcp --dport 8777 -j ACCEPT  # ceilometer
 
 # Horizon
 add-rule INPUT -p tcp --dport 80 -j ACCEPT

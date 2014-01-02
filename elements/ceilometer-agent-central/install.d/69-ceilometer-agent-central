@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eux
+
+os-svc-daemon ceilometer-agent-central ceilometer ceilometer-agent-central --config-dir /etc/ceilometer

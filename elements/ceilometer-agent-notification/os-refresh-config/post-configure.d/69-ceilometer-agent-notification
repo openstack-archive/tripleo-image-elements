@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eux
+
+os-svc-enable -n ceilometer-agent-notification
+
+service ceilometer-agent-notification restart

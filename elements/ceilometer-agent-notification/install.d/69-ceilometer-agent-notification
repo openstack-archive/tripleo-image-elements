@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eux
+
+os-svc-daemon ceilometer-agent-notification ceilometer ceilometer-agent-notification --config-dir /etc/ceilometer

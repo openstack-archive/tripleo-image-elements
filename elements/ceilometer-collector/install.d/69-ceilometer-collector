@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eux
+
+os-svc-daemon ceilometer-collector ceilometer ceilometer-collector --config-dir /etc/ceilometer

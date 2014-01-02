@@ -1,0 +1,9 @@
+#!/bin/bash
+set -eux
+
+os-svc-install -n ceilometer -u ceilometer -r /opt/stack/ceilometer
+
+
+install -m 640 -o ceilometer -g ceilometer /opt/stack/ceilometer/etc/ceilometer/pipeline.yaml /etc/ceilometer
+install -m 640 -o ceilometer -g ceilometer /opt/stack/ceilometer/etc/ceilometer/policy.json /etc/ceilometer
+install -m 640 -o ceilometer -g ceilometer /opt/stack/ceilometer/etc/ceilometer/sources.json /etc/ceilometer

@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eux
+
+os-svc-daemon ceilometer-api ceilometer ceilometer-api --config-dir /etc/ceilometer
