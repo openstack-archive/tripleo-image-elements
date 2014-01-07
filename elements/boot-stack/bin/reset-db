@@ -13,9 +13,11 @@ DONE=${STATEDIR}/db.initialized
 if [ -e ${DONE} ] ; then
   echo "DB files already initialized."
 else
-  mv ${STATEDIR}/ibdata1 ${STATEDIR}/ibdata1.bak
-  mv ${STATEDIR}/ib_logfile0 ${STATEDIR}/ib_logfile0.bak
-  mv ${STATEDIR}/ib_logfile1 ${STATEDIR}/ib_logfile1.bak
+  for FILE in ibdata1 ib_logfile0 ib_logfile1 ; do
+    if [ -e $STATEDIR/$FILE ] ; then
+      mv $STATEDIR/$FILE $STATEDIR/$FILE.bak
+    fi
+  done
   # Sometimes packages make the files ownership wrong
   chown -R mysql.mysql ${STATEDIR}
   touch ${DONE}
