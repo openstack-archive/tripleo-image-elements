@@ -1,0 +1,8 @@
+#!/bin/bash
+set -eux
+
+install-packages openvswitch-switch
+
+if [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
+  systemctl enable openvswitch.service
+fi
