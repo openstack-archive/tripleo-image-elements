@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eux
+
+os-svc-daemon cinder-volume cinder cinder-volume "--config-dir /etc/cinder"

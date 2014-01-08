@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eu
+
+os-svc-enable -n cinder-volume
+service cinder-volume restart
