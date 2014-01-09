@@ -1,0 +1,6 @@
+#!/bin/bash
+
+[ -d /mnt/state/var/lib/rabbitmq-server ] || install -d -D -m 0770 -o rabbitmq -g rabbitmq /mnt/state/var/lib/rabbitmq-server
+[ -d /mnt/state/var/log/rabbitmq-server ] || install -d -D -m 0770 -o rabbitmq -g rabbitmq /mnt/state/var/log/rabbitmq-server
+
+service rabbitmq-server restart
