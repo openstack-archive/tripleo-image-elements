@@ -10,6 +10,7 @@ cat > /etc/os-collect-config.conf <<eof
 [DEFAULT]
 command=os-refresh-config
 eof
+chmod 600 /etc/os-collect-config.conf
 
 if [ "$DIB_INIT_SYSTEM" == "upstart" ] ; then
     cat > /etc/init/os-collect-config.conf <<eof
