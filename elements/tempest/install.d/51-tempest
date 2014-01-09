@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -ex
+
+install-packages augeas-tools
+
+os-svc-install -n tempest -u tempest -r /opt/stack/tempest
+
+source /opt/stack/venvs/tempest/bin/activate
+cd /opt/stack/tempest
+pip install -r test-requirements.txt
+testr init
+
+install -m 0664 -o root -g root $(dirname $0)/../tests2skip.txt /opt/stack/tempest/tests2skip.txt
+install -m 0775 -o root -g root $(dirname $0)/../tests2skip.py /opt/stack/tempest/tests2skip.py
