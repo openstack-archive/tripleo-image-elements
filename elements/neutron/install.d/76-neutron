@@ -10,8 +10,6 @@ echo "qpid-python" | tee -a /opt/stack/neutron/requirements.txt
 
 os-svc-install -n neutron -u neutron -r /opt/stack/neutron
 
-mkdir -p /var/lib/neutron && chown -R neutron:neutron /var/lib/neutron
-
 ln -sf /opt/stack/venvs/neutron/bin/neutron-rootwrap /usr/bin/neutron-rootwrap
 ln -sf /opt/stack/venvs/neutron/etc/neutron/rootwrap.d /etc/neutron/rootwrap.d
 
