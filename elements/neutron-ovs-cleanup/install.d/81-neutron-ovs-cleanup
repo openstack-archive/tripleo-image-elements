@@ -1,0 +1,9 @@
+#!/bin/bash
+set -x
+
+SCRIPTDIR=$(dirname $0)
+
+DIB_INIT_SYSTEM=$(dib-init-system)
+if [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
+    install -D -g root -o root -m 0755 ${SCRIPTDIR}/neutron-ovs-cleanup.service /usr/lib/systemd/system/neutron-ovs-cleanup.service
+fi

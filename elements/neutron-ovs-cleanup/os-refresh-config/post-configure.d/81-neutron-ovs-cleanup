@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eux
+
+os-svc-enable -n neutron-ovs-cleanup
