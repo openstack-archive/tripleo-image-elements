@@ -29,7 +29,11 @@ register-state-path /var/lib/mysql
 register-state-path /var/log/mysql
 
 if [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
-    systemctl enable mysqld.service
+    # The service is called mariadb on Fedora 20. While there is a symlink from
+    # mysqld.service -> mariadb.service to maintain backwards compatibility,
+    # there's a bug with systemd and symlinked service files:
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1014311
+    systemctl enable mysqld.service || systemctl enable mariadb.service
 fi
 
 DISTRO=`lsb_release -si` || true
