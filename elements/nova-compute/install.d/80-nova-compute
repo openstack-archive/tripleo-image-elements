@@ -8,8 +8,6 @@ install-packages ebtables qemu-utils syslinux
 # https://bugs.launchpad.net/tripleo/+bug/1226310
 os-svc-daemon -e "LIBVIRT_DEFAULT_URI=qemu:///system" nova-compute  nova nova-compute          "--config-dir /etc/nova"
 
-chown -R nova:nova /var/lib/misc/
-
 # Use the rootwrap config from the source repo.
 install -o root -g root -m 0755 -d /etc/nova/rootwrap.d
 for f in $(ls /opt/stack/nova/etc/nova/rootwrap.d/); do
