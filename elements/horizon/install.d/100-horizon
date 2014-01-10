@@ -2,6 +2,12 @@
 set -eux
 
 install-packages libapache2-mod-wsgi
+
+if [ -d /etc/apache2 ]; then
+    ln -s /etc/httpd/conf.d/horizon.conf /etc/apache2/sites-available/horizon.conf
+    ln -s /etc/httpd/sites-available/horizon.conf /etc/apache2/sites-enabled/horizon.conf
+fi
+
 os-svc-install -n horizon -u horizon -r /opt/stack/horizon
 
 # Django won't start otherwise:
