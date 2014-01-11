@@ -1,0 +1,15 @@
+#!/bin/bash
+set -eux
+
+# This key is to be retrieved to allow ironic to ssh
+# into the host machine when using the SSH power driver
+KEYPATH=/mnt/state/opt/stack/boot-stack/
+KEYNAME=virtual-power-key
+KEYFULLPATH=$KEYPATH$KEYNAME
+[ ! -e "$KEYFULLPATH" ] || exit 0
+install -d -m 0755 -o root -g root $KEYPATH
+ssh-keygen -t rsa -f $KEYFULLPATH \
+    -N '' -C 'boot-stack key for use with Ironic SSHPowerDriver'
+chown ironic:ironic ${KEYFULLPATH}*
+chmod 400 ${KEYFULLPATH}*
+chmod a+r ${KEYFULLPATH}.pub
