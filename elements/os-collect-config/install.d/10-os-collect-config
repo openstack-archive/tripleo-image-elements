@@ -1,9 +1,13 @@
 #!/bin/bash
 set -eux
 
-install-packages python-pip build-essential libz-dev libxslt-dev libxml2-dev python-dev
+install-packages python-virtualenv build-essential libz-dev libxslt-dev libxml2-dev python-dev
 
-pip install /opt/stack/os-collect-config
+virtualenv --setuptools /opt/stack/venvs/os-collect-config
+
+/opt/stack/venvs/os-collect-config/bin/pip install -U os-collect-config
+
+ln -s /opt/stack/venvs/os-collect-config/bin/os-collect-config /usr/local/bin/os-collect-config
 
 # Minimal static config for bootstrapping
 cat > /etc/os-collect-config.conf <<eof
@@ -28,7 +32,7 @@ After=cloud-final.service
 Before=crond.service
 
 [Service]
-ExecStart=/usr/bin/os-collect-config
+ExecStart=/usr/local/bin/os-collect-config
 Restart=on-failure
 
 [Install]
