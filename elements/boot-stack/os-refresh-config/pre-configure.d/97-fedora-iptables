@@ -19,15 +19,16 @@ if [[ "Fedora" = "$DISTRO" ]]; then
         fi
 
         # Openstack services
-        iptables -I INPUT -p tcp --dport 8774 -j ACCEPT
-        iptables -I INPUT -p tcp --dport 8775 -j ACCEPT
-        iptables -I INPUT -p tcp --dport 9292 -j ACCEPT
-        iptables -I INPUT -p tcp --dport 5000 -j ACCEPT
-        iptables -I INPUT -p tcp --dport 35357 -j ACCEPT
-        iptables -I INPUT -p tcp --dport 8000 -j ACCEPT
-        iptables -I INPUT -p tcp --dport 8003 -j ACCEPT
-        iptables -I INPUT -p tcp --dport 8004 -j ACCEPT
-        iptables -I INPUT -p tcp --dport 9696  -j ACCEPT
+        iptables -I INPUT -p tcp --dport 8774 -j ACCEPT  # nova-api
+        iptables -I INPUT -p tcp --dport 8775 -j ACCEPT  # nova-api-metadata
+        iptables -I INPUT -p tcp --dport 9292 -j ACCEPT  # glance
+        iptables -I INPUT -p tcp --dport 5000 -j ACCEPT  # keystone service
+        iptables -I INPUT -p tcp --dport 35357 -j ACCEPT # keystone admin
+        iptables -I INPUT -p tcp --dport 8000 -j ACCEPT  # heat-api-cfn
+        iptables -I INPUT -p tcp --dport 8003 -j ACCEPT  # heat-api-cloudwatch
+        iptables -I INPUT -p tcp --dport 8004 -j ACCEPT  # heat-api
+        iptables -I INPUT -p tcp --dport 9696  -j ACCEPT # neutron
+        iptables -I INPUT -p tcp --dport 6385 -j ACCEPT  # ironic
 
         # Horizon
         iptables -I INPUT -p tcp --dport 80 -j ACCEPT
