@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eux
+
+os-svc-daemon cinder-api cinder cinder-api "--config-dir /etc/cinder"
+os-svc-daemon cinder-scheduler cinder cinder-scheduler "--config-dir /etc/cinder"
