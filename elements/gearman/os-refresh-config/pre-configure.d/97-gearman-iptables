@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu
 
-OK=/opt/stack/gearman-iptables.ok
+OK=/var/run/gearman-iptables.ok
 
 if [ -e $OK ] ; then
     exit 0
