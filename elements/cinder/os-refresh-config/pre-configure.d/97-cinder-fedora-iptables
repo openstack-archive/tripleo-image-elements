@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eu
 
+mkdir -p /var/run/cinder
+chown -R cinder:cinder /var/run/cinder
 OK=/var/run/cinder/fedora-iptables.ok
 
 if [ -e $OK ] ; then
@@ -19,7 +21,7 @@ if [[ "Fedora" = $DISTRO ]]; then
         fi
 
         # Openstack services
-        iptables -I INPUT -p tcp -m multiport --dports 3260, 8776 -j ACCEPT
+        iptables -I INPUT -p tcp -m multiport --dports 3260,8776 -j ACCEPT
 
         iptables-save > $IPT_FILE
     fi
