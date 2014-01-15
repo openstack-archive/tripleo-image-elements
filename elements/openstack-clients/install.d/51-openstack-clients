@@ -27,7 +27,8 @@ for client in $client_install_list; do
     elif [ -e tools/pip-requires ]; then
         pip install -r tools/pip-requires
     fi
-    python setup.py develop --script-dir /usr/local/bin
+    python setup.py develop
+    ln -s /opt/stack/venvs/$repo/bin/$client /usr/local/bin/$client
     popd
 
     set +u
