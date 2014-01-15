@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -eux
+
+install-packages haproxy
+
+if [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
+  systemctl enable haproxy.service
+fi
+
+# haproxy service has to be explicitly enabled in /etc/default/haproxy on ubuntu/debian systems
+[ -f /etc/default/haproxy ] && sed -i -e 's/ENABLED=0/ENABLED=1/' /etc/default/haproxy
