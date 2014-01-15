@@ -1,0 +1,15 @@
+[Unit]
+Description=Neutron OVS Cleanup Service
+Wants=network.service openvswitch-nonetwork.service
+After=openvswitch-nonetwork.service
+Before=network.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/stack/venvs/neutron/bin/neutron-ovs-cleanup --ovs_all_ports
+User=root
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+Alias=neutron-ovs-cleanup.service
