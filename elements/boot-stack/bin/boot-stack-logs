@@ -1,9 +1,6 @@
 #!/bin/bash
 set -eu
 
-#!/bin/bash
-set -eu
-
 if [[ $EUID -ne 0 ]]; then
    echo "ERROR: you must be root to run this" 1>&2
    exit 1
