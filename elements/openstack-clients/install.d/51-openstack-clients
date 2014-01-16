@@ -21,6 +21,10 @@ for client in $client_install_list; do
     source /opt/stack/venvs/$repo/bin/activate
     set -u
 
+    # Need setuptools>=1.0 to manage connections when
+    # downloading from pypi using http_proxy and https_proxy
+    pip install -U 'setuptools>=1.0'
+
     pushd /opt/stack/$repo
     if [ -e requirements.txt ]; then
         pip install -r requirements.txt

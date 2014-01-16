@@ -5,6 +5,9 @@ install-packages python-virtualenv build-essential libz-dev libxslt-dev libxml2-
 
 virtualenv --setuptools /opt/stack/venvs/os-collect-config
 
+# Need setuptools>=1.0 to manage connections when
+# downloading from pypi using http_proxy and https_proxy
+/opt/stack/venvs/os-collect-config/bin/pip install -U 'setuptools>=1.0'
 /opt/stack/venvs/os-collect-config/bin/pip install -U os-collect-config
 
 ln -s /opt/stack/venvs/os-collect-config/bin/os-collect-config /usr/local/bin/os-collect-config
