@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Script to add iptables rules per element
+#
+# The only input argument is an iptables rule without the command option.
+# This case covers all of the current usage of elements that insert rules
+# in the 97-iptables files.
+# Example usage:
+# add-rule INPUT -p tcp -m multiport --dports 3260,8776 -j ACCEPT
+# add-rule INPUT -p tcp --dport 4730 -j ACCEPT
+# add-rule FORWARD -d 192.0.2.0/24 -j ACCEPT
+
+set -eu
+
+RULE="$@"
+
+DISTRO=`lsb_release -si` || true
+
+if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
+
+    # Check if the iptables service is active
+    if systemctl is-active iptables.service ; then
+        IPT_FILE=/etc/sysconfig/iptables
+        if [ -f $IPT_FILE ]; then
+            iptables-restore < $IPT_FILE
+        fi
+
+        iptables -C $RULE || iptables -I $RULE
+
+        iptables-save > $IPT_FILE
+    fi
+
+fi
