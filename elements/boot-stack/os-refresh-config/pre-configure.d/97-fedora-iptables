@@ -1,55 +1,31 @@
 #!/bin/bash
 set -eu
 
-OK=/opt/stack/boot-stack/fedora-iptables.ok
+# Openstack services
+add-rule INPUT -p tcp --dport 8774 -j ACCEPT  # nova-api
+add-rule INPUT -p tcp --dport 8775 -j ACCEPT  # nova-api-metadata
+add-rule INPUT -p tcp --dport 9292 -j ACCEPT  # glance
+add-rule INPUT -p tcp --dport 5000 -j ACCEPT  # keystone service
+add-rule INPUT -p tcp --dport 35357 -j ACCEPT # keystone admin
+add-rule INPUT -p tcp --dport 8000 -j ACCEPT  # heat-api-cfn
+add-rule INPUT -p tcp --dport 8003 -j ACCEPT  # heat-api-cloudwatch
+add-rule INPUT -p tcp --dport 8004 -j ACCEPT  # heat-api
+add-rule INPUT -p tcp --dport 9696  -j ACCEPT # neutron
+add-rule INPUT -p tcp --dport 6385 -j ACCEPT  # ironic
 
-if [ -e $OK ] ; then
-    exit 0
-fi
+# Horizon
+add-rule INPUT -p tcp --dport 80 -j ACCEPT
 
-DISTRO=`lsb_release -si` || true
+# AMQP
+add-rule INPUT -p tcp --dport 5672  -j ACCEPT
 
-if [[ "Fedora" = "$DISTRO" ]]; then
+# DHCP, TFTP
+add-rule INPUT -m udp -p udp --dport 69 -j ACCEPT
 
-    # Check if the iptables service is active
-    if systemctl is-active iptables.service ; then
-        IPT_FILE=/etc/sysconfig/iptables
-        if [ -f $IPT_FILE ]; then
-            iptables-restore < $IPT_FILE
-        fi
+# ISCSI
+add-rule INPUT -p tcp --dport 10000 -j ACCEPT
 
-        # Openstack services
-        iptables -I INPUT -p tcp --dport 8774 -j ACCEPT  # nova-api
-        iptables -I INPUT -p tcp --dport 8775 -j ACCEPT  # nova-api-metadata
-        iptables -I INPUT -p tcp --dport 9292 -j ACCEPT  # glance
-        iptables -I INPUT -p tcp --dport 5000 -j ACCEPT  # keystone service
-        iptables -I INPUT -p tcp --dport 35357 -j ACCEPT # keystone admin
-        iptables -I INPUT -p tcp --dport 8000 -j ACCEPT  # heat-api-cfn
-        iptables -I INPUT -p tcp --dport 8003 -j ACCEPT  # heat-api-cloudwatch
-        iptables -I INPUT -p tcp --dport 8004 -j ACCEPT  # heat-api
-        iptables -I INPUT -p tcp --dport 9696  -j ACCEPT # neutron
-        iptables -I INPUT -p tcp --dport 6385 -j ACCEPT  # ironic
-
-        # Horizon
-        iptables -I INPUT -p tcp --dport 80 -j ACCEPT
-
-        # AMQP
-        iptables -I INPUT -p tcp --dport 5672  -j ACCEPT
-
-        # DHCP, TFTP
-        iptables -I INPUT -m udp -p udp --dport 69 -j ACCEPT
-
-        # ISCSI
-        iptables -I INPUT -p tcp --dport 10000 -j ACCEPT
-
-        # Forward packets to the private ctlplane network
-        iptables -I FORWARD -d 192.0.2.0/24 -j ACCEPT
-        # Forward packets to the hosts libvirt network
-        iptables -I FORWARD -d 192.168.122.0/24 -j ACCEPT
-
-        iptables-save > $IPT_FILE
-    fi
-
-fi
-
-touch $OK
+# Forward packets to the private ctlplane network
+add-rule FORWARD -d 192.0.2.0/24 -j ACCEPT
+# Forward packets to the hosts libvirt network
+add-rule FORWARD -d 192.168.122.0/24 -j ACCEPT

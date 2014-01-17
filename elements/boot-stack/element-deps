@@ -1,6 +1,7 @@
 glance
 heat-api
 heat-engine
+iptables
 keystone
 mysql
 nova-api
