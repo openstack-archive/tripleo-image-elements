@@ -1,0 +1,13 @@
+[Unit]
+Description=Stunnel Service
+Wants=network.service
+After=network.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/stunnel /etc/stunnel/from-heat.conf
+User=root
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
