@@ -5,6 +5,8 @@ install-packages python-mysqldb libssl-dev
 
 os-svc-install -n glance -u glance -r /opt/stack/glance
 
+ln -s /opt/stack/venvs/glance/bin/glance-manage /usr/local/bin/glance-manage
+
 cp /opt/stack/glance/etc/policy.json /etc/glance/policy.json
 cp /opt/stack/glance/etc/schema-image.json /etc/glance/schema-image.json
 cp /opt/stack/glance/etc/glance-api-paste.ini /etc/glance/glance-api-paste.ini
