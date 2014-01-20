@@ -20,6 +20,9 @@ if [ -e /etc/apparmor.d/usr.sbin.mysqld ] ; then
     sed -i -e 's,/var/log/mysql/,/mnt/state/var/log/mysql/,g' /etc/apparmor.d/usr.sbin.mysqld
     sed -i -e 's,/etc/mysql/,/mnt/state/etc/mysql/,g' /etc/apparmor.d/usr.sbin.mysqld
 fi
+if [ -e /etc/init/mysql.conf ]; then
+    sed -i -e 's,/var/lib/mysql/,/mnt/state/var/lib/mysql/,g' /etc/init/mysql.conf
+fi
 # Fedora/RHEL install /etc/my.cnf but we do not want any unmanaged configs
 rm -f /etc/my.cnf
 register-state-path /var/lib/mysql
