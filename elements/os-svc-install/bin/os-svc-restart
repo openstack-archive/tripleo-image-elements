@@ -18,7 +18,7 @@
 set -eu
 
 usage() {
-  echo "Usage: os-svc-enable -n SERVICENAME"
+  echo "Usage: os-svc-restart -n SERVICENAME"
   echo ""
   echo "  -h             Show help and exit"
   echo "  -n SERVICENAME Name of job/service file."
@@ -42,20 +42,20 @@ if [ -z "$SERVICENAME" ] ; then
     usage
 fi
 
-function enable_upstart_service {
+function restart_upstart_service {
   local name=$1
-  os-svc-enable-upstart $name enable
+  service $name restart
 }
 
-function enable_systemd_service {
+function restart_systemd_service {
   local name=$1
-  systemctl enable $(map-services $name).service
+  systemctl restart $(map-services $name).service
 }
 
 # TODO: SysV init fallback support
 DIB_INIT_SYSTEM=$(dib-init-system)
 if [ "$DIB_INIT_SYSTEM" == "upstart" ]; then
-  enable_upstart_service $SERVICENAME
+  restart_upstart_service $SERVICENAME
 elif [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
-  enable_systemd_service $SERVICENAME
+  restart_systemd_service $SERVICENAME
 fi
