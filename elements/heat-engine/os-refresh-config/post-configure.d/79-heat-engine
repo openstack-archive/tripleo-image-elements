@@ -2,4 +2,4 @@
 
 os-svc-enable -n heat-engine
 
-service heat-engine restart
+os-svc-restart -n heat-engine
