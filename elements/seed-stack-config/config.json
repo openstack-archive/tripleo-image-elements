@@ -12,7 +12,8 @@
   "rabbit": {
     "host": "127.0.0.1",
     "username": "guest",
-    "password": "guest"
+    "password": "guest",
+    "cookie": "unset"
   },
   "glance": {
     "backend": "file",

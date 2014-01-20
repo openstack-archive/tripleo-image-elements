@@ -17,3 +17,62 @@ this in Heat:
 
 Using cfn-signal, we will feed back a generated password into the handle
 for use by other resources.
+
+
+RabbitMQ Cluster
+----------------
+
+Additional parameters in heat template are required for each clustered node:
+
+    Metadata:
+      rabbit:
+        cookie: some_cookie
+          - make sure same cookie is set for all nodes in cluster
+        nodes:
+          node0,node1
+
+'rabbit.nodes' contains short hostnames of all nodes in RabbitMq cluster.
+
+If a node has 'rabbit.nodes' set to true, this node is added into
+cluster with other nodes listed in 'rabbit.nodes'.
+
+RabbitMQ inter-node communication is restricted to port 5535 only in config file
+(otherwise random ports would be used) to make sure this port can be enabled in
+firewall.
+
+
+Sample 2-node cluster definition:
+
+    node0:
+      rabbit:
+        cookie: some_cookie
+        nodes:
+          Fn::Join:
+          - ','
+          - - Fn::Select:
+              - name
+              - Fn::GetAtt:
+                - node0
+                - show
+            - Fn::Select:
+              - name
+              - Fn::GetAtt:
+                - node1
+                - show
+
+    node1:
+      rabbit:
+        cookie: some_cookie
+        nodes:
+          Fn::Join:
+          - ','
+          - - Fn::Select:
+              - name
+              - Fn::GetAtt:
+                - node0
+                - show
+            - Fn::Select:
+              - name
+              - Fn::GetAtt:
+                - node1
+                - show
