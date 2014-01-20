@@ -8,4 +8,4 @@ mkdir -p /mnt/state/etc/keystone/ssl
 
 os-svc-enable -n keystone
 
-service keystone restart
+os-svc-restart -n keystone
