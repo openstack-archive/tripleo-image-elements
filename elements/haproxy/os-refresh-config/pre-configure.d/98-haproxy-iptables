@@ -1,0 +1,40 @@
+#!/bin/bash
+set -eu
+
+DISTRO=`lsb_release -si` || true
+
+if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
+
+    # Check if the iptables service is active
+    if systemctl is-active iptables.service ; then
+        IPT_FILE=/etc/sysconfig/iptables
+        if [ -f $IPT_FILE ]; then
+            iptables-restore < $IPT_FILE
+        fi
+
+        CONF=`os-apply-config --key haproxy.services --type raw | sed "s/u'/'/g"|sed "s/'/\"/g"`
+        [ -z "$CONF" ] && exit 0
+
+        # parses metadata hash and returns lines in "port-proxy_port" format:
+        LINES=`echo "$CONF" | python -c 'import json,sys;obj=json.load(sys.stdin);print "\n".join(["%d-%d" % (x["port"], x["proxy_port"]) for x in obj])'`
+        [ -z "$LINES" ] && exit 0
+
+        for LINE in $LINES; do
+            PORT=${LINE%-*}
+            PROXY_PORT=${LINE#*-}
+            # keystone is the only exception where ports are twisted - real
+            # service listens on non-standard port if haproxy is used so
+            # PORT instead of PROXY_PORT should be enabled
+            if [ $PROXY_PORT = "5000" -o $PROXY_PORT = "35357" ];then
+                FW_PORT=$PORT
+            else
+                FW_PORT=$PROXY_PORT
+            fi
+            RULE="INPUT -p tcp --dport $FW_PORT -j ACCEPT"
+            iptables -C $RULE 2>/dev/null || iptables -I $RULE
+        done
+
+        iptables-save > $IPT_FILE
+    fi
+
+fi
