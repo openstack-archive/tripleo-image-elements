@@ -5,6 +5,6 @@ os-svc-enable -n swift-account
 os-svc-enable -n swift-container
 os-svc-enable -n swift-object
 
-service swift-account restart
-service swift-container restart
-service swift-object restart
+os-svc-restart -n swift-account
+os-svc-restart -n swift-container
+os-svc-restart -n swift-object

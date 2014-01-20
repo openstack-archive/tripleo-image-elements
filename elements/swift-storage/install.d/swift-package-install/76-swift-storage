@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eux
+
+install-packages \
+    openstack-swift-storage \
+    openstack-swift-account \
+    openstack-swift-container
