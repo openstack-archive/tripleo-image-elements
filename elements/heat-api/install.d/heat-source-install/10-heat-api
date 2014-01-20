@@ -4,4 +4,6 @@ os-svc-daemon heat-api heat heat-api
 os-svc-daemon heat-api-cfn heat heat-api-cfn
 os-svc-daemon heat-api-cloudwatch heat heat-api-cloudwatch
 
+ln -s /opt/stack/venvs/heat/bin/heat-manage /usr/local/bin/heat-manage
+
 cp /opt/stack/heat/etc/heat/api-paste.ini /etc/heat/api-paste.ini
