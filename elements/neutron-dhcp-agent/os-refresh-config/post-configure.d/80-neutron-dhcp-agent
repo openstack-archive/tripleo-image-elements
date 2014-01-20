@@ -3,4 +3,4 @@ set -eux
 
 os-svc-enable -n neutron-dhcp-agent
 
-service neutron-dhcp-agent restart
+os-svc-restart -n neutron-dhcp-agent

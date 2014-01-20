@@ -3,4 +3,4 @@ set -eux
 
 os-svc-enable -n neutron-openvswitch-agent
 
-service neutron-openvswitch-agent restart
+os-svc-restart -n neutron-openvswitch-agent
