@@ -17,8 +17,8 @@ os-svc-enable -n nova-cert
 os-svc-enable -n nova-scheduler
 os-svc-enable -n nova-consoleauth
 
-service nova-conductor restart
-service nova-api restart
-service nova-cert restart
-service nova-scheduler restart
-service nova-consoleauth restart
+os-svc-restart -n nova-conductor
+os-svc-restart -n nova-api
+os-svc-restart -n nova-cert
+os-svc-restart -n nova-scheduler
+os-svc-restart -n nova-consoleauth

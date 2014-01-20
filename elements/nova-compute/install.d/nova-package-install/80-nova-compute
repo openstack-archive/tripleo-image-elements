@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -eux
+
+install-packages openstack-nova-compute
+
+# We delete the default libvirt network to avoid a possible
+# collision with the network on the seed host machine
+# This is also done from the nova-kvm element, but we need to do it here as
+# well, since the nova compute packages automatically pull in libvirt.
+rm -f /etc/libvirt/qemu/networks/autostart/default.xml
+rm -f /etc/libvirt/qemu/networks/default.xml

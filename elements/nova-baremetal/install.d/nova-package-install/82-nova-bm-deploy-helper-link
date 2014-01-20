@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -eux
+
+# This is a fix so that we can use the service file from the source install
+# with our packaged nova-baremetal-deploy-helper, which is missing the service:
+# https://bugzilla.redhat.com/show_bug.cgi?id=1055788
+mkdir -p /opt/stack/venvs/nova/bin/
+ln -s /bin/nova-baremetal-deploy-helper /opt/stack/venvs/nova/bin/nova-baremetal-deploy-helper
