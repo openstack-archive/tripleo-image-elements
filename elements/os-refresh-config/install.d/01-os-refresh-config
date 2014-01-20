@@ -8,6 +8,9 @@ install-packages python-virtualenv
 
 virtualenv --setuptools /opt/stack/venvs/os-refresh-config
 
+# Need setuptools>=1.0 to manage connections when
+# downloading from pypi using http_proxy and https_proxy
+/opt/stack/venvs/os-refresh-config/bin/pip install -U 'setuptools>=1.0'
 /opt/stack/venvs/os-refresh-config/bin/pip install -U os-refresh-config
 
 ln -s /opt/stack/venvs/os-refresh-config/bin/os-refresh-config /usr/local/bin/os-refresh-config
