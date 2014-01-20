@@ -52,7 +52,7 @@ if [ -x "$venvs/ceilometer/bin/ceilometer-dbsync" ] ; then
 fi
 
 os-db-create nova nova $db_pass
-run_db_sync && $venvs/nova/bin/nova-manage db sync
+run_db_sync && nova-manage db sync
 
 os-db-create nova_bm nova $db_pass
 run_db_sync && $venvs/nova/bin/nova-baremetal-manage db sync

@@ -6,3 +6,5 @@ os-svc-daemon nova-cert             nova nova-cert             "--config-dir /et
 os-svc-daemon nova-scheduler        nova nova-scheduler        "--config-dir /etc/nova --debug"
 os-svc-daemon nova-consoleauth      nova nova-consoleauth      "--config-dir /etc/nova"
 os-svc-daemon nova-conductor        nova nova-conductor        "--config-dir /etc/nova"
+
+ln -s /opt/stack/venvs/nova/bin/nova-manage /usr/local/bin/nova-manage
