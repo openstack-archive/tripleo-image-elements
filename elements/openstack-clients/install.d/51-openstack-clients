@@ -16,7 +16,12 @@ swift"
 for client in $client_install_list; do
     repo=python-${client}client
 
-    virtualenv --system-site-packages /opt/stack/venvs/$repo
+    # We would like to use --system-site-packages here but if requirements.txt
+    # contains libraries that are installed globally with versions that don't
+    # satisfy our requirements.txt, we end up using the incorrect global library.
+    # Because the global site-packages appears first in sys.path
+    # TODO : Add this back in when we are using virtualenv >= 1.11
+    virtualenv /opt/stack/venvs/$repo
     set +u
     source /opt/stack/venvs/$repo/bin/activate
     set -u
