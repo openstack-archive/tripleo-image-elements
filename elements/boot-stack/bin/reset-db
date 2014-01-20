@@ -29,7 +29,7 @@ PATH=/usr/local/bin:$PATH
 venvs=/opt/stack/venvs
 
 os-db-create keystone keystone $db_pass
-run_db_sync && $venvs/keystone/bin/keystone-manage db_sync
+run_db_sync && keystone-manage db_sync
 
 if [ -x "$venvs/cinder/bin/cinder-manage" ] ; then
     os-db-create cinder cinder $db_pass

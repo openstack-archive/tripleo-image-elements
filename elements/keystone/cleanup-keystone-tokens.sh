@@ -6,7 +6,7 @@ KEYSTONE_DB=$(os-apply-config --key keystone.db --type dsn)
 KEYSTONE_DB_TYPE=${KEYSTONE_DB%%://*}
 if [ "$KEYSTONE_DB_TYPE" != "mysql" ] ; then
     # We can just call this directly if bug #1188378 is ever fixed
-    exec /opt/stack/venvs/keystone/bin/keystone-manage token_flush
+    exec keystone-manage token_flush
 fi
 
 KEYSTONE_DB_P1=${KEYSTONE_DB##mysql://}
