@@ -55,7 +55,7 @@ os-db-create nova nova $db_pass
 run_db_sync && nova-manage db sync
 
 os-db-create nova_bm nova $db_pass
-run_db_sync && $venvs/nova/bin/nova-baremetal-manage db sync
+run_db_sync && nova-baremetal-manage db sync
 
 os-db-create glance glance $db_pass
 run_db_sync && $venvs/glance/bin/glance-manage db_sync
