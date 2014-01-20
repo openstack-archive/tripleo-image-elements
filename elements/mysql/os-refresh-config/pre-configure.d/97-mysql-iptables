@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eu
+
+add-rule INPUT -p tcp --dport 3306 -j ACCEPT  # mysql
