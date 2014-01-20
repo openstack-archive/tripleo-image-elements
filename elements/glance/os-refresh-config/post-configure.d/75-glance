@@ -10,5 +10,5 @@ set -eu
 os-svc-enable -n glance-api
 os-svc-enable -n glance-reg
 
-service glance-api restart
-service glance-reg restart
+os-svc-restart -n glance-api
+os-svc-restart -n glance-reg
