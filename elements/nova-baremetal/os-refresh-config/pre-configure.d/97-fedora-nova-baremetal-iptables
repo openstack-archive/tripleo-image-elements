@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eu
+
+# ISCSI
+add-rule INPUT -p tcp --dport 10000 -j ACCEPT
