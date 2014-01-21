@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eu
+
+add-rule INPUT -p tcp --dport 8776 -j ACCEPT # cinder-api
