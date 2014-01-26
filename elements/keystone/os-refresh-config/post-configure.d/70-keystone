@@ -1,6 +1,9 @@
 #!/bin/bash
 set -eu
 
+# NB: pki_setup chowns things appropriately.
+mkdir -p /mnt/state/etc/keystone/ssl
+
 /opt/stack/venvs/keystone/bin/keystone-manage db_sync
 
 os-svc-enable -n keystone
