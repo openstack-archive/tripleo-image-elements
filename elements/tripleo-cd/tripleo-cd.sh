@@ -24,6 +24,7 @@ THROTTLELOCK=$(mktemp /tmp/tripleo-cd-throttle-XXXXXX.lock)
 while true; do
     flock -x $THROTTLELOCK sleep 600 &
     source /opt/stack/tripleo-incubator/scripts/refresh-env /opt/stack
+    source /opt/stack/tripleo-incubator/scripts/devtest_variables.sh
     source /root/stackrc
     set +e
     OVERCLOUD_LIBVIRT_TYPE=";NovaComputeLibvirtType=kvm" \
