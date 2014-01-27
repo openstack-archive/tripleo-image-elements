@@ -33,3 +33,5 @@ EOF
 
 # Adds support for tftp requests that don't include the directory name.
 echo 'r ^([^/]) /tftpboot/\1' > /tftpboot/map-file
+
+os-svc-enable -n xinetd
