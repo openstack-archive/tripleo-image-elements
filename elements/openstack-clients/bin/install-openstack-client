@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -eux
+
+client=$1
+
+repo=python-${client}client
+
+# We would like to use --system-site-packages here but if requirements.txt
+# contains libraries that are installed globally with versions that don't
+# satisfy our requirements.txt, we end up using the incorrect global library.
+# Because the global site-packages appears first in sys.path
+# TODO : Add this back in when we are using virtualenv >= 1.11
+virtualenv /opt/stack/venvs/$repo
+set +u
+source /opt/stack/venvs/$repo/bin/activate
+set -u
+
+# Need setuptools>=1.0 to manage connections when
+# downloading from pypi using http_proxy and https_proxy
+pip install -U 'setuptools>=1.0'
+
+pushd /opt/stack/$repo
+if [ -e requirements.txt ]; then
+    pip install -r requirements.txt
+elif [ -e tools/pip-requires ]; then
+    pip install -r tools/pip-requires
+fi
+python setup.py develop
+ln -s /opt/stack/venvs/$repo/bin/$client /usr/local/bin/$client
+popd
+
+set +u
+deactivate
+set -u
