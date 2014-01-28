@@ -9,4 +9,6 @@ if [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
 fi
 
 # haproxy service has to be explicitly enabled in /etc/default/haproxy on ubuntu/debian systems
-[ -f /etc/default/haproxy ] && sed -i -e 's/ENABLED=0/ENABLED=1/' /etc/default/haproxy
+if [ -f /etc/default/haproxy ]; then
+  sed -i -e 's/ENABLED=0/ENABLED=1/' /etc/default/haproxy
+fi
