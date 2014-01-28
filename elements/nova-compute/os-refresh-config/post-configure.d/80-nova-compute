@@ -7,4 +7,4 @@ chown -R nova:nova /var/run/nova
 
 os-svc-enable -n nova-compute
 
-service nova-compute restart
+os-svc-restart -n nova-compute

@@ -1,8 +1,8 @@
 #!/bin/bash
 set -eux
 
-/opt/stack/venvs/nova/bin/nova-baremetal-manage db sync
+nova-baremetal-manage db sync
 
 os-svc-enable -n nova-baremetal-deploy-helper
 
-service nova-baremetal-deploy-helper restart
+os-svc-restart -n nova-baremetal-deploy-helper

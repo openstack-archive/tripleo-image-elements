@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eux
+
+# We delete the default libvirt network to avoid a possible
+# collision with the network on the seed host machine
+rm -f /etc/libvirt/qemu/networks/autostart/default.xml
+rm -f /etc/libvirt/qemu/networks/default.xml

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -eux
+
+install-packages \
+    openstack-nova-api \
+    openstack-nova-scheduler \
+    openstack-nova-conductor \
+    openstack-nova-console \
+    openstack-nova-cert
