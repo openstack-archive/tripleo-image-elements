@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -eux
+
+install-packages openstack-glance
+
+# When glance-manage is run as root during os-refresh-config it will create the
+# initial glance registry log file root owned, and then the glance service will
+# fail to start. Create the initial glance owned log file here instead.
+touch /var/log/glance/registry.log
+chown glance.glance /var/log/glance/registry.log
