@@ -1,0 +1,17 @@
+set base_path /mnt/state/srv/apt-mirror
+set mirror_path $base_path/mirror
+set skel_path $base_path/skel
+set var_path $base_path/var
+
+set nthreads 1
+set _autoclean 1
+
+{{#debian-mirror}}
+{{#architectures}}
+{{#suites}}
+deb-{{arch}} {{mirror}} {{.}} {{#components}}{{.}} {{/components}}
+{{/suites}}
+{{/architectures}}
+
+clean {{mirror}}
+{{/debian-mirror}}

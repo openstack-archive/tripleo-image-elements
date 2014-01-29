@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -eu
+
+install-packages apt-mirror
+
+sed -i -e 's/^#0/0/' -e 's&/var/spool/apt-mirror&/mnt/state/srv/apt-mirror&' /etc/cron.d/apt-mirror
