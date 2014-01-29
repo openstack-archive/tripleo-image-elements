@@ -1,27 +1,20 @@
 #!/bin/bash
 
-# Idempotent script to create a ovs bridge and place a public_interface on the
-# bridge.
+# Idempotent script to create an ovs bridge and add a physical NIC
+# onto it as an OVS port. Any IP address on the physical NIC will
+# be automatically moved onto the OVS bridge.
 #
-# If the defined physical_bridge is not present on the system, one will be
-# defined via ovs-vsctl.
-#
-# The physical bridge will be brought up.
-#
-# If a public_interface is defined in metadata:
-#   - it will be made a member of the physical_bridge.
-#   - all IP addresses on public_interface will be moved onto physical_bridge.
+# Uses the OS default networking script format to write out persistent
+# config files to disk. These config files persist across reboots
+# an are only updated if metadata changes are detected (these are passed
+# in as script parameters). If a config change is made the network interface
+# and OVS bridge are restarted using ifdown/ifup scripts.
 #
 # If public_interface_route is set then the current default route is
 # specialised to a 169.254.169.254/32 only route (unless there is already a
 # 169.254.169.254 route - such as a neutron network with host routes can
 # create) and a default route via public_interface_route is added on the public
 # interface.
-#
-# Note that no persistent config file is written to the OS : ovs-vsctl modifies
-# a persistent database so the bridge device will persist across reboots, but
-# [on Ubuntu at least] early boot does not bring up ovs-vswitch early enough,
-# and metadata access will fail.
 
 set -eux
 
@@ -29,61 +22,159 @@ PATH=/usr/local/bin:$PATH
 
 EXTERNAL_BRIDGE="$1"
 PHYSICAL_INTERFACE="$2"
-PUBLIC_INTERFACE_ROUTE="${3:-}"
+PHYSICAL_INTERFACE_IP_NETMASK="${3:-}" #optional, by default uses DHCP
+PUBLIC_INTERFACE_ROUTE="${4:-}" #optional
 
-ovs-vsctl -- --may-exist add-br $EXTERNAL_BRIDGE
-ovs-vsctl --no-wait br-set-external-id $EXTERNAL_BRIDGE bridge-id $EXTERNAL_BRIDGE
+# network scripts function used on Fedora/RHEL/Centos, etc.
+function configure_bridge_interface_dhcp_netscripts() {
 
-ip link set dev $EXTERNAL_BRIDGE up
+    local bridge=$1
+    local interface=$2
+    local bridge_ip_addr=${3:-''}
+    local bridge_netmask=${4:-''}
+    local tmp_bridge_config=$(mktemp)
+    local tmp_interface_config=$(mktemp)
+    local bridge_config="/etc/sysconfig/network-scripts/ifcfg-$bridge"
+    local interface_config="/etc/sysconfig/network-scripts/ifcfg-$interface"
 
-if [ -n "$PHYSICAL_INTERFACE" ] ; then
-    if ovs-vsctl port-to-br $PHYSICAL_INTERFACE ; then
-        EXISTING_PORT=$(ovs-vsctl port-to-br $PHYSICAL_INTERFACE)
-        if [ "$EXISTING_PORT" != "$PHYSICAL_INTERFACE" ] ; then
-            ovs-vsctl del-port $EXTERNAL_BRIDGE $PHYSICAL_INTERFACE
-        fi
+    #interface config
+    cat > $tmp_interface_config <<EOF_CAT
+DEVICE=$interface
+ONBOOT=yes
+DEVICETYPE=ovs
+TYPE=OVSPort
+OVS_BRIDGE=$bridge
+BOOTPROTO=none
+HOTPLUG=no
+EOF_CAT
+
+    #bridge config
+    if [ -z "$bridge_ip_addr" ]; then
+        cat > $tmp_bridge_config <<EOF_CAT
+DEVICE=$bridge
+ONBOOT=yes
+DEVICETYPE=ovs
+TYPE=OVSBridge
+OVSBOOTPROTO="dhcp"
+OVSDHCPINTERFACES=$interface
+HOTPLUG=no
+EOF_CAT
+    else
+        cat > $tmp_bridge_config <<EOF_CAT
+DEVICE=$bridge
+ONBOOT=yes
+DEVICETYPE=ovs
+TYPE=OVSBridge
+BOOTPROTO=static
+IPADDR=$bridge_ip_addr
+NETMASK=$bridge_netmask
+HOTPLUG=no
+EOF_CAT
     fi
-    ovs-vsctl add-port $EXTERNAL_BRIDGE $PHYSICAL_INTERFACE
-    ip link set dev $PHYSICAL_INTERFACE up
+
+    if ! diff $tmp_interface_config $interface_config &>/dev/null || \
+        ! diff $tmp_bridge_config $bridge_config &>/dev/null; then
+
+        ifdown $interface &>/dev/null || true
+        ifdown $bridge &>/dev/null || true
+
+        cp $tmp_interface_config $interface_config
+        cp $tmp_bridge_config $bridge_config
+
+        ifup $bridge
+        ifup $interface
+
+    fi
+
+    rm $tmp_bridge_config
+    rm $tmp_interface_config
+
+}
+
+# elastic network interfaces used on Debian/Ubuntu, etc.
+function configure_bridge_interface_dhcp_eni() {
+
+    local bridge=$1
+    local interface=$2
+    local bridge_ip_addr=${3:-''}
+    local bridge_netmask=${4:-''}
+    local tmp_config=$(mktemp)
+    local config="/etc/network/interfaces"
+
+    cp $config $tmp_config
+    sed -e "/auto $interface*/,/^$/d" -i $tmp_config
+    sed -e "/auto $bridge*/,/^$/d" -i $tmp_config
+
+#interface config
+    cat >> $tmp_config <<-EOF_CAT
+auto $interface
+allow-$bridge $interface
+ iface $interface inet manual
+ ovs_bridge $bridge
+ ovs_type OVSPort
+EOF_CAT
+
+#bridge config
+    if [ -z "$bridge_ip_addr" ]; then
+        cat >> $tmp_config <<EOF_CAT
+auto $bridge
+allow-ovs $bridge
+ iface $bridge inet dhcp
+ ovs_type OVSBridge
+ ovs_ports $interface
+EOF_CAT
+    else
+        cat >> $tmp_config <<EOF_CAT
+auto $bridge
+allow-ovs $bridge
+iface $bridge inet static
+ address $bridge_ip_addr
+ netmask $bridge_netmask
+ ovs_type OVSBridge
+EOF_CAT
+    fi
+
+    if ! diff $tmp_config $config &>/dev/null; then
+        ifdown $interface &>/dev/null || true
+        ifdown $bridge &>/dev/null || true
+
+        cp $tmp_config $config
+
+        ifup $bridge
+        ifup $interface
+
+    fi
+
+    rm $tmp_config
+
+}
+
+if [ -n "$PHYSICAL_INTERFACE_IP_NETMASK" ]; then
+    IP=$(python -c "import netaddr; print netaddr.IPNetwork('$PHYSICAL_INTERFACE_IP_NETMASK').ip")
+    NETMASK=$(python -c "import netaddr; print netaddr.IPNetwork('$PHYSICAL_INTERFACE_IP_NETMASK').netmask")
+else
+    IP=''
+    NETMASK=''
 fi
 
-if [ -n "$PHYSICAL_INTERFACE" ] ; then
-    # Right now we probably are disconnected, need to move all IPs and routers
-    # from interface to bridge.
-    # Add all the IP addresses, so that we can add routes.
-    # Then add routes
-    # Then remove IP addresses
-    # This way, if we are interrupted, nothing has been lost: we're temporarily
-    # multipathed is all.
-    IPS=$(ip addr show dev $PHYSICAL_INTERFACE | grep ' inet ' | awk '{print $2}')
-    # Strictly speaking this doesn't grab all routes, but for now it's
-    # sufficient.
-    ROUTES=$(ip route show dev $PHYSICAL_INTERFACE | grep via || true)
-    for IP in $IPS ; do
-      if ! ip addr show $EXTERNAL_BRIDGE | grep $IP; then
-        ip addr add $IP dev $EXTERNAL_BRIDGE
+if [ -d "/etc/sysconfig/network-scripts/" ]; then
+    configure_bridge_interface_dhcp_netscripts $EXTERNAL_BRIDGE $PHYSICAL_INTERFACE $IP $NETMASK
+elif [ -d "/etc/network" ]; then
+    configure_bridge_interface_dhcp_eni $EXTERNAL_BRIDGE $PHYSICAL_INTERFACE $IP $NETMASK
+else
+    echo "Unsupported network configuration type!"
+    exit 1
+fi
+
+# Handle default route replacement.
+if [ -n "$PUBLIC_INTERFACE_ROUTE" ]; then
+    DEFAULT_VIA=$(ip route show | awk '/default / { print $3 }')
+    if [ "$DEFAULT_VIA" != "$PUBLIC_INTERFACE_ROUTE" ]; then
+      if [ -z "$(ip route show 169.254.169.254)" ]; then
+        # No explicit route to 169.254.169.254 - set one.
+        ip route add 169.254.169.254/32 via $DEFAULT_VIA
       fi
-    done
-    ORIG_IFS=$IFS
-    IFS=$'\n'
-    for ROUTE in $ROUTES ; do
-        IFS=$ORIG_IFS
-        ip route prepend dev $EXTERNAL_BRIDGE $ROUTE
-        ip route del dev $PHYSICAL_INTERFACE $ROUTE
-    done
-    for IP in $IPS ; do
-      ip addr del $IP dev $PHYSICAL_INTERFACE
-    done
-    # Handle default route replacement.
-    if [ -n "$PUBLIC_INTERFACE_ROUTE" ]; then
-        DEFAULT_VIA=$(ip route show | awk '/default / { print $3 }')
-        if [ "$DEFAULT_VIA" != "$PUBLIC_INTERFACE_ROUTE" ]; then
-          if [ -z "$(ip route show 169.254.169.254)" ]; then
-            # No explicit route to 169.254.169.254 - set one.
-            ip route add 169.254.169.254/32 via $DEFAULT_VIA
-          fi
-          ip route prepend dev $EXTERNAL_BRIDGE default via $PUBLIC_INTERFACE_ROUTE
-          ip route del default via $DEFAULT_VIA
-        fi
+      ip route prepend dev $EXTERNAL_BRIDGE default via $PUBLIC_INTERFACE_ROUTE
+      ip route del default via $DEFAULT_VIA
     fi
 fi
