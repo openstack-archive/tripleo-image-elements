@@ -3,12 +3,12 @@
 set -uex
 
 install-packages \
-    python-pip python-psutil python-virtualenv
+    python-pip python-psutil python-virtualenv gcc
 
 mkdir -p /opt/stack/venvs
 
 VENV=/opt/stack/venvs/heat-cfntools
-virtualenv $VENV --system-site-packages
+virtualenv $VENV
 
 $VENV/bin/pip install heat-cfntools
 
