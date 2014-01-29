@@ -23,10 +23,10 @@ fi
 
 if [ "$DIB_INIT_SYSTEM" = "systemd" ]; then
     # Delay the rc-local.service start-up until rabbitmq-server.service is started up
-    sed -i 's/\[Unit\]/\[Unit\]\nBefore=rc-local.service/g' /lib/systemd/system/rabbitmq-server.service
+    sed -i 's/\[Unit\]/\[Unit\]\nBefore=rc-local.service/g' /usr/lib/systemd/system/rabbitmq-server.service
 
     # Respawn rabbitmq-server in case the process exits with an nonzero exit code
-    sed -i 's/\[Service\]/\[Service\]\nRestart=on-failure/g' /lib/systemd/system/rabbitmq-server.service
+    sed -i 's/\[Service\]/\[Service\]\nRestart=on-failure/g' /usr/lib/systemd/system/rabbitmq-server.service
 
     # Enable the service
     systemctl enable rabbitmq-server.service
