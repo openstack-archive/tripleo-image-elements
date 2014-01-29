@@ -6,4 +6,4 @@ set -eux
 
 os-svc-enable -n neutron-server
 
-service neutron-server restart
+os-svc-restart -n neutron-server

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -eux
+
+install-packages openstack-neutron
+
+ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
+
+# Needed because the packaged install uses /var/lib/neutron, but we configure
+# it to be /var/run/neutron.
+mkdir /var/run/neutron
+chown neutron.neutron /var/run/neutron
+
+# Packaged neutron is providing a requires.txt which breaks dependencies at
+# runtime. See:
+# https://bugzilla.redhat.com/show_bug.cgi?id=1057615
+rm -f /usr/lib/python2.7/site-packages/neutron-*.egg-info/requires.txt
