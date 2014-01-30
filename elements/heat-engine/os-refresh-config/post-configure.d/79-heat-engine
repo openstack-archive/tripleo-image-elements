@@ -1,5 +1,9 @@
 #!/bin/bash
 
+set -e
+
+heat-manage db_sync
+
 os-svc-enable -n heat-engine
 
 os-svc-restart -n heat-engine

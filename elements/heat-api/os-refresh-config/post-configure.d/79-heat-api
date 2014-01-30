@@ -1,7 +1,5 @@
 #!/bin/bash
 
-heat-manage db_sync
-
 os-svc-enable -n heat-api
 os-svc-enable -n heat-api-cfn
 os-svc-enable -n heat-api-cloudwatch
