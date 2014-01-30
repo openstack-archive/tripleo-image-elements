@@ -1,8 +1,7 @@
 #!/bin/bash
 set -eux
 
-# syslinux is installed by nova-compute, which contains pxelinux.0
-install-packages tftpd-hpa xinetd
+install-packages syslinux tftpd-hpa xinetd
 
 mkdir -p /tftpboot/pxelinux.cfg/
 if [ -f /usr/lib/syslinux/pxelinux.0 ]; then
