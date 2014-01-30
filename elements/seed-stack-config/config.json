@@ -33,7 +33,6 @@
       "db": "mysql://nova:unset@localhost/nova_bm",
       "power_manager": "nova.virt.baremetal.virtual_power_driver.VirtualPowerManager",
       "pxe_deploy_timeout": "2400",
-      "use_file_injection": "False",
       "virtual_power": {
         "user": "stack",
         "key": "/opt/stack/boot-stack/virtual-power-key",
