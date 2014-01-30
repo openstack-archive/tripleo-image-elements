@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eu
+
+add-rule INPUT -p tcp --dport 6385 -j ACCEPT

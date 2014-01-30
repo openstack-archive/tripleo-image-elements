@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eu
+
+# keystone service, keystone admin
+add-rule INPUT -p tcp -m multiport --dports 5000,35357 -j ACCEPT

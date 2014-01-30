@@ -1,31 +1,6 @@
 #!/bin/bash
 set -eu
 
-# Openstack services
-add-rule INPUT -p tcp --dport 8774 -j ACCEPT  # nova-api
-add-rule INPUT -p tcp --dport 8775 -j ACCEPT  # nova-api-metadata
-add-rule INPUT -p tcp --dport 9292 -j ACCEPT  # glance
-add-rule INPUT -p tcp --dport 5000 -j ACCEPT  # keystone service
-add-rule INPUT -p tcp --dport 35357 -j ACCEPT # keystone admin
-add-rule INPUT -p tcp --dport 8000 -j ACCEPT  # heat-api-cfn
-add-rule INPUT -p tcp --dport 8003 -j ACCEPT  # heat-api-cloudwatch
-add-rule INPUT -p tcp --dport 8004 -j ACCEPT  # heat-api
-add-rule INPUT -p tcp --dport 9696  -j ACCEPT # neutron
-add-rule INPUT -p tcp --dport 6385 -j ACCEPT  # ironic
-add-rule INPUT -p tcp --dport 8777 -j ACCEPT  # ceilometer
-
-# Horizon
-add-rule INPUT -p tcp --dport 80 -j ACCEPT
-
-# AMQP
-add-rule INPUT -p tcp --dport 5672  -j ACCEPT
-
-# DHCP, TFTP
-add-rule INPUT -m udp -p udp --dport 69 -j ACCEPT
-
-# ISCSI
-add-rule INPUT -p tcp --dport 10000 -j ACCEPT
-
 # Forward packets to the private ctlplane network
 add-rule FORWARD -d 192.0.2.0/24 -j ACCEPT
 # Forward packets to the hosts libvirt network
