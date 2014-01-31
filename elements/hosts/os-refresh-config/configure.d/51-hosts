@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -eu
+set -o pipefail
+
+# 51 - right after oac as hosts is needed for $justabouteverything.
+
+if [ ! -e /etc/hosts -o ! -e /var/run/hosts.d/tail ]; then
+    exit 0
+fi
+
+if fgrep -f /var/run/hosts.d/tail /etc/hosts; then
+    exit 0
+fi
+cp /etc/hosts /var/run/hosts.d/new-hosts
+echo >> /var/run/hosts.d/new-hosts
+cat /var/run/hosts.d/tail >> /var/run/hosts.d/new-hosts
+echo >> /var/run/hosts.d/new-hosts
+mv /var/run/hosts.d/new-hosts /etc/hosts
