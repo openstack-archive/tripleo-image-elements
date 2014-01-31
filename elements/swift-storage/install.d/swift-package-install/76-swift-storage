@@ -5,4 +5,5 @@ set -eux
 install-packages \
     openstack-swift-storage \
     openstack-swift-account \
-    openstack-swift-container
+    openstack-swift-container \
+    openstack-swift-object
