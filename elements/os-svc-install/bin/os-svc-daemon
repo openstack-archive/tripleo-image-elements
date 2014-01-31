@@ -12,6 +12,8 @@ usage() {
   echo ""
   echo "  -h             Show help and exit"
   echo "  -p             Print the job file instead of writing to disk"
+  echo "  -d             Only create the systemd service that creates the run time directory,"
+  echo "                 not the actual systemd daemon service. Ignored for upstart."
   echo "  -s POSTSTART   post_start will be added to the upstart job. Ignored with systemd."
   echo "                 default: $DEFAULT_POSTSTART"
   echo "  -e ENV         Environment name=value entries to set in the service/job"
@@ -27,6 +29,7 @@ SERVICENAME=${SERVICENAME:-""}
 RUNAS=${RUNAS:-""}
 RUNCMD=${RUNCMD:-""}
 ENV=${ENV:-""}
+CREATE_DIR_ONLY=${CREATE_DIR_ONLY:-""}
 # The default helps avoid race with daemon listening. http://pad.lv/1179766
 POSTSTART=${POSTSTART:-$DEFAULT_POSTSTART}
 
@@ -41,7 +44,7 @@ print_to_file() {
 OUTPUT=print_to_file
 
 nshift=0
-while getopts "phs:n:u:c:e:" opt; do
+while getopts "phds:n:u:c:e:" opt; do
     case "$opt" in
         n) SERVICENAME=$OPTARG;;
         u) RUNAS=$OPTARG;;
@@ -49,6 +52,7 @@ while getopts "phs:n:u:c:e:" opt; do
         s) POSTSTART=$OPTARG;;
         e) ENV=$OPTARG;;
         p) OUTPUT=print_only;;
+        d) CREATE_DIR_ONLY=1;;
         h) usage; exit 0;;
         \?) usage; exit 1;;
         :) usage; exit 1;;
@@ -137,13 +141,22 @@ WantedBy=multi-user.target
 Alias=$name.service
 EOF
 
+}
+
+function install_create_dir_systemd {
+  local name=$(map-services $1)
+  local user=$2
+
   $OUTPUT /usr/lib/systemd/system/$name-create-dir.service <<EOF
 [Unit]
-Description=Create /var/run/$name
+Description=Create /var/run/$user
 
 [Service]
 ExecStartPre=/bin/mkdir -p /var/run/$user
 ExecStart=/bin/chown -R $user:$user /var/run/$user
+
+[Install]
+RequiredBy=$name.service
 EOF
 
 }
@@ -156,5 +169,8 @@ elif [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
   if [ "$POSTSTART" != "$DEFAULT_POSTSTART" ] ; then
       echo "WARNING: post start is ignored with systemd." >&2
   fi
-  install_systemd $SERVICENAME $RUNAS $RUNCMD $*
+  if [ -z "$CREATE_DIR_ONLY" ]; then
+    install_systemd $SERVICENAME $RUNAS $RUNCMD $*
+  fi
+  install_create_dir_systemd $SERVICENAME $RUNAS
 fi

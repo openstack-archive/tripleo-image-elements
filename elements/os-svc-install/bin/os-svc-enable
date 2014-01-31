@@ -50,7 +50,12 @@ function enable_upstart_service {
 
 function enable_systemd_service {
   local name=$1
-  systemctl enable $(map-services $name).service
+  local service_name=$(map-services $name)
+  systemctl enable $service_name.service
+  # Also enable the create-dir service if it exists
+  if [ -f /usr/lib/systemd/system/$service_name-create-dir.service ]; then
+    systemctl enable $service_name-create-dir.service
+  fi
 }
 
 # TODO: SysV init fallback support
