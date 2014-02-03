@@ -10,3 +10,5 @@ install-packages openstack-nova-compute
 # well, since the nova compute packages automatically pull in libvirt.
 rm -f /etc/libvirt/qemu/networks/autostart/default.xml
 rm -f /etc/libvirt/qemu/networks/default.xml
+
+os-svc-daemon -n nova-compute -u nova -c noop -d
