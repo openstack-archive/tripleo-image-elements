@@ -2,7 +2,7 @@
 
 set -eux
 
-install-packages openstack-neutron
+install-packages openstack-neutron openstack-neutron-ml2
 
 ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
 
