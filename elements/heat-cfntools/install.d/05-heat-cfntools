@@ -3,7 +3,7 @@
 set -uex
 
 install-packages \
-    python-pip python-psutil python-virtualenv gcc
+    python-pip python-psutil python-virtualenv gcc python-dev
 
 mkdir -p /opt/stack/venvs
 
