@@ -2,4 +2,5 @@
 set -eu
 
 os-svc-enable -n cinder-volume
-service cinder-volume restart
+os-svc-restart tgtd
+os-svc-restart cinder-volume
