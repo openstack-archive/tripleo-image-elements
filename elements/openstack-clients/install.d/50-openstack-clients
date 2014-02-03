@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -eux
+
+install-packages git build-essential python-dev libssl-dev python-pip python-virtualenv libxml2-dev libxslt-dev
