@@ -6,10 +6,7 @@ install-packages openstack-neutron openstack-neutron-ml2
 
 ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
 
-# Needed because the packaged install uses /var/lib/neutron, but we configure
-# it to be /var/run/neutron.
-mkdir /var/run/neutron
-chown neutron.neutron /var/run/neutron
+os-svc-daemon -n neutron-server -u neutron -c noop -d
 
 # Packaged neutron is providing a requires.txt which breaks dependencies at
 # runtime. See:
