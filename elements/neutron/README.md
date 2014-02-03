@@ -10,3 +10,4 @@ neutron:
   debug: False
     - Print debugging output (set logging level to DEBUG
       instead of default WARNING level).
+  flat-networks: "tripleo-bm-test"
