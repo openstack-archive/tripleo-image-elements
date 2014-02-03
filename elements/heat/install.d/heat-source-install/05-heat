@@ -4,9 +4,6 @@ install-packages python-setuptools python-eventlet python-greenlet \
     python-httplib2 python-iso8601 python-lxml python-sqlalchemy \
     python-paste python-routes python-webob python-yaml
 
-# for BUG: https://bugs.launchpad.net/heat/+bug/1225191
-echo "qpid-python" | tee -a /opt/stack/heat/requirements.txt
-
 os-svc-install -n heat -u heat -r /opt/stack/heat
 
 cp /opt/stack/heat/etc/heat/policy.json /etc/heat/policy.json
