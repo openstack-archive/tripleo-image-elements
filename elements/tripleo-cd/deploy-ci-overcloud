@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+# Copyright 2014 Hewlett-Packard Development Company, L.P.
+# All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+set -eux
+
+cd /
+
+# We want to map the DC network into the VMs:
+export OVERCLOUD_FLAT_NETWORKS=tripleo-bm-test
+export OVERCLOUD_BRIDGE_MAPPINGS=tripleo-bm-test:br-untagged
+export OVERCLOUD_HYPERVISOR_PHYSICAL_BRIDGE=br-untagged
+export OVERCLOUD_HYPERVISOR_PUBLIC_INTERFACE=eth2
+
+# API endpoint for host file injection
+export OVERCLOUD_NAME=ci-overcloud.tripleo.org
+
+# How many hypervisors
+export OVERCLOUD_COMPUTESCALE=10
+
+# And a unique name for the thing we're deploying.
+export STACKNAME=ci-overcloud
+
+export OVERCLOUD_DIB_EXTRA_ARGS="pypi"
+export NODE_ARCH=amd64
+# We need to inject a static mapping to the API endpoint.
+export DIB_COMMON_ELEMENTS="pypi-openstack pip-cache stackuser hosts"
+source /opt/stack/tripleo-incubator/scripts/refresh-env /opt/stack
+source /opt/stack/tripleo-incubator/scripts/devtest_variables.sh
+source /root/stackrc
+set +e
+OVERCLOUD_LIBVIRT_TYPE="kvm" \
+    devtest_overcloud.sh vlan25 138.35.77.16/25 eth2 138.35.77.1 138.35.77.17 \
+    138.35.77.126 138.35.77.0/25 \
+    $TRIPLEO_ROOT/tripleo-incubator/tripleo-cloud/tripleo-cd-admins \
+    $TRIPLEO_ROOT/tripleo-incubator/tripleo-cloud/tripleo-cd-users \
+    $STACKNAME /root/ssl/ci-overcloud.tripleo.org \
+    ci-overcloud.tripleo.org
+RESULT=$?
+set -e
+MSG=$(echo "************** $STACKNAME complete status=$RESULT ************")
+echo "$MSG"
+set -x
+send-irc tripleo $STACKNAME "$MSG"
