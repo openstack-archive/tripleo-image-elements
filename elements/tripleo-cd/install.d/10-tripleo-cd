@@ -35,4 +35,6 @@ fi
 mkdir -p ~root/.cache/image-create
 ln -s /var/cache/pypi-mirror/pypi ~root/.cache/image-create
 
-install -m 0755 -o root -g root $(dirname $0)/../tripleo-cd.sh /usr/local/bin
+for f in `ls $(dirname $0)/../bin`; do
+  install -m 0755 -o root -g root $(dirname $0)/../bin/$f /usr/local/bin/$f
+done
