@@ -23,6 +23,7 @@ usage() {
   echo "  -h             Show help and exit"
   echo "  -n SERVICENAME Name of job/service file."
   echo ""
+  exit $1
 }
 
 SERVICENAME=${SERVICENAME:-""}
@@ -31,15 +32,15 @@ nshift=0
 while getopts "hn:" opt; do
     case "$opt" in
         n) SERVICENAME=$OPTARG;;
-        h) usage; exit 0;;
-        \?) usage; exit 1;;
-        :) usage; exit 1;;
+        h) usage 0;;
+        \?) usage 0;;
+        :) usage 1;;
     esac
 done
 
 shift $(($OPTIND-1))
 if [ -z "$SERVICENAME" ] ; then
-    usage
+    usage 1
 fi
 
 function restart_upstart_service {
