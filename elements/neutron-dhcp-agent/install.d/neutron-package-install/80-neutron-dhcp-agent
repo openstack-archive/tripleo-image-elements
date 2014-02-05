@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -eux
+
+install-packages openstack-neutron
+
+os-svc-daemon -n neutron-dhcp-agent -u neutron -c noop -d
