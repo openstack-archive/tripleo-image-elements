@@ -2,8 +2,14 @@
 
 set -eux
 
-# This is a fix so that we can use the service file from the source install
-# with our packaged nova-baremetal-deploy-helper, which is missing the service:
-# https://bugzilla.redhat.com/show_bug.cgi?id=1055788
-mkdir -p /opt/stack/venvs/nova/bin/
-ln -s /bin/nova-baremetal-deploy-helper /opt/stack/venvs/nova/bin/nova-baremetal-deploy-helper
+DISTRO=`lsb_release -si` || true
+
+if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
+    # This is a fix so that we can use the service file from the source install
+    # with our packaged nova-baremetal-deploy-helper, which is missing the service:
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1055788
+    os-svc-daemon nova-baremetal-deploy-helper nova nova-baremetal-deploy-helper "--config-dir /etc/nova"
+
+    mkdir -p /opt/stack/venvs/nova/bin/
+    ln -s /bin/nova-baremetal-deploy-helper /opt/stack/venvs/nova/bin/nova-baremetal-deploy-helper
+fi

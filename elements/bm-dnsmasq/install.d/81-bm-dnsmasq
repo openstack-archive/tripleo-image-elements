@@ -38,8 +38,6 @@ After=openvswitch.service
 
 [Service]
 Type=forking
-ExecStartPre=/bin/mkdir -p /tftpboot
-ExecStartPre=/bin/chown -R nova:nova /tftpboot
 ExecStartPre=-/bin/killall -9 dnsmasq
 ExecStart=/sbin/dnsmasq --conf-file= \\
                   --port=0 \\
