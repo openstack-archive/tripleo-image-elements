@@ -37,7 +37,7 @@ Configuration
 In a running OpenStack there are several categories of config.
 
  - per user - e.g. ssh key registration with nova: we repeat this sort
-   of config everytime we add a user.
+   of config every time we add a user.
  - local node - e.g. nova.conf or ovs-vsctl add-br br-ex : settings that
    apply individually to machines
  - inter-node - e.g. credentials on rabbitmq for a given nova compute node
