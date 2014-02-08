@@ -2,7 +2,7 @@
 set -eux
 
 [ -d /mnt/state/var/lib/neutron ] || install -d -D -m 0770 -o neutron -g neutron /mnt/state/var/lib/neutron
-[ -d /mnt/state/var/lib/neutron/keystone-signing ] || install -d -D -m 0770 -o neutron -g neutron /mnt/state/var/lib/neutron/keystone-signing
+[ -d /mnt/state/var/lib/neutron/keystone-signing ] || install -d -D -m 0700 -o neutron -g neutron /mnt/state/var/lib/neutron/keystone-signing
 
 os-svc-enable -n neutron-server
 
