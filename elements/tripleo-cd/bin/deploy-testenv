@@ -9,6 +9,10 @@ if [ -z "${1:-}" ] ; then
     exit 1
 fi
 
+
+GEARMANHOST=${2:-192.168.1.1}
+PUBLICINTERFACE=${3:-eth2}
+
 if heat stack-show testenv > /dev/null; then
     HEAT_OP=update
 else
@@ -21,9 +25,9 @@ heat stack-$HEAT_OP \
     -f testenv-workers-built.yaml \
     -P AuthPassword=$(awk '$1=="tripleo-ci" { print $2 }' < /os-asserted-users) \
     -P AuthUrl=http://$1:5000/v2.0 \
-    -P GearmanHost=192.168.1.1 \
+    -P GearmanHost=$GEARMANHOST \
     -P NetworkName=tripleo-bm-test \
-    -P PublicInterface=eth2 \
+    -P PublicInterface=$PUBLICINTERFACE \
     -P Hosts="$1 ci-overcloud.tripleo.org" \
     testenv
 
