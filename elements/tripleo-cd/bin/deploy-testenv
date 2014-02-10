@@ -3,6 +3,12 @@
 # This is a helper to get tripleo-cd admins to deploy testenvs repeatably.
 set -eux
 set -o pipefail
+
+if [ -z "${1:-}" ] ; then
+    echo "Please supply the IP of the overcloud controller as the first parameter"
+    exit 1
+fi
+
 if heat stack-show testenv > /dev/null; then
     HEAT_OP=update
 else
@@ -14,10 +20,10 @@ python /opt/stack/tripleo-heat-templates/tripleo_heat_merge/merge.py \
 heat stack-$HEAT_OP \
     -f testenv-workers-built.yaml \
     -P AuthPassword=$(awk '$1=="tripleo-ci" { print $2 }' < /os-asserted-users) \
-    -P AuthUrl=http://10.10.16.175:5000/v2.0 \
+    -P AuthUrl=http://$1:5000/v2.0 \
     -P GearmanHost=192.168.1.1 \
     -P NetworkName=tripleo-bm-test \
     -P PublicInterface=eth2 \
-    -P Hosts="10.10.16.175 ci-overcloud.tripleo.org" \
+    -P Hosts="$1 ci-overcloud.tripleo.org" \
     testenv
 
