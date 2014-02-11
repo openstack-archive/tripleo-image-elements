@@ -10,4 +10,3 @@ os-apply-config
 os-refresh-config
 neutron-openvswitch-agent
 neutron-server
-rabbitmq-server
