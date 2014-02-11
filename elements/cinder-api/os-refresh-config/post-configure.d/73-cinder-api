@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu
 
-/opt/stack/venvs/cinder/bin/cinder-manage db sync
+cinder-manage db sync
 
 os-svc-enable -n cinder-api
 os-svc-enable -n cinder-scheduler

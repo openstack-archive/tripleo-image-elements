@@ -1,5 +1,7 @@
 #!/bin/bash
 set -eux
 
+ln -s /opt/stack/venvs/cinder/bin/cinder-manage /usr/local/bin/cinder-manage
+
 os-svc-daemon cinder-api cinder cinder-api "--config-dir /etc/cinder"
 os-svc-daemon cinder-scheduler cinder cinder-scheduler "--config-dir /etc/cinder"
