@@ -2,10 +2,17 @@
 
 set -eux
 
+DISTRO=`lsb_release -si`
+
 install-packages openstack-keystone
+
+KEYSTONE_USER=keystone
+if [ "openSUSE project" = "$DISTRO" ]; then
+    KEYSTONE_USER=openstack-keystone
+fi
 
 # When keystone-manage is run as root during os-refresh-config it will create
 # the initial keystone log file root owned, and then the keystone service will
 # fail to start. Create the initial keystone owned log file here instead.
 touch /var/log/keystone/keystone.log
-chown keystone.keystone /var/log/keystone/keystone.log
+chown $KEYSTONE_USER: /var/log/keystone/keystone.log
