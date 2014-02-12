@@ -36,7 +36,7 @@
       "pxe_deploy_timeout": "2400",
       "virtual_power": {
         "user": "stack",
-        "key": "/opt/stack/boot-stack/virtual-power-key",
+        "ssh_key": "PUTAPRIVATEKEYHERE",
         "ssh_host": "192.168.122.1",
         "type": "virsh"
       }

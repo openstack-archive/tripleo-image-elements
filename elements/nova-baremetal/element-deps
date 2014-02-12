@@ -1,3 +1,4 @@
 iptables
 nova-compute
+os-apply-config
 os-refresh-config
