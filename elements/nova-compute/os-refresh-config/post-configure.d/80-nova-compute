@@ -3,8 +3,6 @@ set -eux
 
 modprobe nbd || true
 
-chown -R nova:nova /var/run/nova
-
 os-svc-enable -n nova-compute
 
 os-svc-restart -n nova-compute
