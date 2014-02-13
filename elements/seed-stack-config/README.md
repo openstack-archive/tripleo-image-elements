@@ -12,10 +12,12 @@ at boot-time by Heat itself).
 Usage
 -----
 
-Edit config.json to customise it for your deployment environment. The default
-is configured for nova-baremetal operation in a seed VM. The configuration
-options are documented in the actual elements that use the configuration - e.g.
-nova, neutron etc.
+Copy config.json (our basic schema) to local.json and  customise it for your
+deployment environment. The default is mostly configured for nova-baremetal
+operation in a seed VM (just add SSH key). The configuration options are
+documented in the actual elements that use the configuration - e.g.  nova,
+neutron etc. If local.json does not exist, config.json will be used, but
+this is for backwards compatability and will be removed in a future release.
 
 Configuration keys
 ------------------
