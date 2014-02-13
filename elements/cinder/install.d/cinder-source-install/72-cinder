@@ -5,12 +5,6 @@ install-packages lvm2 libssl-dev tgt
 echo "qpid-python" | tee -a /opt/stack/cinder/requirements.txt
 os-svc-install -n cinder -u cinder -r /opt/stack/cinder -c cinder-all
 
-mkdir -p /etc/tgt/conf.d
-install -d -o root -g cinder -m 0770 /var/lib/cinder/volumes
-register-state-path /var/lib/cinder
-echo 'include /etc/tgt/conf.d/cinder_tgt.conf' > /etc/tgt/targets.conf
-echo 'include /mnt/state/var/lib/cinder/volumes/*' > /etc/tgt/conf.d/cinder_tgt.conf
-
 cp -a /opt/stack/cinder/etc/cinder/rootwrap* /etc/cinder
 cp /opt/stack/cinder/etc/cinder/api-paste.ini /etc/cinder/api-paste.ini
 cp /opt/stack/cinder/etc/cinder/policy.json /etc/cinder/policy.json

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -eux
+
+mkdir -p /etc/tgt/conf.d
+install -d -o root -g cinder -m 0770 /var/lib/cinder/volumes
+register-state-path /var/lib/cinder
+echo 'include /etc/tgt/conf.d/cinder_tgt.conf' > /etc/tgt/targets.conf
+echo 'include /mnt/state/var/lib/cinder/volumes/*' > /etc/tgt/conf.d/cinder_tgt.conf
