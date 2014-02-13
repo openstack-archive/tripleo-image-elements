@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -eux
+
+install -d -o swift -g swift /srv/node /var/cache/swift
