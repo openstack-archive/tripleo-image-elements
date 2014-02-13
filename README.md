@@ -1,7 +1,7 @@
-Image building rules for Openstack images
+Image building rules for OpenStack images
 =========================================
 
-These elements are used to build disk images for deploying Openstack via Heat.
+These elements are used to build disk images for deploying OpenStack via Heat.
 They are built as part of the TripleO (https://github.com/tripleo/incubator)
 umbrella project.
 
