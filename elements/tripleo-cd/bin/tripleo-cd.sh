@@ -17,8 +17,11 @@
 
 set -eux
 
+# To use this, create /opt/stack/testenv.json matching the region it is running
+# in. While we only CD the overcloud, only overcloud related keys are needed
+# - e.g. {"arch": "amd64"}
+
 export OVERCLOUD_DIB_EXTRA_ARGS="pypi"
-export NODE_ARCH=amd64
 export DIB_COMMON_ELEMENTS="pypi-openstack pip-cache stackuser"
 THROTTLELOCK=$(mktemp /tmp/tripleo-cd-throttle-XXXXXX.lock)
 while true; do
