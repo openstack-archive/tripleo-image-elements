@@ -1,6 +1,6 @@
-Pip install Openstack python- client tools.
+Pip install OpenStack python- client tools.
 
-The element will install Openstack python-*clients.
+The element will install OpenStack python-*clients.
 This element is intended to to allow other elements who require client tools
 access to installing them in a uniform way.
 
