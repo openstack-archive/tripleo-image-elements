@@ -2,4 +2,12 @@
 set -eux
 
 mkdir -p /var/lib/cloud/data
-install -D -m 0755 -o root -g root $(dirname $0)/../config.json /var/lib/heat-cfntools/cfn-init-data
+
+CONFIG_DIR="$(dirname $0)/../"
+if [ -e "$CONFIG_DIR/local.json" ]; then
+    CONFIG_FILE="$CONFIG_DIR/local.json"
+else
+    echo "Deprecated: Using config.json rather than local.json" >&2
+    CONFIG_FILE="$CONFIG_DIR/config.json"
+fi
+install -D -m 0755 -o root -g root "$CONFIG_FILE" /var/lib/heat-cfntools/cfn-init-data

@@ -9,3 +9,4 @@ dist
 build
 AUTHORS
 ChangeLog
+elements/seed-stack-config/local.json
