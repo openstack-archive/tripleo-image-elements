@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eu
+
+install-packages nfs-kernel-server
