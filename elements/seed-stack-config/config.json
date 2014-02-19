@@ -25,6 +25,7 @@
     "host": "127.0.0.1",
     "db":    "mysql://nova:unset@localhost/nova",
     "compute_driver": "baremetal.driver.BareMetalDriver",
+    "default_ephemeral_format": "ext4",
     "tuning": {
         "ram_allocation_ratio": "1.0",
         "reserved_host_memory_mb": "0"
