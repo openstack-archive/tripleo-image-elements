@@ -14,3 +14,5 @@ glance:
     swift-store-user: service:glance
     swift-store-key:  userpassword
       - The credentials to use against swift if using the swift backend.
+    api-workers: 1
+      - The number of Glance API server processes to start.
