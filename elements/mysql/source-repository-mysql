@@ -1,0 +1,2 @@
+# Due to https://bugs.launchpad.net/percona-xtradb-cluster/+bug/1213855 we are running a testing build
+xtradb-cluster tar /usr/local/Percona-XtraDB-Cluster http://www.percona.com/redir/downloads/TESTING/Percona-XtraDB-Cluster/5.5.33-23.7.5/release-5.5.33/476/binary/linux/$PERCONA_ARCH/Percona-XtraDB-Cluster-5.5.33-23.7.5.476-static-openssl-1.0.1e.Linux.$PERCONA_ARCH.tar.gz
