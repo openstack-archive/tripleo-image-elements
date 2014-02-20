@@ -7,6 +7,8 @@ glance:
       - Show more verbose log output (sets INFO log level output)
     debug: False
       - Show debugging output in logs (sets DEBUG log level output)
+    db: mysql://glance:unset@localhost/glance
+      - SQLAlchemy database connection string
     backend: swift
       - The backend store to use
     service-password: password
