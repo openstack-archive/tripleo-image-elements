@@ -15,10 +15,7 @@
 # under the License.
 set -eux
 
-install-packages libyaml-dev pkg-config python-dev python-pip build-essential
-
-# need latest virtualenv
-pip install -U virtualenv
+install-packages libyaml-dev pkg-config python-dev build-essential
 
 mkdir -p /opt/stack/venvs
 virtualenv /opt/stack/venvs/pypi-mirror

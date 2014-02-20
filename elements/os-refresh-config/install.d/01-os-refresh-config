@@ -4,12 +4,13 @@
 
 set -eux
 
-install-packages python-virtualenv
+# pip and virtualenv is installed by the pip-and-virtualenv element
 
 virtualenv --setuptools /opt/stack/venvs/os-refresh-config
 
 # Need setuptools>=1.0 to manage connections when
 # downloading from pypi using http_proxy and https_proxy
+/opt/stack/venvs/os-refresh-config/bin/pip install -U pip
 /opt/stack/venvs/os-refresh-config/bin/pip install -U 'setuptools>=1.0'
 /opt/stack/venvs/os-refresh-config/bin/pip install -U os-refresh-config
 
