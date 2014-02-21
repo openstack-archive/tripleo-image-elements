@@ -17,7 +17,7 @@ deployment environment. The default is mostly configured for nova-baremetal
 operation in a seed VM (just add SSH key). The configuration options are
 documented in the actual elements that use the configuration - e.g.  nova,
 neutron etc. If local.json does not exist, config.json will be used, but
-this is for backwards compatability and will be removed in a future release.
+this is for backwards compatibility and will be removed in a future release.
 
 Configuration keys
 ------------------
