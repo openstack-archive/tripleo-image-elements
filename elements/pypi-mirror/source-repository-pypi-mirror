@@ -1,1 +1,1 @@
-pypi-mirror git /opt/stack/pypi-mirror https://git.openstack.org/cgit/openstack-infra/pypi-mirror
+pypi-mirror git /opt/stack/pypi-mirror https://git.openstack.org/openstack-infra/pypi-mirror

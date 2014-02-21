@@ -1,1 +1,1 @@
-ironic git /opt/stack/ironic https://git.openstack.org/cgit/openstack/ironic
+ironic git /opt/stack/ironic https://git.openstack.org/openstack/ironic

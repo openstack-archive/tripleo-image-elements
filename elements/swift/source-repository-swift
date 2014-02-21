@@ -1,1 +1,1 @@
-swift git /opt/stack/swift https://git.openstack.org/cgit/openstack/swift
+swift git /opt/stack/swift https://git.openstack.org/openstack/swift
