@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eux
+
+os-svc-restart -n libvirt-bin
