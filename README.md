@@ -2,7 +2,7 @@ Image building rules for OpenStack images
 =========================================
 
 These elements are used to build disk images for deploying OpenStack via Heat.
-They are built as part of the TripleO (https://github.com/tripleo/incubator)
+They are built as part of the TripleO (https://wiki.openstack.org/wiki/TripleO)
 umbrella project.
 
 Instructions
@@ -12,8 +12,8 @@ Checkout this source tree and also the diskimage builder
 (https://github.com/openstack/diskimage-builder), export an ELEMENTS\_PATH
 to add elements from this tree, and build any disk images you need.
 
-	git clone https://github.com/openstack/diskimage-builder.git
-	git clone https://github.com/openstack/tripleo-image-elements.git
+	git clone https://git.openstack.org/openstack/diskimage-builder.git
+	git clone https://git.openstack.org/openstack/tripleo-image-elements.git
 	export ELEMENTS_PATH=tripleo-image-elements/elements
 	diskimage-builder/bin/disk-image-create -u base vm bootstrap local-config stackuser heat-cfntools -a i386 -o bootstrap
 
