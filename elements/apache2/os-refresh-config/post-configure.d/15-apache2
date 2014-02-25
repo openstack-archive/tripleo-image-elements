@@ -33,8 +33,9 @@ if [ -f /etc/debian_version ]; then
 fi
 
 # Pick up on any config changes other elements may have done
+# if service is not running reload isnt sufficient, so restart
 if [ -f /etc/debian_version ]; then
-    service apache2 reload
+    service apache2 reload || service apache2 restart
 elif [ -f /etc/yum.conf ]; then
-    service httpd reload
+    service httpd reload || service httpd restart
 fi
