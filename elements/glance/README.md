@@ -18,3 +18,8 @@ glance:
       - The credentials to use against swift if using the swift backend.
     api-workers: 1
       - The number of Glance API server processes to start.
+    notifier-strategy: noop
+      - Strategy to use for notification queue.
+    log-file: ''
+      - The filepath of the file to use for logging messages from Glance’s servers.
+      - The default is unset, which implies stdout.
