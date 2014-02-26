@@ -3,5 +3,17 @@
 set -eux
 
 os-svc-daemon swift-account swift swift-account-server /etc/swift/account-server.conf
+os-svc-daemon swift-account-auditor swift swift-account-auditor /etc/swift/account-server.conf
+os-svc-daemon swift-account-reaper swift swift-account-reaper /etc/swift/account-server.conf
+os-svc-daemon swift-account-replicator swift swift-account-replicator /etc/swift/account-server.conf
+
 os-svc-daemon swift-container swift swift-container-server /etc/swift/container-server.conf
+os-svc-daemon swift-container-auditor swift swift-container-auditor /etc/swift/container-server.conf
+os-svc-daemon swift-container-replicator swift swift-container-replicator /etc/swift/container-server.conf
+os-svc-daemon swift-container-sync swift swift-container-sync /etc/swift/container-server.conf
+os-svc-daemon swift-container-updater swift swift-container-updater /etc/swift/container-server.conf
+
 os-svc-daemon swift-object swift swift-object-server /etc/swift/object-server.conf
+os-svc-daemon swift-object-auditor swift swift-object-auditor /etc/swift/object-server.conf
+os-svc-daemon swift-object-replicator swift swift-object-replicator /etc/swift/object-server.conf
+os-svc-daemon swift-object-updater swift swift-object-updater /etc/swift/object-server.conf
