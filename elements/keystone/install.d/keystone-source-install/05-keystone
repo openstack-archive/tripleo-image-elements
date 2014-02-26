@@ -3,5 +3,5 @@ set -eux
 os-svc-install -u keystone -r /opt/stack/keystone
 
 # Workaround for https://bugs.launchpad.net/tripleo/+bug/1288425
-/opt/stack/venvs/keystone/bin/pip install -U kombu
-/opt/stack/venvs/keystone/bin/pip install -U qpid-python
+$KEYSTONE_VENV_DIR/bin/pip install -U kombu
+$KEYSTONE_VENV_DIR/bin/pip install -U qpid-python

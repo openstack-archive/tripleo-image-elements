@@ -9,7 +9,7 @@ cp -a /opt/stack/cinder/etc/cinder/rootwrap* /etc/cinder
 cp /opt/stack/cinder/etc/cinder/api-paste.ini /etc/cinder/api-paste.ini
 cp /opt/stack/cinder/etc/cinder/policy.json /etc/cinder/policy.json
 
-ln -sf /opt/stack/venvs/cinder/bin/cinder-rootwrap /usr/local/bin/cinder-rootwrap
+ln -sf $CINDER_VENV_DIR/bin/cinder-rootwrap /usr/local/bin/cinder-rootwrap
 
 echo "cinder ALL=(root) NOPASSWD: /usr/local/bin/cinder-rootwrap" > /etc/sudoers.d/cinder
 chmod 0440 /etc/sudoers.d/cinder
