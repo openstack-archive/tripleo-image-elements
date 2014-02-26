@@ -24,6 +24,8 @@ glance:
         log-file: ''
           - The path of the file to use for logging messages from Glance’s API server.
           - The default is unset, which implies stdout.
+        default-log-levels:
+          - Logging: fine tune default log levels
     registry:
         verbose: False
           - Show more verbose log output (sets INFO log level output)
@@ -32,3 +34,5 @@ glance:
         log-file: ''
           - The path of the file to use for logging messages from Glance’s Registry server.
           - The default is unset, which implies stdout.
+        default-log-levels:
+          - Logging: fine tune default log levels
