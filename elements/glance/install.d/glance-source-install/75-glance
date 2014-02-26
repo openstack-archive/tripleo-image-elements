@@ -3,7 +3,7 @@ set -eux
 
 install-packages python-mysqldb libssl-dev
 
-os-svc-install -n glance -u glance -r /opt/stack/glance
+os-svc-install -u glance -r /opt/stack/glance
 
 ln -s /opt/stack/venvs/glance/bin/glance-manage /usr/local/bin/glance-manage
 

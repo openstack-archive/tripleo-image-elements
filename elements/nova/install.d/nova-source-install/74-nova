@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-os-svc-install -n nova -u nova -r /opt/stack/nova
+os-svc-install -u nova -r /opt/stack/nova
 
 cp /opt/stack/nova/etc/nova/policy.json /etc/nova/policy.json
 cp /opt/stack/nova/etc/nova/api-paste.ini /etc/nova/api-paste.ini

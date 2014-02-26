@@ -14,7 +14,7 @@ if [ -d /etc/apache2 ]; then
     rm -f /etc/apache2/sites-enabled/{000-default.conf,default.conf,default-ssl.conf}
 fi
 
-os-svc-install -n horizon -u horizon -r /opt/stack/horizon
+os-svc-install -u horizon -r /opt/stack/horizon
 
 # Django won't start otherwise:
 touch /etc/horizon/.secret_key_store

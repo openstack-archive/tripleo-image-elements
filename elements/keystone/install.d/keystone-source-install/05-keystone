@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eux
-os-svc-install -n keystone -u keystone -r /opt/stack/keystone -c "/opt/stack/keystone/bin/keystone-all"
+os-svc-install -u keystone -r /opt/stack/keystone
 
 # Workaround for https://bugs.launchpad.net/tripleo/+bug/1288425
 /opt/stack/venvs/keystone/bin/pip install -U kombu
