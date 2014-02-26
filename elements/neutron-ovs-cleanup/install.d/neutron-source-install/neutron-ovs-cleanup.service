@@ -6,7 +6,7 @@ Before=network.service
 
 [Service]
 Type=oneshot
-ExecStart=/opt/stack/venvs/neutron/bin/neutron-ovs-cleanup --ovs_all_ports
+ExecStart=/usr/local/bin/neutron-ovs-cleanup --ovs_all_ports
 User=root
 RemainAfterExit=yes
 
