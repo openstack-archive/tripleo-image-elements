@@ -7,3 +7,5 @@ install-packages libssl-dev
 os-svc-install -u ironic -r /opt/stack/ironic
 
 install -d -m 0750 -o ironic -g ironic /etc/ironic
+
+ln -s /opt/stack/venvs/ironic/bin/ironic-dbsync /usr/local/bin/ironic-dbsync

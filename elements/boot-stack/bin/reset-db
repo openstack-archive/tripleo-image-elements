@@ -26,7 +26,6 @@ fi
 service mysql restart || service mysqld restart
 
 PATH=/usr/local/bin:$PATH
-venvs=/opt/stack/venvs
 
 os-db-create keystone keystone $db_pass
 run_db_sync && keystone-manage db_sync
@@ -36,19 +35,19 @@ if which cinder-manage 1>/dev/null 2>&1; then
     run_db_sync && cinder-manage db sync
 fi
 
-if [ -x "$venvs/ironic/bin/ironic-dbsync" ] ; then
+if which ironic-dbsync 1>/dev/null 2>&1; then
     os-db-create ironic ironic $db_pass
-    run_db_sync && $venvs/ironic/bin/ironic-dbsync --config-file /etc/ironic/ironic.conf
+    run_db_sync && ironic-dbsync --config-file /etc/ironic/ironic.conf
 fi
 
-if [ -x "$venvs/tuskar/bin/tuskar-dbsync" ] ; then
+if which tuskar-dbsync 1>/dev/null 2>&1; then
     os-db-create tuskar tuskar $db_pass
-    run_db_sync && $venvs/tuskar/bin/tuskar-dbsync --config-file /etc/tuskar/tuskar.conf
+    run_db_sync && tuskar-dbsync --config-file /etc/tuskar/tuskar.conf
 fi
 
-if [ -x "$venvs/ceilometer/bin/ceilometer-dbsync" ] ; then
+if which ceilometer-dbsync 1>/dev/null 2>&1; then
     os-db-create ceilometer ceilometer $db_pass
-    run_db_sync && $venvs/ceilometer/bin/ceilometer-dbsync --config-file /etc/ceilometer/ceilometer.conf
+    run_db_sync && ceilometer-dbsync --config-file /etc/ceilometer/ceilometer.conf
 fi
 
 os-db-create nova nova $db_pass
@@ -64,4 +63,4 @@ os-db-create heat heat $db_pass
 run_db_sync && heat-manage db_sync
 
 os-db-create ovs_neutron neutron $db_pass
-/opt/stack/venvs/neutron/bin/neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
+neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head

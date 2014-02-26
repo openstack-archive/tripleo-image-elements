@@ -7,3 +7,5 @@ os-svc-install -u ceilometer -r /opt/stack/ceilometer
 install -m 640 -o ceilometer -g ceilometer /opt/stack/ceilometer/etc/ceilometer/pipeline.yaml /etc/ceilometer
 install -m 640 -o ceilometer -g ceilometer /opt/stack/ceilometer/etc/ceilometer/policy.json /etc/ceilometer
 install -m 640 -o ceilometer -g ceilometer /opt/stack/ceilometer/etc/ceilometer/sources.json /etc/ceilometer
+
+ln -s /opt/stack/venvs/ceilometer/bin/ceilometer-dbsync /usr/local/bin/ceilometer-dbsync
