@@ -89,16 +89,18 @@ function usage() {
   echo "  -r   service's git repo url"
   echo "  -b   repo branch or ref (default 'master')"
   echo "  -u   name of the service run-as user"
-  exit 0
 }
 
-while getopts r:u:c:n:h:b: opt; do
+user=
+repo=
+while getopts hr:u:b: opt; do
   case "$opt" in
     u)  user=$OPTARG;;
-    h)  usage;;
+    h)  usage; exit 0;;
     r)  repo=$OPTARG;;
     b)  branch=$OPTARG;;
-    \?) usage;;
+    \?) usage; exit 1;;
+    :) usage; exit 1;;
   esac
 done
 

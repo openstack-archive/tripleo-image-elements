@@ -23,7 +23,7 @@ service will not be started automatically nor can it be manually started.
 ## example usage
 ```bash
 # clone nova.git from github, and install it and its dependencies to /opt/stack/venvs/nova
-os-svc-install -u nova -n nova-all -c 'nova-all --someoption' -r https://github.com/openstack/nova.git
+os-svc-install -u nova -r https://github.com/openstack/nova.git
 
 # install a system-start script for nova-api
 os-svc-daemon -e 'foo=bar bar=baz' -n nova-api -u nova -c /opt/stack/venvs/nova/bin/nova-api -- --config-dir /etc/nova
