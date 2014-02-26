@@ -10,6 +10,6 @@ if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
     # https://bugzilla.redhat.com/show_bug.cgi?id=1055788
     os-svc-daemon nova-baremetal-deploy-helper nova nova-baremetal-deploy-helper "--config-dir /etc/nova"
 
-    mkdir -p /opt/stack/venvs/nova/bin/
-    ln -s /bin/nova-baremetal-deploy-helper /opt/stack/venvs/nova/bin/nova-baremetal-deploy-helper
+    mkdir -p $NOVA_VENV_DIR/bin/
+    ln -s /bin/nova-baremetal-deploy-helper $NOVA_VENV_DIR/bin/nova-baremetal-deploy-helper
 fi
