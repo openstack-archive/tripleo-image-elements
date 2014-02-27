@@ -6,6 +6,6 @@ install-packages python-mysqldb
 cp -r /opt/stack/heat/etc/heat/environment.d /etc/heat
 cp -r /opt/stack/heat/etc/heat/templates /etc/heat
 
-ln -s /opt/stack/venvs/heat/bin/heat-manage /usr/local/bin/heat-manage
+ln -s $HEAT_VENV_DIR/bin/heat-manage /usr/local/bin/heat-manage
 
 os-svc-daemon heat-engine heat heat-engine

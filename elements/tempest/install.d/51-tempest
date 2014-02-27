@@ -6,10 +6,13 @@ install-packages augeas-tools
 
 os-svc-install -u tempest -r /opt/stack/tempest
 
-source /opt/stack/venvs/tempest/bin/activate
+source $TEMPEST_VENV_DIR/bin/activate
 cd /opt/stack/tempest
 pip install -r test-requirements.txt
 testr init
+
+# soft link testr into PATH so we can use it directly in run-tempest
+ln -sf $TEMPEST_VENV_DIR/bin/testr /usr/local/bin/testr
 
 install -m 0664 -o root -g root $(dirname $0)/../tests2skip.txt /opt/stack/tempest/tests2skip.txt
 install -m 0775 -o root -g root $(dirname $0)/../tests2skip.py /opt/stack/tempest/tests2skip.py
