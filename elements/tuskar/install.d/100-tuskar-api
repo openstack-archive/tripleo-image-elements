@@ -8,6 +8,6 @@ install -d -m 0750 -o tuskar -g tuskar /etc/tuskar
 cp -a /opt/stack/tuskar/etc/tuskar/policy.json /etc/tuskar
 cp -a /opt/stack/tuskar/etc/tuskar/tripleo-heat-templates /etc/tuskar
 
-os-svc-daemon tuskar-api tuskar tuskar-api "--config-dir /etc/tuskar"
+os-svc-daemon -i "$TUSKAR_VENV_DIR" tuskar-api tuskar tuskar-api "--config-dir /etc/tuskar"
 
 ln -s $TUSKAR_VENV_DIR/bin/tuskar-dbsync /usr/local/bin/tuskar-dbsync

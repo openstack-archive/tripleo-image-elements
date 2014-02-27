@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
-os-svc-daemon heat-api heat heat-api
-os-svc-daemon heat-api-cfn heat heat-api-cfn
-os-svc-daemon heat-api-cloudwatch heat heat-api-cloudwatch
+os-svc-daemon -i "$HEAT_VENV_DIR" heat-api heat heat-api
+os-svc-daemon -i "$HEAT_VENV_DIR" heat-api-cfn heat heat-api-cfn
+os-svc-daemon -i "$HEAT_VENV_DIR" heat-api-cloudwatch heat heat-api-cloudwatch
 
 cp /opt/stack/heat/etc/heat/api-paste.ini /etc/heat/api-paste.ini

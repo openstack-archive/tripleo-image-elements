@@ -11,4 +11,4 @@ install-packages openstack-nova-compute
 rm -f /etc/libvirt/qemu/networks/autostart/default.xml
 rm -f /etc/libvirt/qemu/networks/default.xml
 
-os-svc-daemon -n nova-compute -u nova -c noop -d
+os-svc-daemon -i "$NOVA_VENV_DIR" -n nova-compute -u nova -c noop -d

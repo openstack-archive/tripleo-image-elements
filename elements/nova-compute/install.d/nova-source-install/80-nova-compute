@@ -6,7 +6,7 @@ install-packages ebtables qemu-utils syslinux
 
 # LIBVIRT_DEFAULT_URI needs to be set due to
 # https://bugs.launchpad.net/tripleo/+bug/1226310
-os-svc-daemon -e "LIBVIRT_DEFAULT_URI=qemu:///system" nova-compute  nova nova-compute          "--config-dir /etc/nova"
+os-svc-daemon -i "$NOVA_VENV_DIR" -e "LIBVIRT_DEFAULT_URI=qemu:///system" nova-compute  nova nova-compute          "--config-dir /etc/nova"
 
 # Use the rootwrap config from the source repo.
 install -o root -g root -m 0755 -d /etc/nova/rootwrap.d
