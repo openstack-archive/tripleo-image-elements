@@ -1,21 +1,20 @@
 #!/bin/bash
 set -eux
 
-function python-install() {
-  local name=$1
-  local svc_root=$2
+function python_install() {
+  local svc_root=$1
+  local install_dir=$2
+  local system_site_packages=${3:-"False"}
 
-  pushd /opt/stack/venvs
   SITE_PCKGS="--no-site-packages"
-  # Nova depends on python-libvirt which can't be installed via pip
-  if [ $name == "nova" ]; then
+  if [ $system_site_packages == "True" ]; then
     SITE_PCKGS="--system-site-packages"
   fi
-  virtualenv $SITE_PCKGS $name
-  popd
+  mkdir -p $(dirname $install_dir)
+  virtualenv $SITE_PCKGS $install_dir
 
   set +u
-  source /opt/stack/venvs/$name/bin/activate
+  source $install_dir/bin/activate
   set -u
 
   if [ -e $svc_root/requirements.txt ]; then
@@ -46,10 +45,12 @@ function python-install() {
 }
 
 
-function install-os-service() {
+function install_os_service() {
   local user=$1
   local repo=$(echo $2 | sed 's/github.com/review.openstack.org/')
   local branch=$3
+  local directory=$4
+  local system_site_packages=$5
 
   id $user || useradd $user --system -d /var/run/$user -s /bin/false
 
@@ -63,10 +64,10 @@ function install-os-service() {
   # this would be the case when the source was retrieved by
   # the source-repositories element
   if [ "${repo:0:1}" = "/" ] ; then
-    python-install $user $repo
+    python_install $repo $directory $system_site_packages
   elif [ ! -e $svc_root ]; then
     git clone --depth=1 -b $branch $repo $svc_root
-    python-install $user $svc_root
+    python_install $svc_root $directory $system_site_packages
   else
     if ! git $git_dir remote -v | grep $repo; then
       echo "ERROR: $svc_root exists and did not come from $repo"
@@ -88,17 +89,24 @@ function usage() {
   echo "  -h   show usage and exit"
   echo "  -r   service's git repo url"
   echo "  -b   repo branch or ref (default 'master')"
+  echo "  -i   Optional: installation directory for the virtualenv."
+  echo "       If not specified defaults to /opt/stack/venv/<service_name>."
   echo "  -u   name of the service run-as user"
+  echo "  -s   enable --system-site-packages in the virtualenv."
 }
 
 user=
 repo=
-while getopts hr:u:b: opt; do
+install_dir=
+system_site_packages="False"
+while getopts hsr:u:b:i: opt; do
   case "$opt" in
     u)  user=$OPTARG;;
+    i)  install_dir=$OPTARG;;
     h)  usage; exit 0;;
     r)  repo=$OPTARG;;
     b)  branch=$OPTARG;;
+    s)  system_site_packages="True";;
     \?) usage; exit 1;;
     :) usage; exit 1;;
   esac
@@ -111,5 +119,9 @@ if [[ -z "$user" || -z "$repo" ]]; then
   exit 1
 fi
 
+if [[ -z "$install_dir" ]]; then
+    install_dir="/opt/stack/venvs/$user"
+fi
+
 install-packages python-dev git-core gcc libc6-dev libxml2-dev libxslt-dev libz-dev
-install-os-service "$user" "$repo" "$branch"
+install_os_service "$user" "$repo" "$branch" "$install_dir" "$system_site_packages"

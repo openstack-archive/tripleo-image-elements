@@ -18,6 +18,7 @@ usage() {
   echo "                 default: $DEFAULT_POSTSTART"
   echo "  -e ENV         Environment name=value entries to set in the service/job"
   echo "  -n SERVICENAME Name of job/service file."
+  echo "  -i INSTALLDIR  Optional: virtualenv installation directory. Defaults to: /opt/stack/venvs/<SERVICENAME>"
   echo "  -u RUNAS       User to run main executable as."
   echo "  -c RUNCMD      Command to execute. Must stay in foreground."
   echo "     arg...      Arguments will be passed to COMMAND"
@@ -26,6 +27,7 @@ usage() {
 
 # Can be set in environment now
 SERVICENAME=${SERVICENAME:-""}
+INSTALLDIR=
 RUNAS=${RUNAS:-""}
 RUNCMD=${RUNCMD:-""}
 ENV=${ENV:-""}
@@ -44,9 +46,10 @@ print_to_file() {
 OUTPUT=print_to_file
 
 nshift=0
-while getopts "phds:n:u:c:e:" opt; do
+while getopts "phds:n:i:u:c:e:" opt; do
     case "$opt" in
         n) SERVICENAME=$OPTARG;;
+        i) INSTALLDIR=$OPTARG;;
         u) RUNAS=$OPTARG;;
         c) RUNCMD=$OPTARG;;
         s) POSTSTART=$OPTARG;;
@@ -72,12 +75,18 @@ fi
 [ -n "$RUNAS" ] || { RUNAS=$1 ; shift; }
 [ -n "$RUNCMD" ] || { RUNCMD=$1 ; shift; }
 
+# if INSTALLDIR isn't set use /opt/stack/venvs/RUNAS
+# NOTE: this was our default before adding the -i option
+if [ -z "$INSTALLDIR" ]; then
+    INSTALLDIR="/opt/stack/venvs/$RUNAS"
+fi
 
 function install_upstart {
   local name=$1
-  local user=$2
-  local cmd=$3
-  shift; shift; shift
+  local install_dir=$2
+  local user=$3
+  local cmd=$4
+  shift; shift; shift; shift;
   local args=$*
 
   local env_entries=''
@@ -105,7 +114,7 @@ respawn
 # not hit the default of 10 times in 5 seconds. Make it 2 times in 5s.
 respawn limit 2 5
 
-exec start-stop-daemon --start -c $user --exec /opt/stack/venvs/$user/bin/$cmd -- $args
+exec start-stop-daemon --start -c $user --exec $install_dir/bin/$cmd -- $args
 
 post-start $POSTSTART
 EOF
@@ -113,9 +122,10 @@ EOF
 
 function install_systemd {
   local name=$1
-  local user=$2
-  local cmd=$3
-  shift; shift; shift
+  local install_dir=$2
+  local user=$3
+  local cmd=$4
+  shift; shift; shift; shift;
   local args=$*
 
   local env_entries=''
@@ -132,7 +142,7 @@ After=os-refresh-config.service
 Requires=$name-create-dir.service
 
 [Service]
-ExecStart=/opt/stack/venvs/$user/bin/$cmd $args
+ExecStart=$install_dir/bin/$cmd $args
 User=$user
 $env_entries
 
@@ -164,13 +174,13 @@ EOF
 # TODO: SysV init fallback support
 DIB_INIT_SYSTEM=$(dib-init-system)
 if [ "$DIB_INIT_SYSTEM" == "upstart" ]; then
-  install_upstart $SERVICENAME $RUNAS $RUNCMD $*
+  install_upstart $SERVICENAME $INSTALLDIR $RUNAS $RUNCMD $*
 elif [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
   if [ "$POSTSTART" != "$DEFAULT_POSTSTART" ] ; then
       echo "WARNING: post start is ignored with systemd." >&2
   fi
   if [ -z "$CREATE_DIR_ONLY" ]; then
-    install_systemd $SERVICENAME $RUNAS $RUNCMD $*
+    install_systemd $SERVICENAME $INSTALLDIR $RUNAS $RUNCMD $*
   fi
   install_create_dir_systemd $SERVICENAME $RUNAS
 fi

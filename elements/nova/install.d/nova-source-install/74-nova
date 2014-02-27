@@ -1,7 +1,8 @@
 #!/bin/bash
 set -eux
 
-os-svc-install -u nova -r /opt/stack/nova
+# -s enables system-site-packages explicitly for python-libvirt
+os-svc-install -u nova -r /opt/stack/nova -s
 
 cp /opt/stack/nova/etc/nova/policy.json /etc/nova/policy.json
 cp /opt/stack/nova/etc/nova/api-paste.ini /etc/nova/api-paste.ini
