@@ -2,7 +2,7 @@
 set -eux
 
 install-packages swig
-os-svc-install -u tuskar -r /opt/stack/tuskar
+os-svc-install -i "$TUSKAR_VENV_DIR" -u tuskar -r /opt/stack/tuskar
 
 install -d -m 0750 -o tuskar -g tuskar /etc/tuskar
 cp -a /opt/stack/tuskar/etc/tuskar/policy.json /etc/tuskar
