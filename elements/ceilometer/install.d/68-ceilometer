@@ -8,4 +8,4 @@ install -m 640 -o ceilometer -g ceilometer /opt/stack/ceilometer/etc/ceilometer/
 install -m 640 -o ceilometer -g ceilometer /opt/stack/ceilometer/etc/ceilometer/policy.json /etc/ceilometer
 install -m 640 -o ceilometer -g ceilometer /opt/stack/ceilometer/etc/ceilometer/sources.json /etc/ceilometer
 
-ln -s /opt/stack/venvs/ceilometer/bin/ceilometer-dbsync /usr/local/bin/ceilometer-dbsync
+ln -s $CEILOMETER_VENV_DIR/bin/ceilometer-dbsync /usr/local/bin/ceilometer-dbsync

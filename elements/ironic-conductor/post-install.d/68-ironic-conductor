@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-echo "ironic ALL=(root) NOPASSWD: /opt/stack/venvs/ironic/bin/ironic-rootwrap" > /etc/sudoers.d/ironic
+echo "ironic ALL=(root) NOPASSWD: $IRONIC_VENV_DIR/bin/ironic-rootwrap" > /etc/sudoers.d/ironic
 chmod 0440 /etc/sudoers.d/ironic
 visudo -c
 

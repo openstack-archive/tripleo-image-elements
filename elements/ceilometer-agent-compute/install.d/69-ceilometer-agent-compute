@@ -2,6 +2,6 @@
 set -eux
 
 install-packages libvirt-dev
-/opt/stack/venvs/ceilometer/bin/pip install libvirt-python
+$CEILOMETER_VENV_DIR/bin/pip install libvirt-python
 
 os-svc-daemon ceilometer-agent-compute ceilometer ceilometer-agent-compute --config-dir /etc/ceilometer

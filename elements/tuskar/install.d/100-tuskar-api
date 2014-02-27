@@ -10,4 +10,4 @@ cp -a /opt/stack/tuskar/etc/tuskar/tripleo-heat-templates /etc/tuskar
 
 os-svc-daemon tuskar-api tuskar tuskar-api "--config-dir /etc/tuskar"
 
-ln -s /opt/stack/venvs/tuskar/bin/tuskar-dbsync /usr/local/bin/tuskar-dbsync
+ln -s $TUSKAR_VENV_DIR/bin/tuskar-dbsync /usr/local/bin/tuskar-dbsync
