@@ -4,7 +4,7 @@ set -ex
 
 install-packages augeas-tools
 
-os-svc-install -i "$TEMPEST_VENV_DIR" -u tempest -r /opt/stack/tempest
+os-svc-install $TEMPEST_EXTRA_INSTALL_OPTS -i "$TEMPEST_VENV_DIR" -u tempest -r /opt/stack/tempest
 
 source $TEMPEST_VENV_DIR/bin/activate
 cd /opt/stack/tempest

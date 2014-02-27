@@ -4,7 +4,7 @@ set -eux
 # need the libssl header files
 install-packages libssl-dev
 
-os-svc-install -i "$IRONIC_VENV_DIR" -u ironic -r /opt/stack/ironic
+os-svc-install $IRONIC_EXTRA_INSTALL_OPTS -i "$IRONIC_VENV_DIR" -u ironic -r /opt/stack/ironic
 
 install -d -m 0750 -o ironic -g ironic /etc/ironic
 install -o root -g root -m 0644 /opt/stack/ironic/etc/ironic/policy.json /etc/ironic

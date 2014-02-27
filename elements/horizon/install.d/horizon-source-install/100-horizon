@@ -16,7 +16,7 @@ if [ -d /etc/apache2 ]; then
     sed -e "s|HORIZON_VENV_DIR|$HORIZON_VENV_DIR|g" -i /etc/apache2/sites-available/horizon.conf
 fi
 
-os-svc-install -i "$HORIZON_VENV_DIR" -u horizon -r /opt/stack/horizon
+os-svc-install $HORIZON_EXTRA_INSTALL_OPTS -i "$HORIZON_VENV_DIR" -u horizon -r /opt/stack/horizon
 
 # Django won't start otherwise:
 touch /etc/horizon/.secret_key_store
