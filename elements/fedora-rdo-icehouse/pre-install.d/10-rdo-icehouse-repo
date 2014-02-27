@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -eux
+
+install-packages http://repos.fedorapeople.org/repos/openstack/openstack-icehouse/rdo-release-icehouse-1.noarch.rpm
