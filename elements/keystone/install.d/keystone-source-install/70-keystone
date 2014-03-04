@@ -2,6 +2,7 @@
 set -eux
 
 DISTRO=`lsb_release -si` || true
+RELEASE=`lsb_release -r` || true
 
 os-svc-install -u keystone -r /opt/stack/keystone
 os-svc-daemon keystone keystone keystone-all "--config-dir /etc/keystone"
@@ -15,6 +16,9 @@ cp /opt/stack/keystone/etc/keystone-paste.ini /etc/keystone/keystone-paste.ini
 # percona-tookit is NOT supported on Fedora (retrieved 25-06-2013)
 # http://www.percona.com/mysql-support/policies/percona-toolkit-supported-platforms-and-versions
 if [[ "Ubuntu RedHatEnterpriseServer CentOS" =~ "$DISTRO" ]]; then
+    if [[ "RedHatEnterpriseServer" =~ "$DISTRO" && "$RELEASE" =~ "7." ]]; then
+        exit 0
+    fi
     install-packages percona-toolkit
     install -m 0755 -o root -g root $(dirname $0)/../cleanup-keystone-tokens.sh /usr/local/bin
     install -m 0640 -o root -g root $(dirname $0)/../keystone.crontab /etc/cron.d/keystone
