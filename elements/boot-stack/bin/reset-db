@@ -23,7 +23,7 @@ else
   touch ${DONE}
 fi
 
-service mysql restart || service mysqld restart
+os-svc-restart -n mysql
 
 PATH=/usr/local/bin:$PATH
 venvs=/opt/stack/venvs
