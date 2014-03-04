@@ -14,4 +14,4 @@ if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
     # https://bugzilla.redhat.com/show_bug.cgi?id=1057615
     rm -f /usr/lib/python2.7/site-packages/neutron-*.egg-info/requires.txt
 fi
-os-svc-daemon -i "$NEUTRON_VENV_DIR" -n neutron-server -u neutron -c noop -d
+os-svc-daemon -i "$NEUTRON_VENV_DIR" -n neutron-server -u neutron
