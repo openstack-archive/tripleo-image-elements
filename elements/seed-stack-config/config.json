@@ -16,10 +16,12 @@
     "cookie": "unset"
   },
   "glance": {
-    "backend": "file",
     "host": "127.0.0.1",
     "db": "mysql://glance:unset@localhost/glance",
-    "service-password": "unset"
+    "service-password": "unset",
+    "api": {
+        "backend": "file"
+    }
   },
   "nova": {
     "compute_hostname": "seed",
