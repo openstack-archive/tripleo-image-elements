@@ -3,9 +3,13 @@ set -eux
 
 install-packages libapache2-mod-wsgi libssl-dev libffi-dev
 
+if [ -d /etc/httpd ]; then
+   install -m 0644 -o root -g root $(dirname $0)/../files/horizon.conf /etc/httpd/conf.d/horizon.conf
+fi
+
 if [ -d /etc/apache2 ]; then
-    ln -s /etc/httpd/conf.d/horizon.conf /etc/apache2/sites-available/horizon.conf
-    ln -s /etc/httpd/conf.d/horizon.conf /etc/apache2/sites-enabled/horizon.conf
+    install -m 0644 -o root -g root $(dirname $0)/../files/horizon.conf /etc/apache2/sites-available
+    ln -s /etc/apache2/sites-available/horizon.conf /etc/apache2/sites-enabled/horizon.conf
     ln -s /var/log/apache2 /var/log/httpd
     rm -f /etc/apache2/sites-enabled/{000-default.conf,default.conf,default-ssl.conf}
 fi
