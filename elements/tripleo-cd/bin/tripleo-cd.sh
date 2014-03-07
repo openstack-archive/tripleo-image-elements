@@ -22,7 +22,9 @@ set -eux
 # - e.g. {"arch": "amd64"}
 
 export OVERCLOUD_DIB_EXTRA_ARGS="pypi"
-export DIB_COMMON_ELEMENTS="pypi-openstack pip-cache stackuser"
+export DIB_COMMON_ELEMENTS="pypi stackuser"
+export DIB_DISTRIBUTION_MIRROR=http://10.10.16.169/ubuntu
+export PYPI_MIRROR_URL=http://10.10.16.169/pypi/simple
 THROTTLELOCK=$(mktemp /tmp/tripleo-cd-throttle-XXXXXX.lock)
 while true; do
     flock -x $THROTTLELOCK sleep 600 &
