@@ -3,3 +3,5 @@
 set -eux
 
 install-packages openstack-neutron-openvswitch
+
+os-svc-daemon -n neutron-openvswitch-agent -u neutron -c noop -d
