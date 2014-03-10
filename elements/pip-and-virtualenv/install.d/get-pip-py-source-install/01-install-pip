@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eux
+
+python /tmp/get-pip.py
+pip install virtualenv
