@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -eux
+set -o pipefail
+
+if [ "$ARCH" == "amd64" -o "$ARCH" == "i386" ]; then
+    install-packages grub-pc
+else
+    echo "ERROR: localboot is not supported for $ARCH architectures."
+    exit 1
+fi
