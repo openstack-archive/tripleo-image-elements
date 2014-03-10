@@ -20,11 +20,11 @@
 
 import sys
 
-re=[]
+re = []
 with open(sys.argv[1]) as fp:
     for line in fp:
-        line=line.strip()
-        if not line: continue
-        if line[0] == '#': continue
+        line = line.strip()
+        if not line or line[0] == '#':
+            continue
         re.append(line)
-print "^(?!(%s))" % "|".join(re)
+print("^(?!(%s))" % "|".join(re))
