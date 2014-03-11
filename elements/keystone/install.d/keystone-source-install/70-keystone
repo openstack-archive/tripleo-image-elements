@@ -10,6 +10,7 @@ install -m 0755 -o keystone -g keystone -d /etc/keystone/ssl
 ln -s /opt/stack/venvs/keystone/bin/keystone-manage /usr/local/bin/keystone-manage
 
 cp /opt/stack/keystone/etc/policy.json /etc/keystone/policy.json
+cp /opt/stack/keystone/etc/keystone-paste.ini /etc/keystone/keystone-paste.ini
 
 # percona-tookit is NOT supported on Fedora (retrieved 25-06-2013)
 # http://www.percona.com/mysql-support/policies/percona-toolkit-supported-platforms-and-versions
