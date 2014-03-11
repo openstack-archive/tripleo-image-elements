@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eu
+
+[ -d /mnt/state/var/lib/nfs ] || install -d -m 0770 -o root -g root /mnt/state/var/lib/nfs
+os-svc-enable -n nfs-server
+os-svc-restart -n nfs-server
+exportfs -a -r -v

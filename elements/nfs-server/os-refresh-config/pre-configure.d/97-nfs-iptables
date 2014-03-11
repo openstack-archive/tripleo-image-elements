@@ -1,0 +1,9 @@
+#!/bin/bash
+set -eu
+
+add-rule INPUT -m state --state NEW -m tcp -p tcp --dport 111 -j ACCEPT
+add-rule INPUT -m state --state NEW -m udp -p udp --dport 111 -j ACCEPT
+add-rule INPUT -m state --state NEW -m tcp -p tcp --dport 2049 -j ACCEPT
+add-rule INPUT -m state --state NEW -m udp -p udp --dport 2049 -j ACCEPT
+add-rule INPUT -m state --state NEW -m tcp -p tcp --dport 20048 -j ACCEPT
+add-rule INPUT -m state --state NEW -m udp -p udp --dport 20048 -j ACCEPT
