@@ -1,2 +1,3 @@
 source-repositories
 pip-and-virtualenv
+pip-manifest

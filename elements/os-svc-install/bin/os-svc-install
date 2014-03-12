@@ -5,6 +5,8 @@ function python_install() {
   local svc_root=$1
   local install_dir=$2
   local system_site_packages=${3:-"False"}
+  local name=$(basename $install_dir)
+  local svc_manifest=$(get-pip-manifest $name)
 
   SITE_PCKGS="--no-site-packages"
   if [ $system_site_packages == "True" ]; then
@@ -17,30 +19,38 @@ function python_install() {
   source $install_dir/bin/activate
   set -u
 
-  if [ -e $svc_root/requirements.txt ]; then
-    reqs=$svc_root/requirements.txt
-  elif [ -e $svc_root/tools/pip-requires ]; then
-    reqs=$svc_root/tools/pip-requires
+  # If given an exact deps list, use it, and upgrade to the local git service
+  if [ -n "$svc_manifest" ]; then
+    use-pip-manifest $svc_manifest
   else
-    reqs=""
+    if [ -e $svc_root/requirements.txt ]; then
+      reqs=$svc_root/requirements.txt
+    elif [ -e $svc_root/tools/pip-requires ]; then
+      reqs=$svc_root/tools/pip-requires
+    else
+      reqs=""
+    fi
+
+    # bug #1201253 : virtualenv-1.10.1 embeds setuptools-0.9.8, which
+    # doesn't manage correctly HTTPS sockets when downloading pbr from
+    # https://pypi.python.org/simple/ if using http_proxy and
+    # https_proxy envvars
+    pip install -U 'setuptools>=1.0'
+
+    # bug #1293812 : Avoid easy_install triggering on pbr.
+    pip install -U 'pbr>=0.5.21,<1.0'
+
+    if [ -n "$reqs" ] ; then
+      pip install -r $reqs
+      # FIXME: pip requires doesn't include MySQL-python
+      pip install MySQL-python
+    fi
   fi
-
-  # bug #1201253 : virtualenv-1.10.1 embeds setuptools-0.9.8, which
-  # doesn't manage correctly HTTPS sockets when downloading pbr from
-  # https://pypi.python.org/simple/ if using http_proxy and
-  # https_proxy envvars
-  pip install -U 'setuptools>=1.0'
-
-  # bug #1293812 : Avoid easy_install triggering on pbr.
-  pip install -U 'pbr>=0.5.21,<1.0'
-
-  if [ -n "$reqs" ] ; then
-       pip install -r $reqs
-       # FIXME: pip requires doesn't include MySQL-python
-       pip install MySQL-python
-  fi
-
+  # Always replay this, as we cannot use the entry this would generate in the manifest
   pip install $svc_root
+
+  # Write the manifest of what was installed
+  write-pip-manifest $name
 
   set +u
   deactivate
