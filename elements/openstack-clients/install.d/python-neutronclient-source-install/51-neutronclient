@@ -2,4 +2,4 @@
 
 set -eux
 
-install-openstack-client neutron
+install-openstack-client $IRONICCLIENT_EXTRA_INSTALL_OPTS -c neutron -i $IRONICCLIENT_VENV_DIR

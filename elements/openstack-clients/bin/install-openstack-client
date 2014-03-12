@@ -2,22 +2,61 @@
 
 set -eux
 
-client=$1
+function usage() {
+  echo "options:"
+  echo "  -h   show usage and exit"
+  echo "  -c   client bin name"
+  echo "  -i   Optional: installation directory for the virtualenv."
+  echo "       If not specified defaults to /opt/stack/venv/python-<client name>client"
+  echo "  -s   enable --system-site-packages in the virtualenv."
+  exit $1
+}
+
+client=""
+install_dir=""
+system_site_packages="False"
+
+
+nshift=0
+while getopts "hsi:c:" opt; do
+    case "$opt" in
+        c) client=$OPTARG;;
+        i) install_dir=$OPTARG;;
+        s) system_site_packages="True";;
+        h) usage 0;;
+        \?) usage 1;;
+        :) usage 1;;
+    esac
+done
+
+if [[ -z "$client" ]]; then
+  echo "missing required 'client' parameter"
+  exit 1
+fi
+
 repo=python-${client}client
-client_manifest=$(get-pip-manifest ${repo})
-venv_base=/opt/stack/venvs
+if [ -z "$install_dir" ]; then
+    install_dir="/opt/stack/venvs/$repo"
+fi
 
 # We would like to use --system-site-packages here but if requirements.txt
 # contains libraries that are installed globally with versions that don't
 # satisfy our requirements.txt, we end up using the incorrect global library.
 # Because the global site-packages appears first in sys.path
 # TODO : Add this back in when we are using virtualenv >= 1.11
-virtualenv $venv_base/$repo
+
+SITE_PCKGS="--no-site-packages"
+if [ $system_site_packages == "True" ]; then
+    SITE_PCKGS="--system-site-packages"
+fi
+
+virtualenv $SITE_PCKGS $install_dir
 set +u
-source $venv_base/$repo/bin/activate
+source $install_dir/bin/activate
 set -u
 
 pushd /opt/stack/$repo
+client_manifest=$(get-pip-manifest ${repo})
 if [ -n "$client_manifest" ]; then
   use-pip-manifest $client_manifest
 else
@@ -41,7 +80,7 @@ python setup.py develop
 # Write the manifest of what was installed
 write-pip-manifest $repo
 
-ln -s $venv_base/$repo/bin/$client /usr/local/bin/$client
+ln -s $install_dir/bin/$client /usr/local/bin/$client
 popd
 
 set +u

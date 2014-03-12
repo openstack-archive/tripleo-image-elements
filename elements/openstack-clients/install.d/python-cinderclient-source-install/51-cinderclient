@@ -2,4 +2,5 @@
 
 set -eux
 
-install-openstack-client cinder
+install-openstack-client $CINDERCLIENT_EXTRA_INSTALL_OPTS -c cinder -i $CINDERCLIENT_VENV_DIR
+
