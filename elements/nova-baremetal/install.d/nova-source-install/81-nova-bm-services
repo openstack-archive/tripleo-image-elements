@@ -3,4 +3,4 @@ set -eux
 
 os-svc-daemon nova-baremetal-deploy-helper nova nova-baremetal-deploy-helper "--config-dir /etc/nova"
 
-ln -s /opt/stack/venvs/nova/bin/nova-baremetal-manage /usr/local/bin/nova-baremetal-manage
+ln -s $NOVA_VENV_DIR/bin/nova-baremetal-manage /usr/local/bin/nova-baremetal-manage
