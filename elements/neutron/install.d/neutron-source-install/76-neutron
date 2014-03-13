@@ -10,13 +10,13 @@ echo "qpid-python" | tee -a /opt/stack/neutron/requirements.txt
 
 os-svc-install -u neutron -r /opt/stack/neutron
 
-ln -sf /opt/stack/venvs/neutron/bin/neutron-rootwrap /usr/bin/neutron-rootwrap
-ln -sf /opt/stack/venvs/neutron/etc/neutron/rootwrap.d /etc/neutron/rootwrap.d
+ln -sf $NEUTRON_VENV_DIR/bin/neutron-rootwrap /usr/bin/neutron-rootwrap
+ln -sf $NEUTRON_VENV_DIR/etc/neutron/rootwrap.d /etc/neutron/rootwrap.d
 
 cp /opt/stack/neutron/etc/api-paste.ini /etc/neutron/api-paste.ini
 cp /opt/stack/neutron/etc/policy.json /etc/neutron/policy.json
 
-ln -s /opt/stack/venvs/neutron/bin/neutron-db-manage /usr/local/bin/neutron-db-manage
+ln -s $NEUTRON_VENV_DIR/bin/neutron-db-manage /usr/local/bin/neutron-db-manage
 
 echo "neutron ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/neutron
 echo "Defaults:neutron !requiretty" >> /etc/sudoers.d/neutron
