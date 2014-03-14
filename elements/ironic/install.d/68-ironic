@@ -9,3 +9,5 @@ os-svc-install -u ironic -r /opt/stack/ironic
 install -d -m 0750 -o ironic -g ironic /etc/ironic
 
 ln -s $IRONIC_VENV_DIR/bin/ironic-dbsync /usr/local/bin/ironic-dbsync
+
+ln -sf $IRONIC_VENV_DIR/bin/ironic-rootwrap /usr/local/bin/ironic-rootwrap
