@@ -100,8 +100,4 @@ set /files/opt/stack/tempest/etc/tempest.conf/network/tenant_network_cidr 172.16
 save
 EOF
 
-# activate throws errors if nounset is set
-set +u
-. /opt/stack/venvs/tempest/bin/activate
-set -u
 testr run --parallel $(python tests2skip.py tests2skip.txt)
