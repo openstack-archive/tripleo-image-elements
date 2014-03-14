@@ -49,7 +49,7 @@ register-state-path /var/lib/mysql
 # We need to setup the directory with appropriate permissions and then
 # the first time we boot a particular state partition we rsync this in.
 [ -d /var/log/mysql ] || install -d -o root -g mysql -m 0775 /var/log/mysql
-register-state-path /var/log/mysql
+register-state-path --leave-symlink /var/log/mysql
 
 DISTRO=`lsb_release -si` || true
 if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
