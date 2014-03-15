@@ -1,0 +1,15 @@
+#!/bin/bash
+set -eu
+# Install Ironic and IronicClient in nova venv.
+# TODO(NobodyCam): remove once Ironic Nova driver lands in Nova.
+set +u
+source $NOVA_VENV_DIR/bin/activate
+set -u
+
+pip install /opt/stack/ironic
+pip install /opt/stack/python-ironicclient
+
+set +u
+deactivate
+set -u
+
