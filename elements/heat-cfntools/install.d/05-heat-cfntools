@@ -9,6 +9,9 @@ mkdir -p /opt/stack/venvs
 VENV=/opt/stack/venvs/heat-cfntools
 virtualenv $VENV
 
+# bug #1293812 : Avoid easy_install triggering on pbr.
+$VENV/bin/pip install -U 'pbr>=0.5.21,<1.0'
+
 $VENV/bin/pip install heat-cfntools
 
 # symlink to /opt/aws/bin
