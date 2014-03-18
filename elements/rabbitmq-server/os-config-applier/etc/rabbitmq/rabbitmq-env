@@ -1,2 +1,0 @@
-LOG_BASE=/mnt/state/var/log/rabbitmq
-MNESIA_BASE=/mnt/state/var/lib/rabbitmq/mnesia
