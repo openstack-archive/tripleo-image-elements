@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -eux
+
+DISTRO=`lsb_release -si`
+
+if [ "openSUSE project" = "$DISTRO" ]; then
+    os-svc-enable -n iscsid
+    os-svc-restart -n iscsid
+fi
