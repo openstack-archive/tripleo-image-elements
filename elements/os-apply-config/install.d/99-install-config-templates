@@ -6,6 +6,8 @@
 set -eux
 TEMPLATE_ROOT=$(os-apply-config --print-templates)
 TEMPLATE_SOURCE=$(dirname $0)/../os-config-applier
-rsync --exclude='.*.swp' -Cr $TEMPLATE_SOURCE/ $TEMPLATE_ROOT/
+mkdir -p $TEMPLATE_ROOT
+
+[ -d $TEMPLATE_SOURCE ] && rsync --exclude='.*.swp' -Cr $TEMPLATE_SOURCE/ $TEMPLATE_ROOT/
 TEMPLATE_SOURCE=$(dirname $0)/../os-apply-config
-rsync --exclude='.*.swp' -Cr $TEMPLATE_SOURCE/ $TEMPLATE_ROOT/
+[ -d $TEMPLATE_SOURCE ] && rsync --exclude='.*.swp' -Cr $TEMPLATE_SOURCE/ $TEMPLATE_ROOT/
