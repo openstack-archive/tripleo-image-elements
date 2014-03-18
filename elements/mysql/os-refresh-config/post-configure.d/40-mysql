@@ -1,7 +1,4 @@
 #!/bin/bash
-os-svc-restart -n mysql
+set -eu
 
-DISTRO=`lsb_release -si` || true
-if [ "openSUSE project" = "$DISTRO" ]; then
-    ln -sf /var/run/mysqld/mysqld.sock /var/run/mysql/mysql.sock
-fi
+os-svc-restart -n mysql
