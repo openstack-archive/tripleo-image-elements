@@ -10,4 +10,4 @@ The Snakeoil SSL cert can be configured via Heat Metadata. For example:
         snakeoil_key: -----  BEGIN PlaceHolder...
 
 Sample usage shown in nagios3 template at:
-    https://github.com/openstack/tripleo-heat-templates
+    https://git.openstack.org/cgit/openstack/tripleo-heat-templates

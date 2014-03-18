@@ -8,9 +8,9 @@ umbrella project.
 Instructions
 ------------
 
-Checkout this source tree and also the diskimage builder
-(https://github.com/openstack/diskimage-builder), export an ELEMENTS\_PATH
-to add elements from this tree, and build any disk images you need.
+Checkout this source tree and also the diskimage builder, export an
+ELEMENTS\_PATH to add elements from this tree, and build any disk images you
+need.
 
 	git clone https://git.openstack.org/openstack/diskimage-builder.git
 	git clone https://git.openstack.org/openstack/tripleo-image-elements.git
