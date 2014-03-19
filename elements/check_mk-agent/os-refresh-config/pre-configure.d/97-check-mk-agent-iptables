@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# configure the IPTables rules required for check_mk
+
+set -eu
+
+add-rule INPUT -p tcp --dport 6556 -j ACCEPT

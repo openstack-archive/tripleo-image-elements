@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# install check-mk-agent and the logwatch plugin
+
+set -eu
+set -o xtrace
+
+install-packages xinetd check-mk-agent check-mk-agent-logwatch
+# check_mk is disabled by default so we need to enable it here
+sed -i "s/\tdisable        = yes/\tdisable        = no/g" /etc/xinetd.d/check_mk
+
+os-svc-enable -n xinetd
