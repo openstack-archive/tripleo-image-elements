@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eux
+
+TEMPLATE_ROOT=$(os-apply-config --print-templates)
+mkdir -p $TEMPLATE_ROOT
