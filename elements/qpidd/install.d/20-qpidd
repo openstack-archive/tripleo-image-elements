@@ -17,18 +17,6 @@ post-start exec sleep 1
 eof
 }
 
-function install_qpidd_systemd {
-  cat > /etc/systemd/system/qpidd.service << eof
-.include /lib/systemd/system/qpidd.service
-[Unit]
-Before=rc-local.service
-Restart=on-failure
-eof
-}
-
-
 if [ "$DIB_INIT_SYSTEM" == "upstart" ]; then
     install_qpidd_upstart
-elif [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
-    install_qpidd_systemd
 fi
