@@ -25,6 +25,9 @@ this in Heat:
               write: .*
               read: .*
         password_handle: {Ref: RabbitMQPasswordHandle}
+        keepalive_disabled: true/false
+        - Enable/Disable TCP keepalive on rabbitmq sockets (default is
+        for keepalive to be enabled).
 
 Using cfn-signal, we will feed back a generated password into the handle
 for use by other resources.
