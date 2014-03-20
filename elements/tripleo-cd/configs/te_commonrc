@@ -1,0 +1,16 @@
+#!/bin/bash
+
+source $TRIPLEO_ROOT/tripleo-incubator/scripts/set-os-type
+if [ $TRIPLEO_OS_DISTRO = "fedora" ] ; then
+    TRIPLEO_OS_DISTRO="fedora selinux-permissive"
+fi
+
+export TE_DISTRO=$TRIPLEO_OS_DISTRO
+export TE_EXTRA_ELEMENTS=
+export TE_NETWORK=tripleo-bm-test
+
+export TE_AUTHUSER=tripleo-ci
+export TE_AUTHTENANT=openstack-nodepool
+export TE_CPUPERENV=5
+export TE_DISKPERENV=100
+export TE_MEMPERENV=20

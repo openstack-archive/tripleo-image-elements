@@ -1,0 +1,22 @@
+#!/bin/bash
+
+export TRIPLEO_ROOT="$(readlink -f $(dirname $0)/../../../..)"
+source $(dirname ${BASH_SOURCE})/te_commonrc
+
+export TE_OVERCLOUDIP=$(nova list | grep overcloud-notCompute0 | grep -oE '192.0.2.[0-9]+')
+export TE_OVERCLOUDDNS=$(nova list | grep overcloud-notCompute0 | grep -oE '192.0.2.[0-9]+')
+export TE_OVERCLOUDPASSWD=$(grep OVERCLOUD_ADMIN_PASSWORD $TRIPLEO_ROOT/tripleo-incubator/tripleo-overcloud-passwords | cut -d "=" -f 2)
+export TE_GEARMANHOST=127.0.0.1
+export TE_AUTHURL=http://$TE_OVERCLOUDIP:5000/v2.0
+export TE_PUBLICINTERFACE=eth0
+export TE_COUNT=1
+
+# These are very different from a real deployment, specifically to allow people to create a testenv
+# on a virtual devtest undercloud
+export TE_EXTRA_ELEMENTS=geard
+export TE_NETWORK=default-net
+export TE_AUTHUSER=admin
+export TE_AUTHTENANT=admin
+export TE_CPUPERENV=1
+export TE_DISKPERENV=1
+export TE_MEMPERENV=1
