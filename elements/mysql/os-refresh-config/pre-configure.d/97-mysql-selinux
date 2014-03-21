@@ -1,0 +1,16 @@
+#!/bin/bash
+set -eu
+
+# Update selinux so that mysql has access to /mnt/state.
+# It runs in pre-configure.d because permissions needs to be correct before
+# reset-db is called in configure.d/51-init-openstack.
+
+[ -x /usr/sbin/semanage ] || exit 0
+
+semanage fcontext -a -t mysqld_db_t "/mnt/state/var/lib/mysql(/.*)?"
+restorecon -Rv /mnt/state/var/lib/mysql
+semanage fcontext -a -t mysqld_log_t "/mnt/state/var/log/mysql(/.*)?"
+restorecon -Rv /mnt/state/var/log/mysql
+[ -d /mnt/state/etc/mysql ] || install -m 0755 -o mysql -g mysql -d /mnt/state/etc/mysql
+semanage fcontext -a -t mysqld_etc_t "/mnt/state/etc/mysql(/.*)?"
+restorecon -Rv /mnt/state/etc/mysql
