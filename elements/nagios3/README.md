@@ -20,4 +20,4 @@ can be provided via heat. For example:
         initial_network_split_key: ctlplane
 
 Sample heat template with defaults configured for a boot-stack vm located at:
-  https://github.com/openstack/tripleo-heat-templates
+  https://git.openstack.org/cgit/openstack/tripleo-heat-templates
