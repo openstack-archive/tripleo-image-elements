@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eux
 
+install-packages build-essential python-dev libssl-dev libxml2-dev libxslt-dev libffi-dev
+
 # -s enables system-site-packages explicitly for python-libvirt
 os-svc-install -u nova -r /opt/stack/nova -s
 
