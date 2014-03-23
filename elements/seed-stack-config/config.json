@@ -83,6 +83,11 @@
   "horizon": {
     "secret_key": "unset___________"
   },
+  "ironic": {
+    "db": "mysql://ironic:unset@localhost/ironic",
+    "service-password": "unset",
+    "virtual_power_ssh_key": "PRIVATE KEY GOES HERE"
+  },
   "os-collect-config": {
     "collectors": "heat_local"
   }

@@ -1,4 +1,4 @@
 Nova Ironic services
------------------------
+--------------------
 
-Configures the nova-ironic directories on disk.
+Installs the Ironic code for Nova, both scheduler and compute.
