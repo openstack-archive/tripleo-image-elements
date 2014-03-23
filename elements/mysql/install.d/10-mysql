@@ -10,7 +10,25 @@ if [ "$(dib-init-system)" = "upstart" ] ; then
 else
     echo WARNING: server-id will not be set on systems that boot this image!
 fi
-install-packages sysstat mytop percona-toolkit mysql-server-5.5 mysql-client-5.5 python-mysqldb
+
+install-packages libaio1
+percona_pkgdir=Percona-XtraDB-Cluster
+
+# Adapted from mysql ref manual
+# http://dev.mysql.com/doc/refman/5.6/en/binary-installation.html
+groupadd mysql
+useradd -r -g mysql mysql
+cd /usr/local
+ln -s /usr/local/$percona_pkgdir mysql
+cd mysql
+chown -R mysql:mysql .
+install -o root -g root -m 0755 support-files/mysql.server /etc/init.d/mysql
+install -o root -g root -m 0755 bin/mysql /usr/local/bin
+install -o root -g root -m 0755 bin/mysqld /usr/local/bin
+sed -i -e 's,^#\!/bin/sh$,#\!/bin/bash,' /etc/init.d/mysql
+sed -i -e 's,^basedir=$,basedir=/usr/local/mysql,' /etc/init.d/mysql
+sed -i -e 's,^datadir=$,datadir=/mnt/state/var/lib/mysql,' /etc/init.d/mysql
+
 # Templates write the configs into /mnt/state. However, MySQL makes it very
 # difficult not to use this as the directory for configs.
 rm -rf /etc/mysql
@@ -32,14 +50,6 @@ register-state-path /var/lib/mysql
 # the first time we boot a particular state partition we rsync this in.
 [ -d /var/log/mysql ] || install -d -o root -g mysql -m 0775 /var/log/mysql
 register-state-path /var/log/mysql
-
-if [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
-    # The service is called mariadb on Fedora 20. While there is a symlink from
-    # mysqld.service -> mariadb.service to maintain backwards compatibility,
-    # there's a bug with systemd and symlinked service files:
-    # https://bugzilla.redhat.com/show_bug.cgi?id=1014311
-    os-svc-enable -n mysql || os-svc-enable -n mariadb || os-svc-enable -n mysqld
-fi
 
 DISTRO=`lsb_release -si` || true
 if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
