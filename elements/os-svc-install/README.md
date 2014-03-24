@@ -1,7 +1,8 @@
 Command line utilities to simplify installation of OpenStack services.
 
 ## os-svc-install
-Given a git repo url, pip-install the repo and all of its python dependencies into a virtualenv under /opt/stack/venvs.
+Given a git repo url, pip-install the repo and all of its python dependencies into a virtualenv.
+NOTE: By default the virtualenv is installed to /opt/stack/venvs/SERVICENAME but this can be customized.
 NOTE: By default services do not autostart until os-svc-enable is called.
 
 ## os-svc-daemon
