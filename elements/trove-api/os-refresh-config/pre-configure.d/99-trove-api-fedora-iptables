@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eu
+
+# nova-api, nova-api-metadata
+add-rule INPUT -p tcp -m multiport --dports 8779 -j ACCEPT

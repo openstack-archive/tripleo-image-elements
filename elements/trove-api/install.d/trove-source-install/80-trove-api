@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eux
+
+os-svc-daemon -i "$TROVE_VENV_DIR" trove-api trove trove-api "--config-file /etc/trove/trove.conf"
+
+ln -s $TROVE_VENV_DIR/bin/trove-manage /usr/local/bin/trove-manage
