@@ -8,6 +8,8 @@ virtualenv --setuptools /opt/stack/venvs/os-apply-config
 # https://pypi.python.org/simple/ if using http_proxy and https_proxy
 # envvars
 /opt/stack/venvs/os-apply-config/bin/pip install -U 'setuptools>=1.0'
+# bug #1293812 : Avoid easy_install triggering on pbr.
+/opt/stack/venvs/os-apply-config/bin/pip install -U 'pbr>=0.6,<1.0'
 /opt/stack/venvs/os-apply-config/bin/pip install -U os-apply-config
 
 ln -s /opt/stack/venvs/os-apply-config/bin/os-apply-config /usr/local/bin/os-apply-config

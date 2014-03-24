@@ -12,6 +12,8 @@ virtualenv --setuptools /opt/stack/venvs/os-refresh-config
 # downloading from pypi using http_proxy and https_proxy
 /opt/stack/venvs/os-refresh-config/bin/pip install -U pip
 /opt/stack/venvs/os-refresh-config/bin/pip install -U 'setuptools>=1.0'
+# bug #1293812 : Avoid easy_install triggering on pbr.
+/opt/stack/venvs/os-refresh-config/bin/pip install -U 'pbr>=0.5.21,<1.0'
 /opt/stack/venvs/os-refresh-config/bin/pip install -U os-refresh-config
 
 ln -s /opt/stack/venvs/os-refresh-config/bin/os-refresh-config /usr/local/bin/os-refresh-config
