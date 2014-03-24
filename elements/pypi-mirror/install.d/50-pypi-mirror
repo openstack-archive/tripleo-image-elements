@@ -15,7 +15,8 @@
 # under the License.
 set -eux
 
-install-packages libyaml-dev pkg-config python-dev build-essential
+install-packages libyaml-dev pkg-config python-dev build-essential libmysqlclient-dev \
+ libffi-dev libpq-dev libxslt-dev libsqlite3-dev libldap2-dev libsasl2-dev
 
 mkdir -p /opt/stack/venvs
 virtualenv /opt/stack/venvs/pypi-mirror
