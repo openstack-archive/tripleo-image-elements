@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eux
+
+os-svc-install $TROVE_EXTRA_INSTALL_OPTS -i "$TROVE_VENV_DIR" -u trove -r /opt/stack/trove

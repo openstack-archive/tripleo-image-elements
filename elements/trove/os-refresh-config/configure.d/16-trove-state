@@ -1,0 +1,3 @@
+#!/bin/bash
+[ -d /mnt/state/var/log/trove ] && exit 0
+install -D -d -o trove -g trove -m 0775 /mnt/state/var/log/trove
