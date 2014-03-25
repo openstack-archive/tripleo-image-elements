@@ -16,3 +16,5 @@ nova:
         - what virtual power driver to use. "virsh" or "vbox"
   compute_libvirt_type: "qemu"
     - what libvirt compute type. Unset will use the nova default.
+  compute_manager: "ironic.nova.compute.manager.ClusterComputeManager"
+    - set to override the compute manager class used by Nova-Compute.
