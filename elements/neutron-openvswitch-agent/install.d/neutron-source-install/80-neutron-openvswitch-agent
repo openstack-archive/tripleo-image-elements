@@ -1,4 +1,4 @@
 #!/bin/bash
 set -eux
-os-svc-daemon neutron-openvswitch-agent neutron neutron-openvswitch-agent \
+os-svc-daemon -i "$NEUTRON_VENV_DIR" neutron-openvswitch-agent neutron neutron-openvswitch-agent \
     "--config-file /etc/neutron/neutron.conf  --config-file /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini --config-dir /etc/neutron"

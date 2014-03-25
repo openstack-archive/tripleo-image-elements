@@ -5,4 +5,4 @@ echo "ironic ALL=(root) NOPASSWD: $IRONIC_VENV_DIR/bin/ironic-rootwrap" > /etc/s
 chmod 0440 /etc/sudoers.d/ironic
 visudo -c
 
-os-svc-daemon ironic-conductor ironic ironic-conductor "--debug --verbose --log-config /etc/ironic/logging-conductor.conf --config-file /etc/ironic/ironic.conf"
+os-svc-daemon -i "$IRONIC_VENV_DIR" ironic-conductor ironic ironic-conductor "--debug --verbose --log-config /etc/ironic/logging-conductor.conf --config-file /etc/ironic/ironic.conf"

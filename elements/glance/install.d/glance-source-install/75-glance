@@ -12,5 +12,5 @@ cp /opt/stack/glance/etc/schema-image.json /etc/glance/schema-image.json
 cp /opt/stack/glance/etc/glance-api-paste.ini /etc/glance/glance-api-paste.ini
 cp /opt/stack/glance/etc/glance-registry-paste.ini /etc/glance/glance-registry-paste.ini
 
-os-svc-daemon glance-api glance glance-api
-os-svc-daemon glance-reg glance glance-registry
+os-svc-daemon -i "$GLANCE_VENV_DIR" glance-api glance glance-api
+os-svc-daemon -i "$GLANCE_VENV_DIR" glance-reg glance glance-registry

@@ -8,4 +8,4 @@ cp -r /opt/stack/heat/etc/heat/templates /etc/heat
 
 ln -s $HEAT_VENV_DIR/bin/heat-manage /usr/local/bin/heat-manage
 
-os-svc-daemon heat-engine heat heat-engine
+os-svc-daemon -i "$HEAT_VENV_DIR" heat-engine heat heat-engine

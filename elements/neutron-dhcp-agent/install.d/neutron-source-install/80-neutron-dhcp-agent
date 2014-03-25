@@ -3,4 +3,4 @@ set -eux
 
 install-packages dnsmasq dnsmasq-utils
 
-os-svc-daemon -n neutron-dhcp-agent -u neutron -c neutron-dhcp-agent -- --config-file /etc/neutron/dhcp_agent.ini --config-dir /etc/neutron
+os-svc-daemon -i "$NEUTRON_VENV_DIR" -n neutron-dhcp-agent -u neutron -c neutron-dhcp-agent -- --config-file /etc/neutron/dhcp_agent.ini --config-dir /etc/neutron
