@@ -1,0 +1,10 @@
+#!/bin/bash
+set -eu
+
+[ -x /usr/sbin/semanage ] || exit 0
+
+semanage fcontext -a -t nova_var_lib_t "/mnt/state/var/lib/nova(/.*)?"
+restorecon -Rv /mnt/state/var/lib/nova
+
+semanage fcontext -a -t nova_log_t "/mnt/state/var/log/nova(/.*)?"
+restorecon -Rv /mnt/state/var/log/nova
