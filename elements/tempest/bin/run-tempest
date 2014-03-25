@@ -54,6 +54,10 @@ nova flavor-create m1.tiny_alt 99 512 2 1 || true
 LOCK_PATH=`mktemp -d`
 trap "rm -rf $LOCK_PATH" EXIT
 
+# Calculate the keystone v3 from the v2 one
+# Assuming the AUTH_URL is http://ip:port/version
+OS_V3_AUTH_URL=${OS_AUTH_URL%/*}/v3
+
 # TODO : see what other defaults can be used
 # cp the tempest config file and edit the settings
 cp etc/tempest.conf.sample etc/tempest.conf
@@ -68,6 +72,7 @@ set /files/opt/stack/tempest/etc/tempest.conf/DEFAULT/use_stderr false
 set /files/opt/stack/tempest/etc/tempest.conf/DEFAULT/log_file tempest.log
 
 set /files/opt/stack/tempest/etc/tempest.conf/identity/uri $OS_AUTH_URL
+set /files/opt/stack/tempest/etc/tempest.conf/identity/uri_v3 $OS_V3_AUTH_URL
 set /files/opt/stack/tempest/etc/tempest.conf/identity/region regionOne
 
 set /files/opt/stack/tempest/etc/tempest.conf/identity/admin_password $OS_PASSWORD
