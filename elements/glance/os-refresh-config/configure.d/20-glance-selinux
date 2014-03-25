@@ -1,0 +1,10 @@
+#!/bin/bash
+set -eu
+
+[ -x /usr/sbin/semanage ] || exit 0
+
+semanage fcontext -a -t glance_var_lib_t "/mnt/state/var/lib/glance(/.*)?"
+restorecon -Rv /mnt/state/var/lib/glance
+
+semanage fcontext -a -t glance_log_t "/mnt/state/var/log/glance(/.*)?"
+restorecon -Rv /mnt/state/var/log/glance

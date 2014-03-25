@@ -1,0 +1,4 @@
+#!/bin/bash
+[ -d /mnt/state/var/lib/glance ] || install -d -D -m 0770 -o glance -g glance /mnt/state/var/lib/glance
+[ -d /mnt/state/var/lib/glance/images ] || install -d -D -m 0770 -o glance -g glance /mnt/state/var/lib/glance/images
+[ -d /mnt/state/var/log/glance ] || install -d -D -m 0755 -o glance -g glance /mnt/state/var/log/glance
