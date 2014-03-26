@@ -1,3 +1,4 @@
 source-repositories
 os-refresh-config
 os-apply-config
+pip-manifest
