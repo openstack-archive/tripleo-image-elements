@@ -3,3 +3,7 @@
 set -eux
 
 install-openstack-client swift
+
+# the swift client doesn't have keystoneclient as a dependency, tripleo is
+# using keystone auth so we need to explicitly install it. Bug 1085740.
+/opt/stack/venvs/python-swiftclient/bin/pip install python-keystoneclient
