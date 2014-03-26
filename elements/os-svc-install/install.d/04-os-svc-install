@@ -1,9 +1,6 @@
 #!/bin/bash
 set -eux
 
-# Mysqlclient-dev is needed for MySQL-python which os-svc-install installs.
-install-packages libmysqlclient-dev
-
 install -m 0755 -o root -g root $(dirname $0)/../bin/os-svc-install /usr/local/bin/os-svc-install
 install -m 0755 -o root -g root $(dirname $0)/../bin/os-svc-daemon  /usr/local/bin/os-svc-daemon
 install -m 0755 -o root -g root $(dirname $0)/../bin/os-db-create   /usr/local/bin/os-db-create
