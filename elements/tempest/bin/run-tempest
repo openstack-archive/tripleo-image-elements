@@ -75,6 +75,8 @@ set /files/opt/stack/tempest/etc/tempest.conf/identity/uri $OS_AUTH_URL
 set /files/opt/stack/tempest/etc/tempest.conf/identity/uri_v3 $OS_V3_AUTH_URL
 set /files/opt/stack/tempest/etc/tempest.conf/identity/region regionOne
 
+set /files/opt/stack/tempest/etc/tempest.conf/identity/admin_username $OS_USERNAME
+set /files/opt/stack/tempest/etc/tempest.conf/identity/admin_tenant_name $OS_TENANT_NAME
 set /files/opt/stack/tempest/etc/tempest.conf/identity/admin_password $OS_PASSWORD
 set /files/opt/stack/tempest/etc/tempest.conf/identity/username demo_t1
 set /files/opt/stack/tempest/etc/tempest.conf/identity/tenant_name demo_t1
