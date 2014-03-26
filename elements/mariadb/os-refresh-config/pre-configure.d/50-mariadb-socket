@@ -1,0 +1,10 @@
+#!/bin/bash
+set -eu
+
+# mariadb clients (from mariadb.org) expect the socket at
+# /var/lib/mysql/mysql.sock
+#
+# mysql server is started from 51-init-openstack (reset-db script) - we need to
+# create symlink to make sure reset-db will not fail
+[ -d /var/lib/mysql ] || mkdir -p /var/lib/mysql
+ln -sf /var/run/mysqld/mysqld.sock /var/lib/mysql/mysql.sock

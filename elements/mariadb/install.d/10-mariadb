@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Install controller base requiered packages
+
+set -e
+set -o xtrace
+
+if [ "$(dib-init-system)" = "upstart" ] ; then
+    install $(dirname $0)/mysql-set-server-id.upstart /etc/init/mysql-set-server-id.conf
+else
+    echo WARNING: server-id will not be set on systems that boot this image!
+fi
+
+install-packages sysstat mytop python-mysqldb mariadb-galera-server mariadb-client galera
+
+# Templates write the configs into /mnt/state. However, MySQL makes it very
+# difficult not to use this as the directory for configs.
+rm -rf /etc/mysql
+ln -s /mnt/state/etc/mysql /etc/mysql
+if [ -e /etc/apparmor.d/usr.sbin.mysqld ] ; then
+    sed -i -e 's,/var/lib/mysql/,/mnt/state/var/lib/mysql/,g' /etc/apparmor.d/usr.sbin.mysqld
+    sed -i -e 's,/var/log/mysql/,/mnt/state/var/log/mysql/,g' /etc/apparmor.d/usr.sbin.mysqld
+    sed -i -e 's,/etc/mysql/,/mnt/state/etc/mysql/,g' /etc/apparmor.d/usr.sbin.mysqld
+fi
+if [ -e /etc/init/mysql.conf ]; then
+    sed -i -e 's,/var/lib/mysql/,/mnt/state/var/lib/mysql/,g' /etc/init/mysql.conf
+fi
+# Fedora/RHEL install /etc/my.cnf but we do not want any unmanaged configs
+rm -f /etc/my.cnf
+# On openSUSE /var/lib/mysql is not part of the mariadb packages.
+[ -d /var/lib/mysql ] || install -d -o mysql -g root -m 0700 /var/lib/mysql
+register-state-path /var/lib/mysql
+# We need to setup the directory with appropriate permissions and then
+# the first time we boot a particular state partition we rsync this in.
+[ -d /var/log/mysql ] || install -d -o root -g mysql -m 0775 /var/log/mysql
+register-state-path /var/log/mysql
