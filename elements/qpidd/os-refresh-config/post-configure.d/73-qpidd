@@ -6,5 +6,6 @@ password=$(os-apply-config --key qpid.password)
 
 sasldb_file=$(grep sasldb_path /etc/sasl2/qpidd.conf | cut -d \: -f 2 | cut -d " " -f 2)
 echo "$password" | saslpasswd2 -c -p -f $sasldb_file -u QPID $username
+chown qpidd.qpidd $sasldb_file
 
 service qpidd restart
