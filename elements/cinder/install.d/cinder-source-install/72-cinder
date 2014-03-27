@@ -3,7 +3,7 @@ set -eux
 
 install-packages lvm2 libssl-dev tgt libffi-dev nfs-common
 echo "qpid-python" | tee -a /opt/stack/cinder/requirements.txt
-os-svc-install -u cinder -r /opt/stack/cinder
+os-svc-install -i "$CINDER_VENV_DIR" -u cinder -r /opt/stack/cinder
 
 cp -a /opt/stack/cinder/etc/cinder/rootwrap* /etc/cinder
 cp /opt/stack/cinder/etc/cinder/api-paste.ini /etc/cinder/api-paste.ini

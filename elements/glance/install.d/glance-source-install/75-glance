@@ -3,7 +3,7 @@ set -eux
 
 install-packages python-mysqldb libssl-dev
 
-os-svc-install -u glance -r /opt/stack/glance
+os-svc-install -i "$GLANCE_VENV_DIR" -u glance -r /opt/stack/glance
 
 ln -s $GLANCE_VENV_DIR/bin/glance-manage /usr/local/bin/glance-manage
 

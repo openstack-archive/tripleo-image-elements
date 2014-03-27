@@ -4,7 +4,7 @@ install-packages python-setuptools python-eventlet python-greenlet \
     python-httplib2 python-iso8601 python-lxml python-sqlalchemy \
     python-paste python-routes python-webob python-yaml
 
-os-svc-install -u heat -r /opt/stack/heat
+os-svc-install -i "$HEAT_VENV_DIR" -u heat -r /opt/stack/heat
 
 cp /opt/stack/heat/etc/heat/policy.json /etc/heat/policy.json
 

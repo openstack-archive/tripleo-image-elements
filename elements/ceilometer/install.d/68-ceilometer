@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-os-svc-install -u ceilometer -r /opt/stack/ceilometer
+os-svc-install -i "$CEILOMETER_VENV_DIR" -u ceilometer -r /opt/stack/ceilometer
 
 
 install -m 640 -o ceilometer -g ceilometer /opt/stack/ceilometer/etc/ceilometer/pipeline.yaml /etc/ceilometer
