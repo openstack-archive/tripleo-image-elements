@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -eux
+
+install-packages libmariadb-dev
+
+# TODO: fedora mysql_config has to be tweaked to exclude probes_mysql lib
+# https://mariadb.atlassian.net/browse/MDEV-5793
+FILE=$(which mysql_config)
+if $FILE --libs_r | grep probes_mysql;then
+  sed -i.orig "s/-lprobes_mysql//" $FILE
+fi

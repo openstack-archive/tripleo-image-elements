@@ -1,0 +1,53 @@
+#!/bin/bash
+
+set -e
+set -o xtrace
+
+# repo urls
+# 5.5 version is used instead of 10.0 (which is already out) because of
+# dependency issues - python-mysql depends on mariadb-libs which conflicts
+# with mysql-galera-server pkg
+# http://yum.mariadb.org/5.5/fedora20-amd64
+# http://yum.mariadb.org/5.5/fedora20-x86
+# http://yum.mariadb.org/5.5/rhel6-amd64
+# http://yum.mariadb.org/5.5/rhel6-x86
+# http://mirror.jmu.edu/pub/mariadb/repo/5.5/ubuntu saucy main
+# http://mirror.jmu.edu/pub/mariadb/repo/5.5/debian wheezy main
+
+DISTRO=`lsb_release -si` || true
+
+if [ "$DISTRO" == "RedHatEnterpriseServer" ];then
+  DIST_DIR="rhel"
+else
+  DIST_DIR=$(echo "$DISTRO"|tr A-Z a-z)
+fi
+
+function add_yum_repo() {
+  ver=`lsb_release -sr`
+
+  cat > /etc/yum.repos.d/mariadb.repo <<eof
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/5.5/$DIST_DIR$ver-$MARIADB_ARCH
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+eof
+  rpmkeys --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+}
+
+function add_apt_repo() {
+  local codename=`lsb_release -sc`
+  # http://keyserver.ubuntu.com is used both for debian and ubuntu
+  apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
+  add-apt-repository "deb  http://mariadb.mirror.iweb.com//repo/5.5/$DIST_DIR $codename main"
+  apt-get update
+}
+
+if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
+  add_yum_repo
+elif [[ "Ubuntu Debian" =~ "$DISTRO" ]]; then
+  add_apt_repo
+else
+  echo "Distribution '$DISTRO' is not supported"
+  exit 1
+fi

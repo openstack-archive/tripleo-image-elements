@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# The mariadb download url arch values are not the same as ours
+if [ $ARCH = "i386" ]; then
+    MARIADB_ARCH=x86
+else
+    MARIADB_ARCH=$ARCH
+fi
+export MARIADB_ARCH
