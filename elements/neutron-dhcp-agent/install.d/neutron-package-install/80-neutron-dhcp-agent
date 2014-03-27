@@ -4,4 +4,4 @@ set -eux
 
 install-packages openstack-neutron
 
-os-svc-daemon -i "$NEUTRON_VENV_DIR" -n neutron-dhcp-agent -u neutron -c noop -d
+os-svc-daemon -i "$NEUTRON_VENV_DIR" -n neutron-dhcp-agent -u neutron
