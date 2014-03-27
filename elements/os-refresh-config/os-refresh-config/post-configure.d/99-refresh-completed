@@ -2,9 +2,17 @@
 set -eux
 
 HANDLE=$(os-apply-config --key completion-handle --type raw --key-default "")
+SIGNAL=$(os-apply-config --key completion-signal --type raw --key-default "")
 ID=$(os-apply-config --key instance-id --type raw --key-default "")
 
-[ -n "$HANDLE" ] || exit 0
 [ -n "$ID" ] || exit 0
 
-curl -X PUT -H 'Content-Type:' --data-binary "{\"Status\" : \"SUCCESS\",\"Reason\" : \"Configuration Complete\",\"UniqueId\" : \"$ID\",\"Data\" : \"Finished os-refresh-config.\"}"  "$(os-apply-config --key completion-handle --type raw)"
+call_curl() {
+    local method=$1
+    local url=$2
+    curl -X $method -H 'Content-Type:' --data-binary "{\"Status\" : \"SUCCESS\",\"Reason\" : \"Configuration Complete\",\"UniqueId\" : \"$ID\",\"Data\" : \"Finished os-refresh-config.\"}" $url
+}
+
+# Signals use POST, wait handles use PUT
+[ -n "$HANDLE" ] && call_curl PUT $HANDLE
+[ -n "$SIGNAL" ] && call_curl POST $SIGNAL
