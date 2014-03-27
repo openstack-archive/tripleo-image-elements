@@ -1,1 +1,3 @@
-export HEAT_VENV_DIR=${HEAT_VENV_DIR:-"/opt/stack/venvs/heat"}
+if [ -z "${HEAT_VENV_DIR:-}" ]; then
+    export HEAT_VENV_DIR=${OPENSTACK_VENV_DIR:-"/opt/stack/venvs/heat"}
+fi

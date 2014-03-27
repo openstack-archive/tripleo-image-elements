@@ -1,1 +1,3 @@
-export CEILOMETER_VENV_DIR=${CEILOMETER_VENV_DIR:-"/opt/stack/venvs/ceilometer"}
+if [ -z "${CEILOMETER_VENV_DIR:-}" ]; then
+    export CEILOMETER_VENV_DIR=${OPENSTACK_VENV_DIR:-"/opt/stack/venvs/ceilometer"}
+fi
