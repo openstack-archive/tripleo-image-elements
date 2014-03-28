@@ -1,0 +1,12 @@
+#!/bin/bash
+
+export TRIPLEO_ROOT="$(readlink -f $(dirname $0)/../../../..)"
+source $(dirname ${BASH_SOURCE})/te_commonrc
+
+export TE_OVERCLOUDIP=10.10.16.135
+export TE_OVERCLOUDDNS=ci-overcloud.tripleo.org
+export TE_OVERCLOUDPASSWD=$(awk '$1=="tripleo-ci" { print $2 }' < /os-asserted-users)
+export TE_AUTHURL=http://$TE_OVERCLOUDIP:5000/v2.0
+export TE_GEARMANHOST=192.168.1.48
+export TE_PUBLICINTERFACE=em3
+export TE_COUNT=10
