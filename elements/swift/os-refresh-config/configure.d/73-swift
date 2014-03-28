@@ -26,3 +26,5 @@ swift-ring-builder /etc/swift/object.builder rebalance 999
 swift-ring-builder /etc/swift/container.builder rebalance 999
 swift-ring-builder /etc/swift/account.builder rebalance 999
 
+chown root:swift /etc/swift/*.ring.gz
+chmod g+r /etc/swift/*.ring.gz
