@@ -17,11 +17,10 @@
 #
 set -eux
 
-dib_pip_manifest_dir=$TMP_MOUNT_PATH/etc/dib-pip-manifests
-sudo mkdir $dib_pip_manifest_dir
+sudo mkdir -p $TMP_MOUNT_PATH/$DIB_MANIFEST_PIP_DIR
 
 # Find all of the pip manifests and copy them into the image for use in install.d
 for manifest in ${!DIB_PIP_MANIFEST_*}
 do
-    sudo cp ${!manifest} $dib_pip_manifest_dir/dib-pip-build-manifest-${manifest##DIB_PIP_MANIFEST_}
+    sudo cp ${!manifest} $TMP_MOUNT_PATH/$DIB_MANIFEST_PIP_DIR/dib-pip-build-manifest-${manifest##DIB_PIP_MANIFEST_}
 done
