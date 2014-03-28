@@ -11,7 +11,7 @@ else
     echo WARNING: server-id will not be set on systems that boot this image!
 fi
 
-install-packages libaio1
+install-packages libaio1 pv rsync
 percona_pkgdir=Percona-XtraDB-Cluster
 
 # Adapted from mysql ref manual

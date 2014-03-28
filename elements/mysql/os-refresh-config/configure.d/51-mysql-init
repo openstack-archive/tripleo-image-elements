@@ -1,0 +1,25 @@
+#!/bin/bash
+set -eu
+
+BOOTSTRAP_NODE=$(os-apply-config --key mysql.nodes --type raw --key-default '' | sed 's/,/\n/' | sort | head -n 1)
+MY_HOST=$(os-apply-config --key mysql.host --type netaddress  --key-default '')
+MYSQL_INITIALIZED="/mnt/state/var/lib/mysql/db.initialized"
+
+pid_path=/var/run/mysqld/mysqld.pid
+mkdir -p $(dirname $pid_path)
+chown mysql:root $(dirname $pid_path)
+
+if [ ! -e ${MYSQL_INITIALIZED} ]; then
+    if [ "$BOOTSTRAP_NODE" == "$MY_HOST" ]; then
+        # Needed to setup initial tables. This command is idempotent.
+        /usr/local/mysql/scripts/mysql_install_db --user=mysql --basedir=/usr/local/mysql --datadir=/mnt/state/var/lib/mysql --no-defaults --pid-file=$pid_path  --wsrep-new-cluster
+
+        # We install this init script so we can trust this path exists
+        /etc/init.d/mysql bootstrap-pxc
+    else
+        os-svc-restart mysql
+    fi
+
+    # We did db initialization by hand so reset-db doesnt need to interfere
+    touch ${MYSQL_INITIALIZED}
+fi
