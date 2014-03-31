@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -eu
+
+os-svc-daemon -n mariadb -u mysql -d mysqld
+
+os-svc-enable -n mariadb-create-dir
