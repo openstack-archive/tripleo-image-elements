@@ -16,13 +16,10 @@ fi
 
 if [ ! -e $IMG -o "${ANS,,}" = "y" ] ; then
     $TRIPLEO_ROOT/diskimage-builder/bin/disk-image-create -a amd64 -o $IMG \
-        stackuser $TE_DISTRO $TE_EXTRA_ELEMENTS testenv-worker dhcp-all-interfaces hosts baremetal
-    nova image-delete testenv-worker testenv-worker-initrd testenv-worker-vmlinuz
+        stackuser $TE_DISTRO $TE_EXTRA_ELEMENTS testenv-worker dhcp-all-interfaces hosts baremetal -u
 fi
 
-if ! nova image-show testenv-worker ; then
-    $TRIPLEO_ROOT/tripleo-incubator/scripts/load-image -d $IMG
-fi
+$TRIPLEO_ROOT/tripleo-incubator/scripts/load-image -d $IMG
 
 if heat stack-show testenv > /dev/null; then
     HEAT_OP=update
