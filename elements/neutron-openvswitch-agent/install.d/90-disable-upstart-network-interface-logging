@@ -1,0 +1,7 @@
+#!/bin/bash
+# potentially thousands of network interfaces on the system, we don't
+# want to overwhelm upstart with log pipes. This sends all of it to the
+# system console.
+if [ "$(dib-init-system)" = "upstart" ] && [ -e /etc/init/network-interface.conf ] ; then
+    echo "console output" >> /etc/init/network-interface.override
+fi
