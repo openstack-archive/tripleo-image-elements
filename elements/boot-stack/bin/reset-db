@@ -21,9 +21,9 @@ else
   # Sometimes packages make the files ownership wrong
   chown -R mysql.mysql ${STATEDIR}
   touch ${DONE}
-fi
 
-os-svc-restart -n mysql
+  os-svc-restart -n mysql
+fi
 
 PATH=/usr/local/bin:$PATH
 
