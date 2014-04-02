@@ -17,3 +17,5 @@ os-svc-daemon -i "$SWIFT_VENV_DIR" swift-object swift swift-object-server /etc/s
 os-svc-daemon -i "$SWIFT_VENV_DIR" swift-object-auditor swift swift-object-auditor /etc/swift/object-server.conf
 os-svc-daemon -i "$SWIFT_VENV_DIR" swift-object-replicator swift swift-object-replicator /etc/swift/object-server.conf
 os-svc-daemon -i "$SWIFT_VENV_DIR" swift-object-updater swift swift-object-updater /etc/swift/object-server.conf
+
+ln -s $SWIFT_VENV_DIR/bin/swift-recon-cron /usr/local/bin/swift-recon-cron

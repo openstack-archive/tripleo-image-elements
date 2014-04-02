@@ -9,3 +9,5 @@ $SWIFT_VENV_DIR/bin/pip install -U 'pbr>=0.5.21,<1.0'
 $SWIFT_VENV_DIR/bin/pip install python-keystoneclient
 
 os-svc-daemon -i "$SWIFT_VENV_DIR" swift-proxy swift swift-proxy-server "/etc/swift/proxy-server.conf"
+
+ln -s $SWIFT_VENV_DIR/bin/swift-recon /usr/local/bin/swift-recon

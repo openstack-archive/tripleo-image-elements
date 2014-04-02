@@ -6,4 +6,5 @@ install-packages libffi-dev
 
 os-svc-install -i "$SWIFT_VENV_DIR" -u swift -r /opt/stack/swift
 
-install -m 0755 -o root -g root $SWIFT_VENV_DIR/bin/swift-ring-builder /usr/local/bin
+ln -s $SWIFT_VENV_DIR/bin/swift-ring-builder /usr/local/bin/swift-ring-builder
+ln -s $SWIFT_VENV_DIR/bin/swift-get-nodes /usr/local/bin/swift-get-nodes
