@@ -23,11 +23,5 @@ function deps {
   install-packages python-numpy python-lxml
 }
 
-function ip_forwarding {
-  cat > /etc/sysctl.conf <<eof
-net.ipv4.ip_forward=1
-eof
-}
-
 deps
-ip_forwarding
+sysctl-set-value "net.ipv4.ip_forward" "1" "Bootstack IPv4 forwarding."
