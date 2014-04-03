@@ -2,7 +2,7 @@
 set -eux
 
 # Used by all compute
-install-packages ebtables qemu-utils syslinux
+install-packages bridge-utils ebtables qemu-utils syslinux
 
 # LIBVIRT_DEFAULT_URI needs to be set due to
 # https://bugs.launchpad.net/tripleo/+bug/1226310
