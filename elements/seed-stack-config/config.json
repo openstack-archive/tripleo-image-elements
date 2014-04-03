@@ -18,6 +18,8 @@
   "glance": {
     "backend": "file",
     "host": "127.0.0.1",
+    "port": "9292",
+    "protocol": "http",
     "db": "mysql://glance:unset@localhost/glance",
     "service-password": "unset"
   },
