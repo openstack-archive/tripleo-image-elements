@@ -1,0 +1,8 @@
+#!/bin/bash
+set -eux
+
+[ -x /usr/sbin/restorecon ] || exit 0
+
+# /tftpboot is created in 80-nova-baremetal.
+# Here we are ensuring it is labeled correctly.
+restorecon -R /tftpboot
