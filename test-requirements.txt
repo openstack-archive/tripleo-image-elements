@@ -1,1 +1,4 @@
 hacking>=0.8.0,<0.9
+
+oslotest
+testrepository>=0.0.18
