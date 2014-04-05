@@ -1,0 +1,11 @@
+#!/bin/bash
+set -eu
+
+[ -x /usr/sbin/semanage ] || exit 0
+
+semanage fcontext -a -t swift_var_cache_t "/mnt/state/var/cache/swift(/.*)?"
+restorecon -Rv /mnt/state/var/cache/swift
+
+# allows rsync to write to /mnt/state/var/log/rsyncd.log
+semanage fcontext -a -t var_log_t "/mnt/state/var/log"
+restorecon -Rv /mnt/state/var/log
