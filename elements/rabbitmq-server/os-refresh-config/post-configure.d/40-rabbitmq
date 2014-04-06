@@ -46,6 +46,12 @@ LOCAL=$(hostname -s)
 NODES=$(os-apply-config --key rabbit.nodes --type raw --key-default '' | sed 's/,/\n/g')
 MASTER=$(echo "$NODES"|sort -n|head -1)
 
+# Heat can return hostname with capital letters, cloud-init converts to lowercase. Make sure
+# we can compare them in a case-insensitive manor:
+LOCAL=${LOCAL,,}
+NODES=${NODES,,}
+MASTER=${MASTER,,}
+
 if [ -n "$NODES" ];then
   if [ "$MASTER" = "$LOCAL" ];then
     # if this is master node which is already clustered, do nothing
