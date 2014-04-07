@@ -1,0 +1,27 @@
+#!/bin/bash
+set -eu
+
+# See bug https://bugs.launchpad.net/percona-xtradb-cluster/+bug/1213855
+#
+# xtradb-cluster is built expecting libssl and libcryto have the following
+# versions. Doing this is terrifying stability-wise for a database.
+
+DISTRO=`lsb_release -si` || true
+
+if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
+    if [ "$ARCH" == "amd64" ]; then
+        LIB_PREFIX=/usr/lib64
+    else
+        LIB_PREFIX=/usr/lib
+    fi
+else
+    LIB_PREFIX=/lib/$PERCONA_ARCH-linux-gnu
+fi
+
+if [ ! -L $LIB_PREFIX/libssl.so.10 ]; then
+    ln -s $LIB_PREFIX/libssl.so.1.0.0 $LIB_PREFIX/libssl.so.10
+fi
+
+if [ ! -L $LIB_PREFIX/libcrypto.so.10 ]; then
+    ln -s $LIB_PREFIX/libcrypto.so.1.0.0 $LIB_PREFIX/libcrypto.so.10
+fi
