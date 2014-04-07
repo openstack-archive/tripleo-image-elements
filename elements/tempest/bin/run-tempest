@@ -20,6 +20,7 @@ set -o pipefail
 
 # Setup the environment
 TEMPEST_RUN_CONCURRENCY=${TEMPEST_RUN_CONCURRENCY:-0}
+TEMPEST_ALLOW_TENANT_ISOLATION=${TEMPEST_ALLOW_TENANT_ISOLATION:-true}
 
 cd /opt/stack/tempest
 
@@ -92,7 +93,7 @@ set /files/opt/stack/tempest/etc/tempest.conf/compute/image_ref $USER_IMAGE_ID
 set /files/opt/stack/tempest/etc/tempest.conf/compute/image_ref_alt $USER_IMAGE_ID2
 set /files/opt/stack/tempest/etc/tempest.conf/compute/flavor_ref_alt 99
 
-set /files/opt/stack/tempest/etc/tempest.conf/compute/allow_tenant_isolation false
+set /files/opt/stack/tempest/etc/tempest.conf/compute/allow_tenant_isolation $TEMPEST_ALLOW_TENANT_ISOLATION
 set /files/opt/stack/tempest/etc/tempest.conf/compute/fixed_network_name default-net
 set /files/opt/stack/tempest/etc/tempest.conf/compute/network_for_ssh $EXTNET
 set /files/opt/stack/tempest/etc/tempest.conf/compute-admin/password $OS_PASSWORD
