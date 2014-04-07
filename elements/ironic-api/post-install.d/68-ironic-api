@@ -1,4 +1,4 @@
 #!/bin/bash
 set -eux
 
-os-svc-daemon -i "$IRONIC_VENV_DIR" ironic-api ironic ironic-api "--debug --verbose --log-config /etc/ironic/logging-api.conf --config-file /etc/ironic/ironic.conf"
+os-svc-daemon -i "$IRONIC_VENV_DIR" ironic-api ironic ironic-api "--config-file /etc/ironic/ironic.conf"
