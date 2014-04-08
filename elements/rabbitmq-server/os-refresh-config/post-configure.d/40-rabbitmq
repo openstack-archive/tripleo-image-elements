@@ -31,7 +31,9 @@ service rabbitmq-server restart
 
 function is_in_cluster() {
   local node=$1
-  rabbitmqctl -n rabbit@$node cluster_status|grep -q "running_nodes,\[[^\]]*,"
+  # Returns true if the list following "running_nodes" in rabbitmqctl
+  # cluster_status contains at least two nodes.
+  rabbitmqctl -n rabbit@$node cluster_status|grep -q "running_nodes,\[[^]]\+,"
 }
 
 function join_with() {
