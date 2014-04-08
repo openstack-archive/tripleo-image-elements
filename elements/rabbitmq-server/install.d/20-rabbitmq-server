@@ -7,7 +7,7 @@ DISTRO=`lsb_release -si` || true
 install-packages rabbitmq-server
 
 # In Ubuntu rabbit's default init.d script is broken.
-if [ "$DISTRO" = "Ubuntu" ]; then
+if [ "$DISTRO" = "Ubuntu" ] || [ "$DISTRO" = "Debian" -a "$DIB_INIT_SYSTEM" = "upstart" ]; then
   update-rc.d -f rabbitmq-server remove
   rm /etc/init.d/rabbitmq-server
   cat > /etc/init/rabbitmq-server.conf <<eof
