@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -eux
+
+install-packages libpq-dev python-dev libevent-dev libssl-dev libffi-dev
+
+os-svc-install -u rally -r /opt/stack/rally
+
+ln -sf $RALLY_VENV_DIR/bin/rally /usr/local/bin/rally
+ln -sf $RALLY_VENV_DIR/bin/rally-manage /usr/local/bin/rally-manage
+
+$RALLY_VENV_DIR/bin/rally-manage db recreate
