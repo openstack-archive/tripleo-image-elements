@@ -10,7 +10,6 @@ os-svc-enable -n swift-account-replicator
 os-svc-enable -n swift-container
 os-svc-enable -n swift-container-auditor
 os-svc-enable -n swift-container-replicator
-os-svc-enable -n swift-container-sync
 os-svc-enable -n swift-container-updater
 os-svc-enable -n swift-object
 os-svc-enable -n swift-object-auditor
@@ -25,7 +24,6 @@ os-svc-restart -n swift-account-replicator
 os-svc-restart -n swift-container
 os-svc-restart -n swift-container-auditor
 os-svc-restart -n swift-container-replicator
-os-svc-restart -n swift-container-sync
 os-svc-restart -n swift-container-updater
 os-svc-restart -n swift-object
 os-svc-restart -n swift-object-auditor
