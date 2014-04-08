@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eu
+
+chmod 600 /mnt/state/etc/mysql/debian.cnf /mnt/state/etc/mysql/dbusers.json /mnt/state/etc/mysql/static-dbusers.json
