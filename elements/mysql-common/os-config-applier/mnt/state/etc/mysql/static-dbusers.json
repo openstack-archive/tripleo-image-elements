@@ -1,1 +1,4 @@
-[{"username": "root"}]
+[{"username": "root"{{#mysql.root-password}},
+  "password": "{{mysql.root-password}}"
+{{/mysql.root-password}}
+}]

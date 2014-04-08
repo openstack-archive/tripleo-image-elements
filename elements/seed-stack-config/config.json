@@ -9,6 +9,9 @@
     "host": "127.0.0.1",
     "db": "mysql://keystone:unset@localhost/keystone"
   },
+  "mysql": {
+    "root-password" : "unset"
+  },
   "rabbit": {
     "host": "127.0.0.1",
     "username": "guest",
