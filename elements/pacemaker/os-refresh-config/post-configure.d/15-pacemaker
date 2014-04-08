@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eux
+
+os-svc-enable -n pacemaker
+
+os-svc-restart -n pacemaker
