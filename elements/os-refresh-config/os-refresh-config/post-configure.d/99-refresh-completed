@@ -14,5 +14,9 @@ call_curl() {
 }
 
 # Signals use POST, wait handles use PUT
-[ -n "$HANDLE" ] && call_curl PUT $HANDLE
-[ -n "$SIGNAL" ] && call_curl POST $SIGNAL
+if [ -n "$HANDLE" ]; then
+    call_curl PUT $HANDLE
+fi
+if [ -n "$SIGNAL" ]; then
+    call_curl POST $SIGNAL
+fi
