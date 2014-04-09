@@ -11,8 +11,13 @@ this in Heat:
     Metadata:
       rabbit:
         users:
-          - username: guest
-          - tags: administrator
+          guest:
+            username: guest
+            tags: administrator
+          nova:
+            username: nova
+            password: SuperSecret
+            tags: administrator
         password_handle: {Ref: RabbitMQPasswordHandle}
 
 Using cfn-signal, we will feed back a generated password into the handle
