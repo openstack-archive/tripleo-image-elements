@@ -57,22 +57,22 @@ NODES=${NODES,,}
 MASTER=${MASTER,,}
 
 if [ -n "$NODES" ];then
-    if [ "$MASTER" = "$LOCAL" ];then
+    if os-is-bootstrap-host; then
         # if this is master node which is already clustered, do nothing
-    if is_in_cluster $LOCAL;then
-        exit 0
-    fi
+        if is_in_cluster $LOCAL; then
+            exit 0
+        fi
     else
         # if this node is already in cluster with current master node, do nothing
-        if rabbitmqctl cluster_status|grep -q "$MASTER";then
-        exit 0
-    fi
+        if rabbitmqctl cluster_status|grep -q "$MASTER"; then
+            exit 0
+        fi
     fi
 
     JOINED_WITH=''
     # find another node which is already clustered and try join with it
     for NODE in $NODES;do
-        if [ ! "$NODE" = "$LOCAL" ] && is_in_cluster $NODE;then
+        if [ ! "$NODE" = "$LOCAL" ] && is_in_cluster $NODE; then
             if join_with $NODE; then
                 JOINED_WITH=$NODE
                 break
@@ -80,10 +80,10 @@ if [ -n "$NODES" ];then
         fi
     done
 
-    if [ -z "$JOINED_WITH"];then
+    if [ -z "$JOINED_WITH"]; then
         # if there is no existing cluster yet and this is master node, start this
         # node standalone (other nodes will join to this one)
-        if [ "$MASTER" == "$LOCAL" ];then
+        if os-is-bootstrap-host; then
             rabbitmqctl start_app
         else
             if ! join_with $MASTER; then

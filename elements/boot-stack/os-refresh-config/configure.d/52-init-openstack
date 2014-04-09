@@ -3,7 +3,7 @@ set -eu
 
 OK=/mnt/state/var/lib/boot-stack/init-openstack.ok
 
-if [ -e $OK ] ; then
+if ! os-is-bootstrap-host || [ -e $OK ] ; then
     exit 0
 fi
 

@@ -1,0 +1,18 @@
+#!/bin/bash
+set -eu
+set -o pipefail
+
+# Used to determine if this host is the "bootstrap host"
+#
+# This is our very temporary method for master election - there should only be
+# one bootstrap host throughout the cluster.
+
+BOOTSTRAP_NODE=$(os-apply-config --key bootstrap_host.bootstrap_nodeid --type netaddress --key-default '')
+MY_HOST=$(os-apply-config --key bootstrap_host.nodeid --type netaddress --key-default '')
+
+# Signal we are not bootstrap now but we could be in future
+if [ -z "$BOOTSTRAP_NODE" -o -z "$MY_HOST" ]; then
+    exit 255
+elif [ "$BOOTSTRAP_NODE" != "$MY_HOST" ]; then
+    exit 1
+fi

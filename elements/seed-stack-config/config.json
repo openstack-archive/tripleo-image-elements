@@ -55,6 +55,10 @@
     "public_interface_ip": "192.0.2.1/24",
     "masquerade_networks": ["192.0.2.0/24"]
   },
+  "bootstrap_host": {
+    "bootstrap_nodeid": "seed",
+    "nodeid": "seed"
+  },
   "cinder": {
     "db": "mysql://cinder:unset@localhost/cinder",
     "volume_size_mb": "5000",
