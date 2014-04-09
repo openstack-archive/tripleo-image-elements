@@ -20,11 +20,52 @@
 
 import sys
 
-re = []
+"""
+Whitelist is applied first. The blacklist is executed against the set of
+tests returned by the whitelist.
+If whitelist is empty, all available tests are fed to blacklist.
+If blacklist is empty, all tests from whitelist are returned.
+
+The syntax for white-list and black-list is as follows:
+- lines starting with # or empty are ignored
+- lines starting with "+" are whitelisted
+- lines starting with "-" are blacklisted
+- lines not matching any of the above conditions are blacklisted
+
+The match for each line gets added a "^" in the beginning,
+so the regular expression should account for that.
+
+For example, the following scenario:
+
+  run all the smoke tests and scenario tests,
+  but exclude the api.volume tests.
+
+is implemented as:
+
+  +.*smoke
+  +tempest\.scenario
+  -tempest\.api\.volume.*
+"""
+
+whitelist = []
+blacklist = []
 with open(sys.argv[1]) as fp:
     for line in fp:
         line = line.strip()
         if not line or line[0] == '#':
             continue
-        re.append(line)
-print("^(?!(%s))" % "|".join(re))
+        if line.startswith("+"):
+            whitelist.append(line[1:])
+        elif line.startswith("-"):
+            blacklist.append(line[1:])
+        else:
+            blacklist.append(line)
+
+regex = '^(?=({whitelist}))'
+params = dict(whitelist="|".join(whitelist))
+if blacklist:
+    regex += '(?!({blacklist}))'
+    params['blacklist'] = "|".join(blacklist)
+
+print(regex.format(**params))
+
