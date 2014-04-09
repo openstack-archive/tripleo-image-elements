@@ -15,7 +15,11 @@ if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
         LIB_PREFIX=/usr/lib
     fi
 else
-    LIB_PREFIX=/lib/$PERCONA_ARCH-linux-gnu
+    if [ "$ARCH" == "amd64" ]; then
+        LIB_PREFIX=/lib/x86_64-linux-gnu
+    else
+        LIB_PREFIX=/lib/$ARCH-linux-gnu
+    fi
 fi
 
 if [ ! -L $LIB_PREFIX/libssl.so.6 ]; then
