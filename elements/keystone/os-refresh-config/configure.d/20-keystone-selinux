@@ -1,0 +1,9 @@
+#!/bin/bash
+set -eu
+
+# Allow openssl to read keys
+
+[ -x /usr/sbin/semanage ] || exit 0
+
+semanage fcontext -a -t cert_t "/mnt/state/etc/keystone/ssl(/.*)?"
+restorecon -Rv /mnt/state/etc/keystone/ssl

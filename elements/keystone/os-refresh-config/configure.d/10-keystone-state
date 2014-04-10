@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eu
+
+[ -d /mnt/state/etc/keystone/ssl/certs ] || install -m 0750 -o keystone -g keystone -d /mnt/state/etc/keystone/ssl/certs
+[ -d /mnt/state/etc/keystone/ssl/private ] || install -m 0750 -o keystone -g keystone -d /mnt/state/etc/keystone/ssl/private
