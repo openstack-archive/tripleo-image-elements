@@ -6,6 +6,9 @@ manifest=$(get-pip-manifest os-collect-config)
 install-packages build-essential libz-dev libxslt-dev libxml2-dev python-dev
 
 virtualenv --setuptools /opt/stack/venvs/os-collect-config
+set +u
+source /opt/stack/venvs/os-collect-config/bin/activate
+set -u
 
 if [ -n "$manifest" ]; then
   use-pip-manifest $manifest
@@ -60,3 +63,7 @@ else
     echo Only systems with systemd or upstart are supported.
     exit 1
 fi
+
+set +u
+deactivate
+set -u

@@ -4,6 +4,9 @@ set -eux
 manifest=$(get-pip-manifest os-apply-config)
 
 virtualenv --setuptools /opt/stack/venvs/os-apply-config
+set +u
+source /opt/stack/venvs/os-apply-config/bin/activate
+set -u
 
 if [ -n "$manifest" ]; then
   use-pip-manifest $manifest
@@ -23,3 +26,7 @@ write-pip-manifest os-apply-config
 
 ln -s /opt/stack/venvs/os-apply-config/bin/os-apply-config /usr/local/bin/os-apply-config
 ln -s /opt/stack/venvs/os-apply-config/bin/os-config-applier /usr/local/bin/os-config-applier
+
+set +u
+deactivate
+set -u
