@@ -1,10 +1,6 @@
 #!/bin/bash
 set -eux
 
-[ -d /mnt/state/var/lib/neutron ] || {
-    install -d -D -m 0770 -o neutron -g neutron /mnt/state/var/lib/neutron
-}
-
 os-svc-enable -n neutron-server
 
 os-svc-restart -n neutron-server

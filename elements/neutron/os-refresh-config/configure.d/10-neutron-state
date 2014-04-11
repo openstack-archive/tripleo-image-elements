@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eu
+
+[ -d /mnt/state/var/lib/neutron ] || install -d -D -m 0770 -o neutron -g neutron /mnt/state/var/lib/neutron
+[ -d /var/run/neutron ] || install -D -m 0775 -o neutron -g neutron -d /var/run/neutron
+[ -d /mnt/state/var/log/neutron ] || install -D -m 0775 -o neutron -g neutron -d /mnt/state/var/log/neutron
