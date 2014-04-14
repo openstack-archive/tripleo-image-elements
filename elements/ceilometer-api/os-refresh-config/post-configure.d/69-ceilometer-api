@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eux
 
+ceilometer-dbsync --config-file /etc/ceilometer/ceilometer.conf
+
 os-svc-enable -n ceilometer-api
 
 service ceilometer-api restart
