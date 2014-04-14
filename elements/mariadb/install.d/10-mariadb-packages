@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Install controller base requiered packages
+
+set -eux
+
+if [ "$(dib-init-system)" = "upstart" ] ; then
+    install $(dirname $0)/mysql-set-server-id.upstart /etc/init/mysql-set-server-id.conf
+else
+    echo WARNING: server-id will not be set on systems that boot this image!
+fi
+
+install-packages sysstat mytop python-mysqldb mariadb-galera-server mariadb-client galera
