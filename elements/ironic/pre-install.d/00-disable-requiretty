@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+
+if [ -d /etc/sudoers.d ]; then
+    echo "Defaults:ironic !requiretty" > /etc/sudoers.d/ironic-notty
+    chmod 0440 /etc/sudoers.d/ironic-notty
+    visudo -c
+fi
