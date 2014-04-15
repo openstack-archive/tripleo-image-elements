@@ -1,6 +1,15 @@
 #!/bin/bash
 set -eu
 
+parent_dir=/mnt/state/var/lib/ironic
+
+# Ensure the images and master-images directories exist and are owned by ironic
+install -d -m 0755 -o ironic -g ironic $parent_dir
+for directory in images master_images; do
+    mkdir -p $parent_dir/$directory
+    chown ironic:ironic $parent_dir/$directory
+done
+
 os-svc-enable -n ironic-conductor
 
 service ironic-conductor restart
