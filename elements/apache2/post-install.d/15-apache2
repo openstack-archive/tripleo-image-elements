@@ -1,6 +1,4 @@
 #!/bin/bash
 set -eux
 
-if [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
-  systemctl enable httpd.service
-fi
+os-svc-enable -n apache2
