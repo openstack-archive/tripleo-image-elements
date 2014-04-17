@@ -16,6 +16,9 @@ fi
 # Disable the tftp-hpa upstart job, we're using xinetd
 [ -f /etc/init/tftpd-hpa.conf ] && echo "manual" > /etc/init/tftpd-hpa.override
 
+# Disable the tftpd-hpa SysV script for the same reason
+[ -f /etc/init.d/tftpd-hpa ] && update-rc.d -f tftpd-hpa disable
+
 cat > /etc/xinetd.d/tftp << EOF
 service tftp
 {
