@@ -1,6 +1,8 @@
 #!/bin/bash
 set -ex
 
+os-svc-daemon -i "$NOVA_VENV_DIR" nova-novncproxy       nova nova-novncproxy       "--config-dir /etc/nova"
+
 # nova-novncproxy looks in /usr/share/novnc by default
 install -d -m 0755 -o root -g root /usr/share/novnc
 install -m 0644 -o root -g root /opt/stack/novnc/favicon.ico /usr/share/novnc

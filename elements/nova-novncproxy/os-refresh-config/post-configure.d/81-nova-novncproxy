@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eux
+
+os-svc-enable -n nova-novncproxy
+os-svc-restart -n nova-novncproxy

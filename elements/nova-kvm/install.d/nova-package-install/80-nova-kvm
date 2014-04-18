@@ -2,8 +2,6 @@
 
 set -eux
 
-install-packages openstack-nova-novncproxy
-
 if ! getent group libvirtd; then
     groupadd libvirtd
 fi

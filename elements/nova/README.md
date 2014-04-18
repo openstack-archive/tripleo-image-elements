@@ -32,3 +32,6 @@ nova:
       e.g. 'linux-ext4=mkfs -t ext4 -F -L %(fs_label)s %(target)s'
   compute_manager: "ironic.nova.compute.manager.ClusterComputeManager"
     - set to override the compute manager class used by Nova-Compute.
+  public_ip:
+    - public IP address (if any) assigned to this node. Used for VNC proxy
+      connections so this is typically only required on controller nodes.
