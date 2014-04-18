@@ -42,6 +42,11 @@ if [ -n "$PHYSICAL_INTERFACE_RAW_DEVICE" ]; then
   ip link set $PHYSICAL_INTERFACE up
 fi
 
+# NOTE: ensure-bridge actually takes care of this now but it
+# as been requested that we leave this in so as to not break
+# anything. AFAIK there is no use case in TripleO right now
+# where we don't actually call ensure-bridge when using
+# init-neutron-ovs so this code should be mute.
 if [ -n "$PHYSICAL_INTERFACE_IP" -a -n "$PHYSICAL_INTERFACE" ] ; then
     if ! (ip addr show | grep -q $PHYSICAL_INTERFACE_IP) ; then
         ip addr add $PHYSICAL_INTERFACE_IP dev $PHYSICAL_INTERFACE
@@ -59,5 +64,5 @@ if [ -z "$EXTERNAL_BRIDGE" ] ; then
     exit 0
 fi
 
-ensure-bridge "$EXTERNAL_BRIDGE" "$PHYSICAL_INTERFACE" "$PUBLIC_INTERFACE_ROUTE"
+ensure-bridge "$EXTERNAL_BRIDGE" "$PHYSICAL_INTERFACE" "$PHYSICAL_INTERFACE_IP" "$PUBLIC_INTERFACE_ROUTE"
 
