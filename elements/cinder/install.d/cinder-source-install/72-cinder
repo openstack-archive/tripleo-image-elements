@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-install-packages lvm2 libssl-dev tgt libffi-dev nfs-common
+install-packages lvm2 libssl-dev libffi-dev nfs-common
 echo "qpid-python" | tee -a /opt/stack/cinder/requirements.txt
 os-svc-install -i "$CINDER_VENV_DIR" -u cinder -r /opt/stack/cinder
 
