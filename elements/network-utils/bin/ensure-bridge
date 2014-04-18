@@ -120,6 +120,7 @@ EOF_CAT
 auto $bridge
 allow-ovs $bridge
  iface $bridge inet dhcp
+ pre-up ip addr flush dev $interface
  ovs_type OVSBridge
  ovs_ports $interface
 EOF_CAT
@@ -128,6 +129,7 @@ EOF_CAT
 auto $bridge
 allow-ovs $bridge
 iface $bridge inet static
+ pre-up ip addr flush dev $interface
  address $bridge_ip_addr
  netmask $bridge_netmask
  ovs_type OVSBridge
