@@ -12,9 +12,11 @@ haproxy:
     ip: 192.0.2.6
   services:
   - name: dashboard_cluster
+    proxy_ip: 192.0.2.3
     proxy_port: 444
     port: 443
   - name: glance_api_cluster
+    proxy_ip: 192.0.2.3
     proxy_port: 9293
     port:9292
 
@@ -23,6 +25,7 @@ haproxy.nodes inside a service definition:
 
   services:
   - name: dashboard_cluster
+    proxy_ip: 192.0.2.3
     proxy_port: 444
     port: 443
     haproxy:
