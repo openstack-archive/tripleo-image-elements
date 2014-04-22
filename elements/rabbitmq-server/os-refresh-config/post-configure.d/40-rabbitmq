@@ -5,8 +5,15 @@ set -eux
 [ -d /var/run/rabbitmq ] || install -d -D -m 0755 -o rabbitmq -g rabbitmq /var/run/rabbitmq
 [ -d /mnt/state/var/log/rabbitmq ] || install -d -D -m 0770 -o rabbitmq -g rabbitmq /mnt/state/var/log/rabbitmq
 
+# NOTE(kiall): We restart here to ensure RabbitMQ has picked up any changes
+#              made by os-refresh-config. Ideally, this would be replaced with
+#              a mechanism that restarts only when it's really necessary.
 service rabbitmq-server restart
 
+# NOTE(kiall): RabbitMQ takes a couple of seconds to really start, without this
+#              the cluster_status commands will not always return the expected
+#              output.
+timeout 10 rabbitmqctl wait /var/run/rabbitmq/pid
 
 # Cluster setup
 # Why not using auto-configuration of cluster (specifying 'cluster_nodes' in
@@ -85,7 +92,7 @@ if [ -n "$NODES" ];then
   fi
 
   # wait until rabbitmq node is up
-  timeout 3 rabbitmqctl wait /var/run/rabbitmq/pid
+  timeout 10 rabbitmqctl wait /var/run/rabbitmq/pid
 
   # make sure that all queues (except those with auto-generated names) are
   # mirrored across all nodes in running:
