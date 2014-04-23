@@ -45,7 +45,7 @@ function join_with() {
 
 LOCAL=$(hostname -s)
 # TODO - nodes are comma separated hostnames, there is probably no type for this
-NODES=$(os-apply-config --key rabbit.nodes --type raw --key-default '' | sed 's/,/\n/')
+NODES=$(os-apply-config --key rabbit.nodes --type raw --key-default '' | sed 's/,/\n/g')
 MASTER=$(echo "$NODES"|sort -n|head -1)
 
 if [ -n "$NODES" ];then
