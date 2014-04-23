@@ -1,0 +1,103 @@
+#!/bin/bash
+# Copyright 2014 Hewlett-Packard Development Company, L.P.
+# All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+set -eu
+set -o pipefail
+
+SCRIPT_NAME=$(basename $0)
+
+function show_usage () {
+
+cat << EOF
+usage: '$SCRIPT_NAME INPUTFILE'
+
+Script to configure iptables.
+
+Positional arguments:
+        INPUTFILE    File containing required configuration details.
+
+An input file is parsed and iptables rules are configured accordingly.
+Rules are applied idempotently (ie duplicate rules are not created)
+and non-destructively (existing rules are not deleted/recreated).
+
+The input file is essentially set of iptables command arguments, with
+the restriction that each line should start with one of:
+'-A', '-D', '-I', '-N', '-F' or '-X'.
+
+Lines beginning with '#' and lines containing only whitespace are ignored.
+
+Sample input file contents:
+
+-N stunnel-INPUT
+-A stunnel-INPUT -p tcp --dport 5000 -j REJECT
+-A stunnel-INPUT -j RETURN
+-I INPUT -p tcp -j stunnel-INPUT
+EOF
+
+  exit 1
+}
+
+function check() {
+  check_chain_name ${@:2}
+  iptables $@ > /dev/null 2>&1
+}
+
+function check_chain_name() {
+  # Verify that a chain name is supplied
+  grep -qEv '^[[:space:]]*-|^[[:space:]]*$' < <(echo $@)
+  if [ $? -ne 0 ]; then
+    echo "$SCRIPT_NAME: bad input (no chain) \"$LINE\""
+    exit 1
+  fi
+}
+
+function apply() {
+  iptables $@
+  echo "$SCRIPT_NAME: iptables $@"
+}
+
+[ $# -ne 1 ] && show_usage
+
+FILE=$1
+
+if [ ! -r $FILE ]; then
+  echo "$SCRIPT_NAME: Cannot read input file ${FILE}."
+  exit 1
+fi
+
+while read LINE
+do
+  CMD=${LINE:0:2}
+  ARGLIST=${LINE:2}
+  case "$CMD" in
+    -A | -I)
+      check -C $ARGLIST || apply $LINE
+      ;;
+    -D)
+      check -C $ARGLIST && apply $LINE
+      ;;
+    -F | -X)
+      check -L $ARGLIST && apply $LINE
+      ;;
+    -N)
+      check -L $ARGLIST || apply $LINE
+      ;;
+    *)
+      echo "$SCRIPT_NAME: bad input \"$LINE\""
+      exit 1
+      ;;
+  esac
+done < <(grep -Ev "^[[:space:]]*$|^#" $FILE)
