@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eu
 
-[ -d /mnt/state/var/cache/swift ] || install -d -o swift -g swift /mnt/state/var/cache/swift
-
 os-svc-enable -n swift-account
 os-svc-enable -n swift-account-auditor
 os-svc-enable -n swift-account-reaper
