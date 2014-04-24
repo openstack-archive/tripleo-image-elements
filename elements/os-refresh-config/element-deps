@@ -1,5 +1,5 @@
-pip-and-virtualenv
-source-repositories
-os-collect-config
 os-apply-config
+os-collect-config
+pip-and-virtualenv
 pip-manifest
+source-repositories
