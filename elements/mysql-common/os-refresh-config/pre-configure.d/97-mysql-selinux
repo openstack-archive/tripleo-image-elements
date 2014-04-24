@@ -14,3 +14,6 @@ restorecon -Rv /mnt/state/var/log/mysql
 [ -d /mnt/state/etc/mysql ] || install -m 0755 -o mysql -g mysql -d /mnt/state/etc/mysql
 semanage fcontext -a -t mysqld_etc_t "/mnt/state/etc/mysql(/.*)?"
 restorecon -Rv /mnt/state/etc/mysql
+
+# /var/lib/mysql needs to be set to mysqld_db_t
+restorecon -R /var/lib/mysql
