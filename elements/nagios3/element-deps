@@ -1,5 +1,4 @@
 apache2
-openstack-clients
 os-apply-config
 os-refresh-config
 postfix
