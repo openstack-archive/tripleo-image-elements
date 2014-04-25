@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eux
+
+# We need to splice this into local_settings.py at configuration time
+mkdir -p /opt/stack/os-config-refresh/environment.d/
+echo "export HORIZON_VENV_DIR='$HORIZON_VENV_DIR'" > /opt/stack/os-config-refresh/environment.d/10-horizon-venv-dir.bash
