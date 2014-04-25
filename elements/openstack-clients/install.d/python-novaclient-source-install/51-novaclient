@@ -2,4 +2,4 @@
 
 set -eux
 
-install-openstack-client nova
+install-openstack-client $NOVACLIENT_EXTRA_INSTALL_OPTS -c nova -i $NOVACLIENT_VENV_DIR
