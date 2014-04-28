@@ -21,5 +21,7 @@ manifest=${1:?"Usage: ${0} <manifest>"}
 
 # Comment out the dev versions listed, as they may not be reinstallable
 sed -i "s/^\(.*[.]dev.*\)$/# \1/g" $manifest
+# also dev versions listed via the -e (editable) option
+sed -i "s/^\(-e .*\)$/# \1/g" $manifest
 
 pip install --no-deps -r $manifest
