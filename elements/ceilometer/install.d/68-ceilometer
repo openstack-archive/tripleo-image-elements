@@ -5,6 +5,7 @@ os-svc-install $CEILOMETER_EXTRA_INSTALL_OPTS -i "$CEILOMETER_VENV_DIR" -u ceilo
 
 
 install -m 640 -o ceilometer -g ceilometer /opt/stack/ceilometer/etc/ceilometer/pipeline.yaml /etc/ceilometer
+install -m 640 -o ceilometer -g ceilometer /opt/stack/ceilometer/etc/ceilometer/api_paste.ini /etc/ceilometer
 install -m 640 -o ceilometer -g ceilometer /opt/stack/ceilometer/etc/ceilometer/policy.json /etc/ceilometer
 install -m 640 -o ceilometer -g ceilometer /opt/stack/ceilometer/etc/ceilometer/sources.json /etc/ceilometer
 
