@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu
 
-BOOTSTRAP_NODE=$(os-apply-config --key mysql.nodes --type raw --key-default '' | sed 's/,/\n/' | sort | head -n 1)
+BOOTSTRAP_NODE=$(os-apply-config --key mysql.nodes --type raw --key-default '' | sed 's/,/\n/g' | sort | head -n 1)
 MY_HOST=$(os-apply-config --key mysql.host --type netaddress  --key-default '')
 MYSQL_INITIALIZED="/mnt/state/var/lib/mysql/db.initialized"
 
