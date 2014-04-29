@@ -18,6 +18,9 @@
 set -eux
 set -o pipefail
 
+# Setup the environment
+TEMPEST_RUN_CONCURRENCY=${TEMPEST_RUN_CONCURRENCY:-0}
+
 cd /opt/stack/tempest
 
 # Tempest needs 2 users, we add them here so that we know their passwords
@@ -107,4 +110,4 @@ set /files/opt/stack/tempest/etc/tempest.conf/network/tenant_network_cidr 172.16
 save
 EOF
 
-testr run --parallel $(python tests2skip.py tests2skip.txt)
+testr run --parallel --concurrency ${TEMPEST_RUN_CONCURRENCY} $(python tests2skip.py tests2skip.txt)
