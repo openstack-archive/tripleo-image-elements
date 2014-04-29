@@ -1,0 +1,10 @@
+#!/bin/bash
+set -eux
+
+install-packages collectl
+
+# The default configuration has been changed to examine cpu, disk, memory,
+# network and process stats only and only record eth and bond stats for the
+# networks. Both raw and plottable files will be produced.
+
+sudo sed -i "/^DaemonCommands/c\DaemonCommands = -f /var/log/collectl -r00:00,7 -m -F60 -scdmnZ --rawnetfilt eth|bond -P --rawtoo" /etc/collectl.conf
