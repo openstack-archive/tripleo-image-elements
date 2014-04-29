@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eux
+
+install-packages squid
+os-svc-enable -n squid

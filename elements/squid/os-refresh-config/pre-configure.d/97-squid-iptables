@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eu
+
+# Squid server
+add-rule INPUT -p tcp --dport 3128 -j ACCEPT
