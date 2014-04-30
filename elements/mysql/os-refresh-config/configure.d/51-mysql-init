@@ -3,7 +3,7 @@ set -eu
 
 BOOTSTRAP_NODE=$(os-apply-config --key mysql.nodes --type raw --key-default '' | sed 's/,/\n/g' | sort | head -n 1)
 MY_HOST=$(os-apply-config --key mysql.host --type netaddress  --key-default '')
-MYSQL_INITIALIZED="/mnt/state/var/lib/mysql/db.initialized"
+MYSQL_INITIALIZED="/mnt/state/var/lib/mysql/galera.initialized"
 
 pid_path=/var/run/mysqld/mysqld.pid
 mkdir -p $(dirname $pid_path)
