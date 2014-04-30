@@ -1,0 +1,10 @@
+#!/bin/bash
+set -eu
+
+[ -x /usr/sbin/semanage ] || exit 0
+
+semanage fcontext -a -t rabbitmq_var_lib_t "/mnt/state/var/lib/rabbitmq(/.*)?"
+restorecon -Rv /mnt/state/var/lib/rabbitmq
+
+semanage fcontext -a -t rabbitmq_var_log_t "/mnt/state/var/log/rabbitmq(/.*)?"
+restorecon -Rv /mnt/state/var/log/rabbitmq

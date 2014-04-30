@@ -3,3 +3,4 @@ set -eux
 
 [ -d /mnt/state/var/lib/rabbitmq ] || install -d -D -m 0770 -o rabbitmq -g rabbitmq /mnt/state/var/lib/rabbitmq
 install -m 600 -o rabbitmq -g rabbitmq /dev/null /mnt/state/var/lib/rabbitmq/.erlang.cookie
+[ -d /mnt/state/var/log/rabbitmq ] || install -d -D -m 0770 -o rabbitmq -g rabbitmq /mnt/state/var/log/rabbitmq
