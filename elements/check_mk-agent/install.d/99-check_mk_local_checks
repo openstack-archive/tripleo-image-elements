@@ -1,0 +1,23 @@
+#!/bin/bash
+# This script will copy the check_mk service checks to the appropriate
+# location. Note that the implementation relies on the detail that all
+# elements share one dir inside the chroot.
+set -eux
+set -o pipefail
+
+
+if [[ "rhel rhel7 centos fedora" =~ "$DISTRO_NAME" ]]; then
+  # we're running a RHEL-based distro, so we need to install to
+  # /usr/share/check-mk-agent/local
+  LOCAL_CHECK_ROOT=/usr/share/check-mk-agent/local
+else
+  # We're running a debian-based distro so we need to install
+  # to /usr/lib/check_mk_agent/local/
+  LOCAL_CHECK_ROOT=/usr/lib/check_mk_agent/local
+fi
+mkdir -p $LOCAL_CHECK_ROOT
+
+LOCAL_CHECK_SOURCE=$(dirname $0)/../check_mk_checks
+if [[ -d "${LOCAL_CHECK_SOURCE}" ]]; then
+  install -m 0755 -o root -g root  $LOCAL_CHECK_SOURCE/* $LOCAL_CHECK_ROOT/
+fi
