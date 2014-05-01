@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Install controller base requiered packages
+# Install controller base required packages
 
 set -e
 set -o xtrace
