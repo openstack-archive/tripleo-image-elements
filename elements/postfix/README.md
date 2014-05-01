@@ -16,6 +16,7 @@ Set postfix hostname and domain via heat:
       mailhostname: mail
       maildomain: example.com
       delay_warning_time: 4h
+      relayhost: smtp.example.com
 
 *NOTE: mailhostname and maildomain must match the system hostname in order to
 ensure local mail delivery will work.
