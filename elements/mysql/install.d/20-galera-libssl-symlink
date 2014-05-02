@@ -25,11 +25,11 @@ fi
 LIBSSL_FILE=$(find $LIB_PREFIX -maxdepth 1 -type f -name "libssl.so.1.0.*" | head -n 1 || echo "")
 LIBCRYPTO_FILE=$(find $LIB_PREFIX -maxdepth 1 -type f -name "libcrypto.so.1.0.*" | head -n 1 || echo "")
 
-if [ -z LIBSSL_FILE ]; then
+if [ -z "$LIBSSL_FILE" ]; then
     echo "Unable to find compatible libssl"
     exit 1
 fi
-if [ -z LIBCRYPTO_FILE ]; then
+if [ -z "$LIBCRYPTO_FILE" ]; then
     echo "Unable to find compatible libcrypto"
     exit 1
 fi
