@@ -19,7 +19,7 @@ function deps {
   fi
   install-packages screen ccze
   install-packages git ipmitool python-dev python-greenlet libxml2-dev libxslt-dev
-  install-packages openvswitch-common openvswitch-controller openvswitch-switch open-iscsi
+  install-packages openvswitch-common openvswitch-switch open-iscsi
   install-packages python-numpy python-lxml
 }
 
