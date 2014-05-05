@@ -14,6 +14,12 @@ if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
     else
         LIB_PREFIX=/usr/lib
     fi
+elif [[ "Debian" =~ "$DISTRO" ]]; then
+    if [ "$ARCH" == "amd64" ]; then
+        LIB_PREFIX=/usr/lib/x86_64-linux-gnu
+    else
+        LIB_PREFIX=/usr/lib/$ARCH-linux-gnu
+    fi
 else
     if [ "$ARCH" == "amd64" ]; then
         LIB_PREFIX=/lib/x86_64-linux-gnu
