@@ -33,8 +33,8 @@ keystone user-get demo_t2 || keystone user-create --name demo_t2 --tenant demo_t
 keystone user-role-add --user admin --role admin --tenant demo_t1 || true
 
 # Users need either this or the admin role to use swift
-keystone user-role-add --user demo_t1 --role swiftoperator --tenant demo_t1 || true
-keystone user-role-add --user demo_t2 --role swiftoperator --tenant demo_t2 || true
+keystone user-role-add --user demo_t1 --role _member_ --tenant demo_t1 || true
+keystone user-role-add --user demo_t2 --role _member_ --tenant demo_t2 || true
 
 # We require that a image is present with a name of user
 USER_IMAGE_ID=$(nova image-show user | grep id | awk '$2=="id" {print $4}')
