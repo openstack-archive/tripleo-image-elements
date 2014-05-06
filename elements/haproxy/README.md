@@ -15,10 +15,12 @@ haproxy:
     proxy_ip: 192.0.2.3
     proxy_port: 444
     port: 443
+    balance: roundrobin
   - name: glance_api_cluster
     proxy_ip: 192.0.2.3
     proxy_port: 9293
     port:9292
+    balance: source
 
 You can override set of nodes for a service by setting its own set of
 haproxy.nodes inside a service definition:
@@ -28,6 +30,7 @@ haproxy.nodes inside a service definition:
     proxy_ip: 192.0.2.3
     proxy_port: 444
     port: 443
+    balance: source
     haproxy:
       nodes:
       - name: foo0
