@@ -5,6 +5,7 @@ export DIB_INSTALLTYPE_neutron=package
 export DIB_INSTALLTYPE_glance=package
 export DIB_INSTALLTYPE_swift=package
 export DIB_INSTALLTYPE_cinder=package
+export DIB_INSTALLTYPE_horizon=package
 
 export DIB_INSTALLTYPE_python_cinderclient=package
 export DIB_INSTALLTYPE_python_glanceclient=package
@@ -14,3 +15,11 @@ export DIB_INSTALLTYPE_python_neutronclient=package
 export DIB_INSTALLTYPE_python_novaclient=package
 export DIB_INSTALLTYPE_python_swiftclient=package
 export DIB_INSTALLTYPE_python_ceilometerclient=package
+export DIB_INSTALLTYPE_python_ironicclient=package
+
+export DIB_INSTALLTYPE_os_collect_config=package
+export DIB_INSTALLTYPE_os_refresh_config=package
+export DIB_INSTALLTYPE_os_apply_config=package
+
+export DIB_INSTALLTYPE_novnc=package
+export DIB_INSTALLTYPE_get_pip_py=package
