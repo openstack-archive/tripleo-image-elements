@@ -17,7 +17,13 @@ this in Heat:
           nova:
             username: nova
             password: SuperSecret
-            tags: administrator
+            tags: 
+              - administrator
+              - monitoring
+            permissions:
+              conf: .*
+              write: .*
+              read: .*
         password_handle: {Ref: RabbitMQPasswordHandle}
 
 Using cfn-signal, we will feed back a generated password into the handle
