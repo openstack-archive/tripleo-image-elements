@@ -20,6 +20,7 @@
 import json
 import logging
 import os
+import shutil
 
 import MySQLdb
 
@@ -41,8 +42,15 @@ def load_userfile(path, users):
 
 
 def secure_installation(rootuser):
-    # If root password is set assumes ~/.my.cnf is configured correctly
-    conn = MySQLdb.Connect(read_default_file=os.path.expanduser('~/.my.cnf'))
+    # Try to connect with no password, ~/.my.cnf and /mnt/state/root/metadata.my.cnf
+    # in that order. This should cover os-refresh-config post install and re-image
+    try:
+        conn = MySQLdb.Connect()
+    except Exception, e:
+        try:
+            conn = MySQLdb.Connect(read_default_file=os.path.expanduser('~/.my.cnf'))
+        except Exception, e:
+            conn = MySQLdb.Connect(read_default_file='/mnt/state/root/metadata.my.cnf')
     with conn:
         # Remove Anonymous Users
         cursor = conn.cursor()
@@ -63,6 +71,8 @@ def secure_installation(rootuser):
                    "%s) WHERE User=%s")
             cursor.execute(cmd, (rootpwd, "root"))
             cursor.execute("FLUSH PRIVILEGES")
+            # As Above also sets root password .my.cnf with new password
+            shutil.copy2('/mnt/state/root/metadata.my.cnf',os.path.expanduser('~/.my.cnf'))
         cursor.close()
 
 users = {}
