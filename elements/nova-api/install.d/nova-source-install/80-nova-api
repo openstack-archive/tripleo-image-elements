@@ -3,7 +3,7 @@ set -eux
 
 os-svc-daemon -i "$NOVA_VENV_DIR" nova-api              nova nova-api              "--config-dir /etc/nova"
 os-svc-daemon -i "$NOVA_VENV_DIR" nova-cert             nova nova-cert             "--config-dir /etc/nova"
-os-svc-daemon -i "$NOVA_VENV_DIR" nova-scheduler        nova nova-scheduler        "--config-dir /etc/nova --debug"
+os-svc-daemon -i "$NOVA_VENV_DIR" nova-scheduler        nova nova-scheduler        "--config-dir /etc/nova"
 os-svc-daemon -i "$NOVA_VENV_DIR" nova-consoleauth      nova nova-consoleauth      "--config-dir /etc/nova"
 os-svc-daemon -i "$NOVA_VENV_DIR" nova-conductor        nova nova-conductor        "--config-dir /etc/nova"
 
