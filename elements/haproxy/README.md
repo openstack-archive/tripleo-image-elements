@@ -4,6 +4,33 @@ haproxy.services and additionally enables ports in firewall.
 Configuration
 -------------
 
+The following properties are supported for configuring haproxy
+
+* haproxy.services: A list of listen <name> blocks. Also supports proxy_ip and
+  proxy_port sub-properties.
+* haproxy.nodes: A list of server <name> <ip>:<port> lines. These are added to
+  any haproxy.services which do not define this sub-property.
+
+Each haproxy.services can define the following sub-properties
+
+* name: A name for the service.
+* proxy_ip: IP address for a service to bind to. Defaults to all IP's.
+* proxy_port: Port for a service to bind to.
+* balance: A balancing strategy for the service. Defaults to source.
+* port: Port to connect to for each of the haproxy.nodes.
+* haproxy.nodes: Same as above. This overrides the global haproxy.nodes list if
+  it is set.
+
+Each haproxy.nodes can define the following sub-properties
+
+* name: A name for the node.
+* ip: IP address to connect to for the node.
+* port: Port to connect to for the node. This overrides any port value defined
+  in haproxy.services.
+
+Example Configurations
+----------------------
+
 haproxy:
   nodes:
   - name: notcompute
