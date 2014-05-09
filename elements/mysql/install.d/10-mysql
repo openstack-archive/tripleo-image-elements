@@ -5,12 +5,6 @@
 set -e
 set -o xtrace
 
-if [ "$(dib-init-system)" = "upstart" ] ; then
-    install $(dirname $0)/mysql-set-server-id.upstart /etc/init/mysql-set-server-id.conf
-else
-    echo WARNING: server-id will not be set on systems that boot this image!
-fi
-
 install-packages libaio1 pv rsync lsof
 percona_pkgdir=Percona-XtraDB-Cluster
 
