@@ -28,6 +28,16 @@ Each haproxy.nodes can define the following sub-properties
 * port: Port to connect to for the node. This overrides any port value defined
   in haproxy.services.
 
+If haproxy is configured to bind to a virtual IP with keepalived
+sysctl must be configured to use "net.ipv4.ip_nonlocal_bind = 1"
+This setting allows allows a program like HA-Proxy to create listening sockets
+on network interfaces that do not actually exist on the server.
+* This can be set in heat meatadata for node properties.
+EX: in overcloud-source.yaml for controllerConfig under properties:
+        sysctl:
+          net.ipv4.ip_nonlocal_bind: 1
+
+
 Example Configurations
 ----------------------
 
