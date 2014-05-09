@@ -1,1 +1,1 @@
-xtradb-cluster tar /usr/local/Percona-XtraDB-Cluster http://www.percona.com/redir/downloads/Percona-XtraDB-Cluster/LATEST/binary/linux/$PERCONA_ARCH/Percona-XtraDB-Cluster-5.5.34-25.9.607.Linux.$PERCONA_ARCH.tar.gz
+xtradb-cluster tar /usr/local/Percona-XtraDB-Cluster http://www.percona.com/redir/downloads/Percona-XtraDB-Cluster/5.5.37-25.10/binary/linux/$PERCONA_ARCH/Percona-XtraDB-Cluster-5.5.37-rel35.0-25.10.756.Linux.$PERCONA_ARCH.tar.gz
