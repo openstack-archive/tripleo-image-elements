@@ -4,25 +4,25 @@ set -eu
 DEFAULT_POSTSTART="exec sleep 1"
 
 usage() {
-  echo "Usage: os-svc-daemon [ -ph ] [ -s POSTSTART ] [ -e ENV ] -n SERVICENAME -u RUNAS [ -c RUNCMD -- [arg [arg...]]]"
-  echo ""
-  echo "SERVICENAME, RUNAS, RUNCMD, and POSTSTART can be set via the"
-  echo "environment as well. Command line arguments will override"
-  echo "environment variables."
-  echo ""
-  echo "  -h             Show help and exit"
-  echo "  -p             Print the job file instead of writing to disk"
-  echo "  -d [NAME]      Specify the name of the runtime directory, which will be"
-  echo "                 /var/run/[NAME]"
-  echo "  -s POSTSTART   post_start will be added to the upstart job. Ignored with systemd."
-  echo "                 default: $DEFAULT_POSTSTART"
-  echo "  -e ENV         Environment name=value entries to set in the service/job"
-  echo "  -n SERVICENAME Name of job/service file."
-  echo "  -i INSTALLDIR  Optional: virtualenv installation directory. Defaults to: /opt/stack/venvs/<SERVICENAME>"
-  echo "  -u RUNAS       User to run main executable as."
-  echo "  -c RUNCMD      Command to execute. Must stay in foreground."
-  echo "     arg...      Arguments will be passed to COMMAND"
-  echo ""
+    echo "Usage: os-svc-daemon [ -ph ] [ -s POSTSTART ] [ -e ENV ] -n SERVICENAME -u RUNAS [ -c RUNCMD -- [arg [arg...]]]"
+    echo ""
+    echo "SERVICENAME, RUNAS, RUNCMD, and POSTSTART can be set via the"
+    echo "environment as well. Command line arguments will override"
+    echo "environment variables."
+    echo ""
+    echo "  -h             Show help and exit"
+    echo "  -p             Print the job file instead of writing to disk"
+    echo "  -d [NAME]      Specify the name of the runtime directory, which will be"
+    echo "                 /var/run/[NAME]"
+    echo "  -s POSTSTART   post_start will be added to the upstart job. Ignored with systemd."
+    echo "                 default: $DEFAULT_POSTSTART"
+    echo "  -e ENV         Environment name=value entries to set in the service/job"
+    echo "  -n SERVICENAME Name of job/service file."
+    echo "  -i INSTALLDIR  Optional: virtualenv installation directory. Defaults to: /opt/stack/venvs/<SERVICENAME>"
+    echo "  -u RUNAS       User to run main executable as."
+    echo "  -c RUNCMD      Command to execute. Must stay in foreground."
+    echo "     arg...      Arguments will be passed to COMMAND"
+    echo ""
 }
 
 # Can be set in environment now
@@ -90,23 +90,23 @@ if [ -z "$INSTALLDIR" ]; then
 fi
 
 function install_upstart {
-  local name=$1
-  local install_dir=$2
-  local user=$3
-  local dirname=${4:-$user}
-  local cmd=$5
-  shift; shift; shift; shift; shift
-  local args=$*
+    local name=$1
+    local install_dir=$2
+    local user=$3
+    local dirname=${4:-$user}
+    local cmd=$5
+    shift; shift; shift; shift; shift
+    local args=$*
 
-  local env_entries=''
-  if [ -n "$ENV" ]; then
-    local env_pad=" $ENV"
-    env_entries=${env_pad// /
+    local env_entries=''
+    if [ -n "$ENV" ]; then
+        local env_pad=" $ENV"
+        env_entries=${env_pad// /
 env }
-  fi
-  local target_file="/etc/init/$name.conf"
+    fi
+    local target_file="/etc/init/$name.conf"
 
-  $OUTPUT $target_file <<EOF
+    $OUTPUT $target_file <<EOF
 start on runlevel [2345]
 stop on runlevel [016]
 $env_entries
@@ -120,8 +120,8 @@ pre-start script
 end script
 EOF
 
-  if [ -n "$cmd" ]; then
-    $APPEND $target_file <<EOF
+    if [ -n "$cmd" ]; then
+        $APPEND $target_file <<EOF
 
 respawn
 # the default post-start of 1 second sleep delays respawning enough to
@@ -132,25 +132,25 @@ exec start-stop-daemon --start -c $user --exec $install_dir/bin/$cmd -- $args
 
 post-start $POSTSTART
 EOF
-  fi
+    fi
 }
 
 function install_systemd {
-  local name=$1
-  local install_dir=$2
-  local user=$3
-  local cmd=$4
-  shift; shift; shift; shift;
-  local args=$*
+    local name=$1
+    local install_dir=$2
+    local user=$3
+    local cmd=$4
+    shift; shift; shift; shift;
+    local args=$*
 
-  local env_entries=''
-  if [ -n "$ENV" ]; then
-    local env_pad=" $ENV"
-    env_entries=${env_pad// /
+    local env_entries=''
+    if [ -n "$ENV" ]; then
+        local env_pad=" $ENV"
+        env_entries=${env_pad// /
 Environment=}
-  fi
+    fi
 
-  $OUTPUT /usr/lib/systemd/system/$name.service <<EOF
+    $OUTPUT /usr/lib/systemd/system/$name.service <<EOF
 [Unit]
 Description=$name Service
 After=os-refresh-config.service
@@ -169,11 +169,11 @@ EOF
 }
 
 function install_create_dir_systemd {
-  local name=$(map-services $1)
-  local user=$2
-  local dirname=${3:-$user}
+    local name=$(map-services $1)
+    local user=$2
+    local dirname=${3:-$user}
 
-  $OUTPUT /usr/lib/systemd/system/$name-create-dir.service <<EOF
+    $OUTPUT /usr/lib/systemd/system/$name-create-dir.service <<EOF
 [Unit]
 Description=Create /var/run/$dirname
 
@@ -190,13 +190,13 @@ EOF
 # TODO: SysV init fallback support
 DIB_INIT_SYSTEM=$(dib-init-system)
 if [ "$DIB_INIT_SYSTEM" == "upstart" ]; then
-  install_upstart $SERVICENAME $INSTALLDIR $RUNAS "$CREATE_DIR_NAME" "$RUNCMD" $*
+    install_upstart $SERVICENAME $INSTALLDIR $RUNAS "$CREATE_DIR_NAME" "$RUNCMD" $*
 elif [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
-  if [ "$POSTSTART" != "$DEFAULT_POSTSTART" ] ; then
-      echo "WARNING: post start is ignored with systemd." >&2
-  fi
-  if [ -n "$RUNCMD" ]; then
-    install_systemd $SERVICENAME $INSTALLDIR $RUNAS $RUNCMD $*
-  fi
-  install_create_dir_systemd $SERVICENAME $RUNAS $CREATE_DIR_NAME
+    if [ "$POSTSTART" != "$DEFAULT_POSTSTART" ] ; then
+        echo "WARNING: post start is ignored with systemd." >&2
+    fi
+    if [ -n "$RUNCMD" ]; then
+        install_systemd $SERVICENAME $INSTALLDIR $RUNAS $RUNCMD $*
+    fi
+    install_create_dir_systemd $SERVICENAME $RUNAS $CREATE_DIR_NAME
 fi

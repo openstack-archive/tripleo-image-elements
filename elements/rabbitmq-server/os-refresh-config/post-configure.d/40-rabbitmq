@@ -32,17 +32,17 @@ os-svc-restart -n rabbitmq-server
 # [2] cluster is any cluster with at least 2 running nodes
 
 function is_in_cluster() {
-  local node=$1
-  # Returns true if the list following "running_nodes" in rabbitmqctl
-  # cluster_status contains at least two nodes.
-  rabbitmqctl -n rabbit@$node cluster_status|grep -q "running_nodes,\[[^]]\+,"
+    local node=$1
+    # Returns true if the list following "running_nodes" in rabbitmqctl
+    # cluster_status contains at least two nodes.
+    rabbitmqctl -n rabbit@$node cluster_status|grep -q "running_nodes,\[[^]]\+,"
 }
 
 function join_with() {
-  local node=$1
-  rabbitmqctl stop_app
-  rabbitmqctl join_cluster rabbit@$node || return 1
-  rabbitmqctl start_app
+    local node=$1
+    rabbitmqctl stop_app
+    rabbitmqctl join_cluster rabbit@$node || return 1
+    rabbitmqctl start_app
 }
 
 LOCAL=$(hostname -s)
@@ -57,46 +57,46 @@ NODES=${NODES,,}
 MASTER=${MASTER,,}
 
 if [ -n "$NODES" ];then
-  if [ "$MASTER" = "$LOCAL" ];then
-    # if this is master node which is already clustered, do nothing
+    if [ "$MASTER" = "$LOCAL" ];then
+        # if this is master node which is already clustered, do nothing
     if is_in_cluster $LOCAL;then
-      exit 0
+        exit 0
     fi
-  else
-    # if this node is already in cluster with current master node, do nothing
-    if rabbitmqctl cluster_status|grep -q "$MASTER";then
-      exit 0
-    fi
-  fi
-
-  JOINED_WITH=''
-  # find another node which is already clustered and try join with it
-  for NODE in $NODES;do
-    if [ ! "$NODE" = "$LOCAL" ] && is_in_cluster $NODE;then
-      if join_with $NODE; then
-        JOINED_WITH=$NODE
-        break
-      fi
-    fi
-  done
-
-  if [ -z "$JOINED_WITH"];then
-    # if there is no existing cluster yet and this is master node, start this
-    # node standalone (other nodes will join to this one)
-    if [ "$MASTER" == "$LOCAL" ];then
-      rabbitmqctl start_app
     else
-      if ! join_with $MASTER; then
-        echo "failed to join this node into cluster"
-        exit 1
-      fi
+        # if this node is already in cluster with current master node, do nothing
+        if rabbitmqctl cluster_status|grep -q "$MASTER";then
+        exit 0
     fi
-  fi
+    fi
 
-  # wait until rabbitmq node is up
-  timeout 3 rabbitmqctl wait /var/run/rabbitmq/pid
+    JOINED_WITH=''
+    # find another node which is already clustered and try join with it
+    for NODE in $NODES;do
+        if [ ! "$NODE" = "$LOCAL" ] && is_in_cluster $NODE;then
+            if join_with $NODE; then
+                JOINED_WITH=$NODE
+                break
+            fi
+        fi
+    done
 
-  # make sure that all queues (except those with auto-generated names) are
-  # mirrored across all nodes in running:
-  rabbitmqctl set_policy HA '^(?!amq\.).*' '{"ha-mode": "all"}'
+    if [ -z "$JOINED_WITH"];then
+        # if there is no existing cluster yet and this is master node, start this
+        # node standalone (other nodes will join to this one)
+        if [ "$MASTER" == "$LOCAL" ];then
+            rabbitmqctl start_app
+        else
+            if ! join_with $MASTER; then
+                echo "failed to join this node into cluster"
+                exit 1
+            fi
+        fi
+    fi
+
+    # wait until rabbitmq node is up
+    timeout 3 rabbitmqctl wait /var/run/rabbitmq/pid
+
+    # make sure that all queues (except those with auto-generated names) are
+    # mirrored across all nodes in running:
+    rabbitmqctl set_policy HA '^(?!amq\.).*' '{"ha-mode": "all"}'
 fi

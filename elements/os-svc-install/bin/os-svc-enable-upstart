@@ -20,7 +20,7 @@ set -eu
 job_name=${1:-}
 action=${2:-}
 
-function usage {
+function usage() {
     echo "usage: $(basename $0) job_name [enable|disable|enabled|clear]"
 }
 
