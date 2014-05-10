@@ -10,7 +10,7 @@ CONFIG_PARAMETERS="--config-dir /etc/nova"
 TEMPLATE_ROOT=$(dirname $0)/../os-apply-config
 
 if [ -e ${TEMPLATE_ROOT}/etc/nova/nova-compute.conf ]; then
-  CONFIG_PARAMETERS="${CONFIG_PARAMETERS} --config-file /etc/nova/nova.conf --config-file /etc/nova/nova-compute.conf"
+    CONFIG_PARAMETERS="${CONFIG_PARAMETERS} --config-file /etc/nova/nova.conf --config-file /etc/nova/nova-compute.conf"
 fi
 
 os-svc-daemon -i "$NOVA_VENV_DIR" -e "LIBVIRT_DEFAULT_URI=qemu:///system" nova-compute  nova nova-compute "${CONFIG_PARAMETERS}"
@@ -19,6 +19,6 @@ os-svc-daemon -i "$NOVA_VENV_DIR" -e "LIBVIRT_DEFAULT_URI=qemu:///system" nova-c
 # Use the rootwrap config from the source repo.
 install -o root -g root -m 0755 -d /etc/nova/rootwrap.d
 for f in $(ls /opt/stack/nova/etc/nova/rootwrap.d/); do
-  install -o root -g root -m 644 /opt/stack/nova/etc/nova/rootwrap.d/$f /etc/nova/rootwrap.d/$f
+    install -o root -g root -m 644 /opt/stack/nova/etc/nova/rootwrap.d/$f /etc/nova/rootwrap.d/$f
 done
 install -o root -g root -m 0644 /opt/stack/nova/etc/nova/rootwrap.conf /etc/nova/rootwrap.conf

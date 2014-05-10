@@ -5,9 +5,9 @@ install-packages mysql-server python-mysqldb
 
 my_cnf=
 if [ -f /etc/mysql/my.cnf ]; then
-  my_cnf=/etc/mysql/my.cnf # Ubuntu
+    my_cnf=/etc/mysql/my.cnf # Ubuntu
 elif [ -f /etc/my.cnf ]; then
-  my_cnf=/etc/my.cnf # Fedora/RHEL
+    my_cnf=/etc/my.cnf # Fedora/RHEL
 fi
 
 sed -i 's/127.0.0.1/0.0.0.0/g' $my_cnf

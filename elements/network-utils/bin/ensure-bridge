@@ -48,7 +48,7 @@ BOOTPROTO=none
 HOTPLUG=no
 EOF_CAT
 
-    #bridge config
+#bridge config
     if [ -z "$bridge_ip_addr" ]; then
         cat > $tmp_bridge_config <<EOF_CAT
 DEVICE=$bridge
@@ -105,7 +105,7 @@ function configure_bridge_interface_dhcp_eni() {
     sed -e "/auto $interface*/,/^$/d" -i $tmp_config
     sed -e "/auto $bridge*/,/^$/d" -i $tmp_config
 
-#interface config
+    #interface config
     cat >> $tmp_config <<-EOF_CAT
 auto $interface
 allow-$bridge $interface
@@ -114,7 +114,7 @@ allow-$bridge $interface
  ovs_type OVSPort
 EOF_CAT
 
-#bridge config
+    #bridge config
     if [ -z "$bridge_ip_addr" ]; then
         cat >> $tmp_config <<EOF_CAT
 auto $bridge
@@ -172,11 +172,11 @@ fi
 if [ -n "$PUBLIC_INTERFACE_ROUTE" ]; then
     DEFAULT_VIA=$(ip route show | awk '/default / { print $3 }')
     if [ "$DEFAULT_VIA" != "$PUBLIC_INTERFACE_ROUTE" ]; then
-      if [ -z "$(ip route show 169.254.169.254)" ]; then
-        # No explicit route to 169.254.169.254 - set one.
-        ip route add 169.254.169.254/32 via $DEFAULT_VIA
-      fi
-      ip route prepend dev $EXTERNAL_BRIDGE default via $PUBLIC_INTERFACE_ROUTE
-      ip route del default via $DEFAULT_VIA
+        if [ -z "$(ip route show 169.254.169.254)" ]; then
+            # No explicit route to 169.254.169.254 - set one.
+            ip route add 169.254.169.254/32 via $DEFAULT_VIA
+        fi
+        ip route prepend dev $EXTERNAL_BRIDGE default via $PUBLIC_INTERFACE_ROUTE
+        ip route del default via $DEFAULT_VIA
     fi
 fi

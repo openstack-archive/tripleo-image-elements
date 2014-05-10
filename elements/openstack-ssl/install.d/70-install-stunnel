@@ -22,7 +22,7 @@ install-packages stunnel4
 
 # Debian/Ubuntu don't install stunnel4 in a working configuration.
 if [ -e /etc/default/stunnel4 ]; then
-  cat > /etc/default/stunnel4 << EOF
+    cat > /etc/default/stunnel4 << EOF
 ENABLED=1
 FILES="/etc/stunnel/*.conf"
 OPTIONS=""
