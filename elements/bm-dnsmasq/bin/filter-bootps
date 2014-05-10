@@ -16,7 +16,7 @@ iptables -X FILTERBOOTPSNEW || true
 iptables -N FILTERBOOTPSNEW
 # Build the chain we want.
 for MAC in $MACS; do
- iptables -A FILTERBOOTPSNEW -m mac --mac-source $MAC -j ACCEPT
+    iptables -A FILTERBOOTPSNEW -m mac --mac-source $MAC -j ACCEPT
 done
 # Drop rather than reject as this is a broadcast protocol: we'd just be
 # creating noise on the network.

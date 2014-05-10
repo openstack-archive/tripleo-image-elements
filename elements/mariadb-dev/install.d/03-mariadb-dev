@@ -8,5 +8,5 @@ install-packages libmariadb-dev
 # https://mariadb.atlassian.net/browse/MDEV-5793
 FILE=$(which mysql_config)
 if $FILE --libs_r | grep probes_mysql;then
-  sed -i.orig "s/-lprobes_mysql//" $FILE
+    sed -i.orig "s/-lprobes_mysql//" $FILE
 fi

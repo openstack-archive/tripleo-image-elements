@@ -11,18 +11,18 @@ db_pass=$(os-apply-config --key db-password)
 STATEDIR=/mnt/state/var/lib/mysql
 DONE=${STATEDIR}/db.initialized
 if [ -e ${DONE} ] ; then
-  echo "DB files already initialized."
+    echo "DB files already initialized."
 else
-  for FILE in ibdata1 ib_logfile0 ib_logfile1 ; do
+    for FILE in ibdata1 ib_logfile0 ib_logfile1 ; do
     if [ -e $STATEDIR/$FILE ] ; then
-      mv $STATEDIR/$FILE $STATEDIR/$FILE.bak
+        mv $STATEDIR/$FILE $STATEDIR/$FILE.bak
     fi
-  done
-  # Sometimes packages make the files ownership wrong
-  chown -R mysql.mysql ${STATEDIR}
-  touch ${DONE}
+    done
+    # Sometimes packages make the files ownership wrong
+    chown -R mysql.mysql ${STATEDIR}
+    touch ${DONE}
 
-  os-svc-restart -n mysql
+    os-svc-restart -n mysql
 fi
 
 PATH=/usr/local/bin:$PATH

@@ -7,20 +7,20 @@ install -m 0755 -o root -g root -d /opt/stack/boot-stack
 
 # tools
 for f in `ls $(dirname $0)/../bin`; do
-  install -m 0755 -o root -g root $(dirname $0)/../bin/$f /usr/local/bin/$f
+    install -m 0755 -o root -g root $(dirname $0)/../bin/$f /usr/local/bin/$f
 done
 
 # db
 install-packages python-mysqldb
 
-function deps {
-  if hash apt-get &> /dev/null; then
-    apt-get update
-  fi
-  install-packages screen ccze
-  install-packages git ipmitool python-dev python-greenlet libxml2-dev libxslt-dev
-  install-packages openvswitch-common openvswitch-switch open-iscsi
-  install-packages python-numpy python-lxml
+function deps() {
+    if hash apt-get &> /dev/null; then
+        apt-get update
+    fi
+    install-packages screen ccze
+    install-packages git ipmitool python-dev python-greenlet libxml2-dev libxslt-dev
+    install-packages openvswitch-common openvswitch-switch open-iscsi
+    install-packages python-numpy python-lxml
 }
 
 deps

@@ -31,7 +31,7 @@ register-state-path /var/log/mysql
 # for mysql and mariadb and for i386/amd64
 [ -e /usr/local/mysql/lib ] || install -m 0755 -o root -g root -d /usr/local/mysql/lib
 if [ -e /usr/lib64/galera/libgalera_smm.so ];then
-  ln -sf /usr/lib64/galera/libgalera_smm.so /usr/local/mysql/lib/libgalera_smm.so
+    ln -sf /usr/lib64/galera/libgalera_smm.so /usr/local/mysql/lib/libgalera_smm.so
 elif [ -e /usr/lib/galera/libgalera_smm.so ];then
-  ln -sf /usr/lib/galera/libgalera_smm.so /usr/local/mysql/lib/libgalera_smm.so
+    ln -sf /usr/lib/galera/libgalera_smm.so /usr/local/mysql/lib/libgalera_smm.so
 fi

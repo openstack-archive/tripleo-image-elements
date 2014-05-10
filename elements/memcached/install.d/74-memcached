@@ -5,5 +5,5 @@ set -eux
 install-packages memcached
 
 if [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
-  systemctl enable memcached.service
+    systemctl enable memcached.service
 fi

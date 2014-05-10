@@ -2,8 +2,8 @@
 set -eu
 
 if [[ $EUID -ne 0 ]]; then
-   echo "ERROR: you must be root to run this" 1>&2
-   exit 1
+    echo "ERROR: you must be root to run this" 1>&2
+    exit 1
 fi
 
 scr_name=os-logs
@@ -17,11 +17,11 @@ caption always "%{-b ..}%-w%{+b ..}[[%n%f*%t]]%{-}%+w"
 eof
 
 for f in \
-  /var/log/upstart/nova-compute.log \
-  /var/log/upstart/nova-scheduler.log; do
-  if [ -e $f ]; then
-    echo "screen -t $(basename $f) sh -c \"tail -f $f | ccze\"" >> $scr_file
-  fi
+    /var/log/upstart/nova-compute.log \
+    /var/log/upstart/nova-scheduler.log; do
+    if [ -e $f ]; then
+        echo "screen -t $(basename $f) sh -c \"tail -f $f | ccze\"" >> $scr_file
+    fi
 done
 
 # XXX: Note that this is obsolete if the Neutron DHCP agent is in use.

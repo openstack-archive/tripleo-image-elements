@@ -4,5 +4,5 @@
 set -e
 
 if (( '16' '>' $DIB_IMAGE_SIZE )); then
-   echo DIB_IMAGE_SIZE=16
+    echo DIB_IMAGE_SIZE=16
 fi

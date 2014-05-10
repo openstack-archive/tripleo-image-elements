@@ -12,21 +12,21 @@ vol_file=/mnt/state/var/lib/cinder/${vol_group}-backing-file
 size=$(os-apply-config --key cinder.volume_size_mb --type int)M
 
 if ! vgs $vol_group; then
-  if ! [ -f $vol_file ] ; then
-      truncate -s $size $vol_file
-  fi
-  dev=$(losetup -j $vol_file)
-  # RACE: will be unstable if other things are running. o-r-c has a
-  # lock though so only manual runners of this script should make it unstable
-  if [ -z "$dev" ] ; then
-      dev=$(sudo losetup -f --show $vol_file)
-  fi
-  # This file is fairly complex and platform dependent. However, we need to
-  # accept only this device or volumes created within cinder could be
-  # added to this volume group erroneously.
-  # Note that this will likely break any other element trying to use LVM.
-  sed --in-place=.bak -e \
-      "s|^\(\s*\)filter = \[.*|\1filter = [ \"a\|^${dev}\|\", \"r/.*/\" ]|" \
-      /etc/lvm/lvm.conf
-  if ! vgs $vol_group; then vgcreate $vol_group $dev; fi
+    if ! [ -f $vol_file ] ; then
+        truncate -s $size $vol_file
+    fi
+    dev=$(losetup -j $vol_file)
+    # RACE: will be unstable if other things are running. o-r-c has a
+    # lock though so only manual runners of this script should make it unstable
+    if [ -z "$dev" ] ; then
+        dev=$(sudo losetup -f --show $vol_file)
+    fi
+    # This file is fairly complex and platform dependent. However, we need to
+    # accept only this device or volumes created within cinder could be
+    # added to this volume group erroneously.
+    # Note that this will likely break any other element trying to use LVM.
+    sed --in-place=.bak -e \
+        "s|^\(\s*\)filter = \[.*|\1filter = [ \"a\|^${dev}\|\", \"r/.*/\" ]|" \
+        /etc/lvm/lvm.conf
+    if ! vgs $vol_group; then vgcreate $vol_group $dev; fi
 fi

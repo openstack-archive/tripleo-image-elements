@@ -3,8 +3,8 @@ set -eux
 
 install-packages dnsmasq dnsmasq-utils
 
-function install_dnsmasq_upstart {
-  cat > /etc/init/nova-bm-dnsmasq.conf << eof
+function install_dnsmasq_upstart() {
+    cat > /etc/init/nova-bm-dnsmasq.conf << eof
 start on runlevel [2345]
 stop on runlevel [016]
 pre-start script
@@ -30,8 +30,8 @@ post-start exec sleep 1
 eof
 }
 
-function install_dnsmasq_systemd {
-  cat > /lib/systemd/system/nova-bm-dnsmasq.service << eof
+function install_dnsmasq_systemd() {
+    cat > /lib/systemd/system/nova-bm-dnsmasq.service << eof
 [Unit]
 Description=Nova dnsmasq service
 After=openvswitch.service
@@ -54,13 +54,13 @@ WantedBy=multi-user.target
 Alias=nova-bm-dnsmasq.service
 eof
 
-  # Enable the service
-  systemctl enable nova-bm-dnsmasq.service
+# Enable the service
+systemctl enable nova-bm-dnsmasq.service
 
 }
 
 if [ "$DIB_INIT_SYSTEM" == "upstart" ]; then
-  install_dnsmasq_upstart
+    install_dnsmasq_upstart
 elif [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
-  install_dnsmasq_systemd
+    install_dnsmasq_systemd
 fi

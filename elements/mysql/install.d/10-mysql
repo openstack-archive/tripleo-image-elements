@@ -53,7 +53,7 @@ register-state-path --leave-symlink /var/log/mysql
 
 DISTRO=`lsb_release -si` || true
 if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
-  # mysql clients on redhat expect the socket at /var/lib/mysql/mysql.sock
-  mkdir -p /var/lib/mysql
-  ln -s /var/run/mysqld/mysqld.sock /var/lib/mysql/mysql.sock
+    # mysql clients on redhat expect the socket at /var/lib/mysql/mysql.sock
+    mkdir -p /var/lib/mysql
+    ln -s /var/run/mysqld/mysqld.sock /var/lib/mysql/mysql.sock
 fi
