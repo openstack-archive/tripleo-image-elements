@@ -1,4 +1,5 @@
 #!/bin/bash
+set -ue
 
 # The mariadb download url arch values are not the same as ours
 if [ $ARCH = "i386" ]; then

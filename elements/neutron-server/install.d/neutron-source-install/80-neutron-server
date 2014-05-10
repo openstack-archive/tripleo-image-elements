@@ -1,3 +1,5 @@
 #!/bin/bash
+set -ue
+
 os-svc-daemon -i "$NEUTRON_VENV_DIR" neutron-server neutron neutron-server \
     "--config-file /etc/neutron/neutron.conf  --config-file /etc/neutron/plugins/ml2/ml2_conf.ini --config-dir /etc/neutron"

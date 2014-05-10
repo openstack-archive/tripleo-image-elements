@@ -1,4 +1,5 @@
 #!/bin/bash
+# dib-lint: disable=sete
 
 source $TRIPLEO_ROOT/tripleo-incubator/scripts/set-os-type
 if [ $TRIPLEO_OS_DISTRO = "fedora" ] ; then

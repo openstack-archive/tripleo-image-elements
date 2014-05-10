@@ -1,4 +1,5 @@
 #!/bin/bash
+set -ue
 
 # ceilometerclient
 if [ -z "${CEILOMETERCLIENT_VENV_DIR:-}" ]; then

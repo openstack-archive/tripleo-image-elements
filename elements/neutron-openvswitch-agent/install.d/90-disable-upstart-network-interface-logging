@@ -1,4 +1,6 @@
 #!/bin/bash
+set -ue
+
 # potentially thousands of network interfaces on the system, we don't
 # want to overwhelm upstart with log pipes. This sends all of it to the
 # system console.

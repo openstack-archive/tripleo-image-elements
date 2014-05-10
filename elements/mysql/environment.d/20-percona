@@ -1,4 +1,5 @@
 #!/bin/bash
+set -ue
 
 # The percona download url arch values are not the same as ours
 if [ $ARCH = "amd64" ]; then
