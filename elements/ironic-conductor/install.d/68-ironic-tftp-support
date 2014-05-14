@@ -31,6 +31,7 @@ service tftp
   server          = /usr/sbin/in.tftpd
   server_args     = --map-file /tftpboot/map-file /tftpboot
   disable         = no
+  flags           = IPv4
 }
 EOF
 
