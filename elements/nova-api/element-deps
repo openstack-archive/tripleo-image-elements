@@ -1,2 +1,3 @@
 iptables
 nova
+nova-novncproxy

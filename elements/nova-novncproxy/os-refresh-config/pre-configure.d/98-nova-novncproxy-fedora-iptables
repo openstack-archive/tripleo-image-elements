@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eu
+
+# open default port for nova-novncproxy connections
+add-rule INPUT -p tcp -m multiport --dports 6080 -j ACCEPT
