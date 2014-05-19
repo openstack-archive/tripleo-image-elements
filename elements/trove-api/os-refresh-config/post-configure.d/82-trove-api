@@ -1,0 +1,11 @@
+#!/bin/bash
+set -eux
+
+mkdir -p /mnt/state/var/log/trove
+chown -R trove:trove /mnt/state/var/log/trove
+
+trove-manage --config-file /etc/trove/trove.conf db_sync
+
+os-svc-enable -n trove-api
+
+os-svc-restart -n trove-api

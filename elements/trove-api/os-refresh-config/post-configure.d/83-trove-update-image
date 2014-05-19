@@ -1,0 +1,16 @@
+#!/bin/bash
+set -eux
+
+GA_IMAGE_ID=`cat /etc/trove/guestagent_image`
+
+if [ ! -z ${GA_IMAGE_ID} ]
+then
+    echo "Updating GuestAgent ImageID"
+    trove-manage --config-file /etc/trove/trove.conf datastore_update "mysql" ""
+
+    trove-manage --config-file /etc/trove/trove.conf datastore_version_update "mysql" "5.5" "mysql" ${GA_IMAGE_ID} "percona-server-server-5.5" 1
+
+    trove-manage --config-file /etc/trove/trove.conf datastore_update "mysql" "5.5"
+else
+    echo "GuestAgent Image ID is not availble"
+fi
