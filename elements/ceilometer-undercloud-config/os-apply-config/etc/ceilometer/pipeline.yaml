@@ -1,0 +1,15 @@
+---
+sources:
+    - name: host_source
+      interval: 600
+      meters:
+          - "hardware.*"
+      sinks:
+          - "meter_sink"
+      discovery:
+          - "tripleo_overcloud_nodes"
+sinks:
+    - name: meter_sink
+      transformers:
+      publishers:
+            - rpc://
