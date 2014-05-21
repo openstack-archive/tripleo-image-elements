@@ -17,7 +17,7 @@ if [ ! -e ${MYSQL_INITIALIZED} ]; then
         # We install this init script so we can trust this path exists
         /etc/init.d/mysql bootstrap-pxc
     else
-        os-svc-restart mysql
+        os-svc-restart -n mysql
     fi
 
     # We did db initialization by hand so reset-db doesnt need to interfere
