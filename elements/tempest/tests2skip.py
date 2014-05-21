@@ -68,4 +68,3 @@ if blacklist:
     params['blacklist'] = "|".join(blacklist)
 
 print(regex.format(**params))
-
