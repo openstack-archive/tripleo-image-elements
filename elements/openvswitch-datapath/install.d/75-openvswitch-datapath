@@ -1,0 +1,13 @@
+#!/bin/bash
+set -eux
+
+RET=$(select-boot-kernel-initrd)
+KERNEL_VERSION=`echo ${RET%:*} | sed 's/vmlinuz-//g' | cut -f-2 -d'.'`
+maj=$(printf "%02d" ${KERNEL_VERSION%.*})
+min=$(printf "%02d" ${KERNEL_VERSION#*.})
+
+# Open vSwitch GRE tunneling included in kernel 3.11 and
+# VXLAN tunneling in kernel 3.12
+if [[ $((10#$maj$min)) -lt 312 ]]; then
+    install-packages openvswitch-datapath-dkms
+fi
