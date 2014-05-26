@@ -10,7 +10,13 @@ ID=$(os-apply-config --key instance-id --type raw --key-default "")
 call_curl() {
     local method=$1
     local url=$2
-    curl -X $method -H 'Content-Type:' --data-binary "{\"Status\" : \"SUCCESS\",\"Reason\" : \"Configuration Complete\",\"UniqueId\" : \"$ID\",\"Data\" : \"Finished os-refresh-config.\"}" $url
+    local output=$(mktemp)
+    status=$(curl -s -w %{http_code} -X $method -H 'Content-Type:' -o $output --data-binary "{\"Status\" : \"SUCCESS\",\"Reason\" : \"Configuration Complete\",\"UniqueId\" : \"$ID\",\"Data\" : \"Finished os-refresh-config.\"}" $url)
+    cat $output
+    rm $output
+    if [ "$status" != "200" ]; then
+        exit 1
+    fi
 }
 
 # Signals use POST, wait handles use PUT
