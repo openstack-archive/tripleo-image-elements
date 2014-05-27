@@ -21,6 +21,7 @@ set -o pipefail
 # Setup the environment
 TEMPEST_RUN_CONCURRENCY=${TEMPEST_RUN_CONCURRENCY:-0}
 TEMPEST_ALLOW_TENANT_ISOLATION=${TEMPEST_ALLOW_TENANT_ISOLATION:-true}
+TEMPEST_IMAGE_NAME=${TEMPEST_IMAGE_NAME:-user}
 
 cd /opt/stack/tempest
 
@@ -37,15 +38,19 @@ keystone user-role-add --user admin --role admin --tenant demo_t1 || true
 keystone user-role-add --user demo_t1 --role swiftoperator --tenant demo_t1 || true
 keystone user-role-add --user demo_t2 --role swiftoperator --tenant demo_t2 || true
 
-# We require that a image is present with a name of user
-USER_IMAGE_ID=$(nova image-show user | grep id | awk '$2=="id" {print $4}')
+# We require that a image is present
+USER_IMAGE=$(glance image-show $TEMPEST_IMAGE_NAME)
+USER_IMAGE_ID=$(echo "$USER_IMAGE" | awk '$2=="id" {print $4}')
+USER_IMAGE_DISK_FORMAT=$(echo "$USER_IMAGE" | awk '$2=="disk_format" {print $4}')
+USER_IMAGE_CONTAINER_FORMAT=$(echo "$USER_IMAGE" | awk '$2=="container_format" {print $4}')
 
 # And then copy it for tempest test that require a second image
-if ! nova image-show user-copy 2> /dev/null ; then
-    glance image-download user | glance image-create --name user-copy --disk-format qcow2 --container-format bare --is-public 1
+if ! nova image-show ${TEMPEST_IMAGE_NAME}-copy 2> /dev/null ; then
+    glance image-download ${TEMPEST_IMAGE_NAME} | glance image-create --name ${TEMPEST_IMAGE_NAME}-copy \
+        --disk-format $USER_IMAGE_DISK_FORMAT --container-format $USER_IMAGE_CONTAINER_FORMAT --is-public 1
 fi
 
-USER_IMAGE_ID2=$(nova image-show user-copy | grep id | awk '$2=="id" {print $4}')
+USER_IMAGE_ID2=$(nova image-show ${TEMPEST_IMAGE_NAME}-copy | grep id | awk '$2=="id" {print $4}')
 
 EXTNET=$(neutron net-show ext-net | awk '/ id / {print $4}')
 
