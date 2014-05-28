@@ -24,8 +24,8 @@ Restart=on-failure
 WantedBy=multi-user.target
 eof
 
-  # Enable the service
-  systemctl enable tripleo-cd.service
+    # Enable the service
+    systemctl enable tripleo-cd.service
 
 else
     echo Only systems with systemd or upstart are supported.
@@ -36,5 +36,5 @@ mkdir -p ~root/.cache/image-create
 ln -s /var/cache/pypi-mirror/pypi ~root/.cache/image-create
 
 for f in `ls $(dirname $0)/../bin`; do
-  install -m 0755 -o root -g root $(dirname $0)/../bin/$f /usr/local/bin/$f
+    install -m 0755 -o root -g root $(dirname $0)/../bin/$f /usr/local/bin/$f
 done

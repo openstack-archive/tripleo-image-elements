@@ -2,8 +2,8 @@
 
 install-packages qpidd qpid-tools qpid-client
 
-function install_qpidd_upstart {
-  cat > /etc/init/qpidd.conf << eof
+function install_qpidd_upstart() {
+    cat > /etc/init/qpidd.conf << eof
 start on runlevel [2345]
 stop on runlevel [016]
 
