@@ -33,10 +33,10 @@ logger = logging.getLogger('mysql-users')
 # in that order. This should cover os-refresh-config post install and re-image
 try:
     conn = MySQLdb.Connect()
-except Exception, e:
+except Exception as e:
     try:
         conn = MySQLdb.Connect(read_default_file=os.path.expanduser('~/.my.cnf'))
-    except Exception, e:
+    except Exception as e:
         conn = MySQLdb.Connect(read_default_file='/mnt/state/root/metadata.my.cnf')
 cursor = conn.cursor()
 rows = cursor.execute("SELECT DISTINCT User FROM mysql.user WHERE user != ''")
