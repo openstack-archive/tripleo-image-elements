@@ -1,0 +1,35 @@
+#!/bin/bash
+set -eux
+
+MYSQL_INITIALIZED="/mnt/state/var/lib/mysql/galera.initialized"
+CLUSTER_FILE="/mnt/state/etc/mysql/conf.d/cluster.cnf"
+
+if [ ! -e ${MYSQL_INITIALIZED} ]; then
+    # systemd service script doesn't allow start mysql with optional
+    # parameter for bootstrapping first node (--wsrep-new-cluster).
+    # So we temporarily set list of cluster nodes to empty string which
+    # causes that this node is started in standalone mode. Once mysql
+    # server is started we restore old config file which contains list
+    # of nodes in cluster. Then if mysql is restarted anytime later on
+    # this node, it will try reconnect to existing cluster.
+    if [ -f $CLUSTER_FILE.orc_bkp ];then
+        rm -f $CLUSTER_FILE.orc_bkp
+    fi
+
+    if os-is-bootstrap-host; then
+        cp -a $CLUSTER_FILE $CLUSTER_FILE.orc_bkp
+        sed -i "s,^wsrep_cluster_address=.*,wsrep_cluster_address=gcomm://," $CLUSTER_FILE
+    elif [ $? -ne 1 ]; then
+        echo "We are neither cluster initializer or joiner. Refusing to bootstrap mysql cluster until role is known."
+        exit 1
+    fi
+
+    os-svc-restart -n mariadb
+
+    if [ -f $CLUSTER_FILE.orc_bkp ];then
+        mv -f $CLUSTER_FILE.orc_bkp $CLUSTER_FILE
+    fi
+
+    # We did db initialization by hand so reset-db doesnt need to interfere
+    touch ${MYSQL_INITIALIZED}
+fi
