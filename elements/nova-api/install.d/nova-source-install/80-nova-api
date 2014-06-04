@@ -4,9 +4,9 @@ set -eux
 TEMPLATE_ROOT=$(dirname $0)/../os-apply-config
 
 get_additional_config(){
-    if [ -e ${TEMPLATE_ROOT}/etc/nova/nova-${1}.conf ]; then
-        echo "--config-file /etc/nova/nova.conf --config-file /etc/nova/nova-${1}.conf"
-    fi
+  if [ -d ${TEMPLATE_ROOT}/etc/nova/${1} ]; then
+    echo "--config-dir /etc/nova/${1}"
+  fi
 }
 
 NOVA_COMPONENTS="api cert scheduler consoleauth conductor"
