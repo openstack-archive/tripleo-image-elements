@@ -1,0 +1,90 @@
+#!/usr/bin/env python
+# Copyright 2014 Hewlett-Packard Development Company, L.P.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+import os
+import subprocess
+import sys
+
+from novaclient.v1_1 import client
+from pynag import Model
+
+conn = client.Client(os.environ['OS_USERNAME'],
+                     os.environ['OS_PASSWORD'],
+                     os.environ['OS_TENANT_NAME'],
+                     os.environ['OS_AUTH_URL'])
+
+if len(sys.argv):
+    target_nets = [unicode(x) for x in sys.argv[1:]]
+else:
+    target_net = [u'default-net']
+
+errors = 0
+reload_nagios = False
+
+for net in target_nets:
+    try:
+        Model.Hostgroup.objects.get_by_name(net)
+    except Exception as e:
+        sys.stderr.write("INFO: creating hostgroup %s\n" % net)
+        hg = Model.Hostgroup()
+        hg.name = net
+        hg.hostgroup_name = net
+        if hg.is_dirty():
+            try:
+                if hg.save():
+                    reload_nagios = True
+            except Exception as e:
+                sys.stderr.write("ERROR: %s\n" % e)
+                errors += 1
+                print(hg)
+
+for server in conn.servers.list():
+    server.get()
+    monitor_nets = set(target_nets) & set(server.networks.keys())
+    if not monitor_nets:
+        continue
+    # Prefer first net, and IPv6
+    for net in target_nets:
+        if net in server.networks:
+            addrs = server.networks[net]
+            break
+    # If there is a floating IP, thats what we want.
+    addr = addrs[-1]
+    try:
+        host = Model.Host.objects.get_by_name(server.name)
+    except Exception as e:
+        host = Model.Host()
+        sys.stderr.write("INFO: creating host %s\n" % server.name)
+    host.use = 'generic-host'
+    host.name = server.name
+    host.host_name = server.name
+    host.alias = server.name
+    host.hostgroups = '%s,ssh-servers' % (','.join(monitor_nets),)
+    host.address = addr
+    try:
+        if host.save():
+            reload_nagios = True
+    except Exception as e:
+        sys.stderr.write("ERROR: %s\n" % e)
+        errors += 1
+        print(host)
+
+if errors:
+    sys.stderr.write("ERROR: %d error(s).\n" % errors)
+    sys.exit(1)
+
+if reload_nagios:
+    sys.stderr.write("INFO: reloading nagios.")
+    subprocess.call(["service","nagios3","reload"])

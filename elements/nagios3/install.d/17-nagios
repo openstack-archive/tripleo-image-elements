@@ -9,8 +9,14 @@ sed -i "s/check_external_commands=0/check_external_commands=1/" /etc/nagios3/nag
 if [ -f /etc/nagios3/conf.d/extinfo_nagios2.cfg ]; then
   sed -i "s/base\/debian/debian/g" /etc/nagios3/conf.d/extinfo_nagios2.cfg
 fi
-# set all servers as having ssh
-sed -i '0,/ssh-servers/! s/localhost/*/' /etc/nagios3/conf.d/hostgroups_nagios2.cfg
+mkdir -p /etc/nagios3/pynag
+if ! grep -q '^cfg_dir=/etc/nagios3/pynag' /etc/nagios3/nagios.cfg ; then
+    echo "cfg_dir=/etc/nagios3/pynag" >> /etc/nagios3/nagios.cfg
+fi
+install -m 0755 -o root -g root $(dirname $0)/../bin/refresh-nagios-from-nova /usr/local/bin
+install -m 0644 -o root -g root $(dirname $0)/nagios3-crontab /etc/cron.d/nagios3
+virtualenv /opt/stack/venvs/nagios-tools
+/opt/stack/venvs/nagios-tools/bin/pip install pynag python-novaclient
 # some cleanup
 chmod g+x /var/lib/nagios3/rw
 chmod g+x /var/lib/nagios3

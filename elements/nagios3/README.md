@@ -17,7 +17,8 @@ can be provided via heat. For example:
         os_password: unset
         os_username: admin
         os_tenant_name: admin
-        initial_network_split_key: ctlplane
+        monitor_networks:
+          - ctlplane
 
 Sample heat template with defaults configured for a boot-stack vm located at:
   https://git.openstack.org/cgit/openstack/tripleo-heat-templates

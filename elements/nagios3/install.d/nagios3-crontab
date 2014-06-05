@@ -1,0 +1,2 @@
+# Refresh from nova periodically
+*/5 * * * * root bash -c '. /opt/stack/venvs/nagios-tools/bin/activate ; . /etc/nagios3/nova_access_info ; /usr/local/bin/refresh-nagios-from-nova $monitor_networks'
