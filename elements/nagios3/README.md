@@ -13,10 +13,10 @@ can be provided via heat. For example:
 
     nagios3:
         adm_web_passwd: nagiosadmin
-        nova_host_ip: 192.0.2.1
-        nova_os_password: unset
-        nova_os_username: admin
-        nova_os_tenant_name: admin
+        os_auth_url: 192.0.2.1
+        os_password: unset
+        os_username: admin
+        os_tenant_name: admin
         initial_network_split_key: ctlplane
 
 Sample heat template with defaults configured for a boot-stack vm located at:
