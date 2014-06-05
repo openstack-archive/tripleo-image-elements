@@ -4,8 +4,9 @@ set -eu
 KEYSTONE_DB=$(os-apply-config --key keystone.db --type dsn)
 
 KEYSTONE_DB_TYPE=${KEYSTONE_DB%%://*}
-if [ "$KEYSTONE_DB_TYPE" != "mysql" ] ; then
-    # We can just call this directly if bug #1188378 is ever fixed
+# Use keystone-manage if not mysql or pt-archiver isn't available
+# We can just call this directly if bug #1188378 is ever fixed
+if [ "$KEYSTONE_DB_TYPE" != "mysql" ] || ! which pt-archiver 2> /dev/null ; then
     exec keystone-manage token_flush
 fi
 

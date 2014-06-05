@@ -13,6 +13,10 @@ ln -s $KEYSTONE_VENV_DIR/bin/keystone-manage /usr/local/bin/keystone-manage
 cp /opt/stack/keystone/etc/policy.json /etc/keystone/policy.json
 cp /opt/stack/keystone/etc/keystone-paste.ini /etc/keystone/keystone-paste.ini
 
+# Install scripts to clean up tokens
+install -m 0755 -o root -g root $(dirname $0)/../cleanup-keystone-tokens.sh /usr/local/bin
+install -m 0640 -o root -g root $(dirname $0)/../keystone.crontab /etc/cron.d/keystone
+
 # percona-tookit is NOT supported on Fedora (retrieved 25-06-2013)
 # http://www.percona.com/mysql-support/policies/percona-toolkit-supported-platforms-and-versions
 if [[ "Ubuntu RedHatEnterpriseServer CentOS" =~ "$DISTRO" ]]; then
@@ -20,6 +24,4 @@ if [[ "Ubuntu RedHatEnterpriseServer CentOS" =~ "$DISTRO" ]]; then
         exit 0
     fi
     install-packages percona-toolkit
-    install -m 0755 -o root -g root $(dirname $0)/../cleanup-keystone-tokens.sh /usr/local/bin
-    install -m 0640 -o root -g root $(dirname $0)/../keystone.crontab /etc/cron.d/keystone
 fi
