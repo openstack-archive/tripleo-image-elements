@@ -14,12 +14,16 @@ The following properties are supported for configuring haproxy
 Each haproxy.services can define the following sub-properties
 
 * name: A name for the service.
-* proxy_ip: IP address for a service to bind to. Defaults to all IP's.
-* proxy_port: Port for a service to bind to.
-* balance: A balancing strategy for the service. Defaults to source.
-* port: Port to connect to for each of the haproxy.nodes.
 * haproxy.nodes: Same as above. This overrides the global haproxy.nodes list if
   it is set.
+* net_binds: A list of ip addresses and ports to bind to. Each element in the
+  list must define a port and can define an IP. If no IP is defined then the
+  service binds to all IP's.
+* balance: A balancing strategy for the service. Defaults to source.
+* port: Port to connect to for each of the haproxy.nodes.
+* proxy_ip: *DEPRECATED* IP address for a service to bind to. Defaults to all
+  IP's (0.0.0.0).
+* proxy_port: *DEPRECATED* Port for a service to bind to.
 
 Each haproxy.nodes can define the following sub-properties
 
@@ -49,9 +53,11 @@ haproxy:
     ip: 192.0.2.6
   services:
   - name: dashboard_cluster
-    proxy_ip: 192.0.2.3
-    proxy_port: 444
-    port: 443
+    net_binds:
+    - ip: 192.0.2.3
+      port: 443
+    - ip: 192.0.2.3
+      port: 444
     balance: roundrobin
   - name: glance_api_cluster
     proxy_ip: 192.0.2.3
@@ -64,9 +70,10 @@ haproxy.nodes inside a service definition:
 
   services:
   - name: dashboard_cluster
-    proxy_ip: 192.0.2.3
-    proxy_port: 444
-    port: 443
+    net_binds:
+    - ip: 192.0.2.3
+      port: 444
+    - port: 443
     balance: source
     haproxy:
       nodes:
