@@ -102,8 +102,8 @@ function configure_bridge_interface_dhcp_eni() {
     local config="/etc/network/interfaces"
 
     cp $config $tmp_config
-    sed -e "/auto $interface*/,/^$/d" -i $tmp_config
-    sed -e "/auto $bridge*/,/^$/d" -i $tmp_config
+    sed -e "/auto $interface\$/,/^$/d" -i $tmp_config
+    sed -e "/auto $bridge\$/,/^$/d" -i $tmp_config
 
 #interface config
     cat >> $tmp_config <<-EOF_CAT
@@ -112,6 +112,7 @@ allow-$bridge $interface
  iface $interface inet manual
  ovs_bridge $bridge
  ovs_type OVSPort
+
 EOF_CAT
 
 #bridge config
@@ -123,6 +124,7 @@ allow-ovs $bridge
  pre-up ip addr flush dev $interface
  ovs_type OVSBridge
  ovs_ports $interface
+
 EOF_CAT
     else
         cat >> $tmp_config <<EOF_CAT
@@ -133,6 +135,7 @@ iface $bridge inet static
  address $bridge_ip_addr
  netmask $bridge_netmask
  ovs_type OVSBridge
+
 EOF_CAT
     fi
 
