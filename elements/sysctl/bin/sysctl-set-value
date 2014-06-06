@@ -19,7 +19,7 @@ if [ -z "$NAME" -o -z "$VALUE" ]; then
     exit 1
 fi
 
-FILENAME="/etc/sysctl.d/$NAME"
+FILENAME="/etc/sysctl.d/${NAME}.conf"
 
 if [ -f $FILENAME ]; then
     # check to make sure the settings match... otherwise fail
