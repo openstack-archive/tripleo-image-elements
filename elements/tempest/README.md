@@ -14,6 +14,10 @@ Tempest configuration may be overwritten via pass-through.
 tempest-run configuration is defined in etc/tempestrunrc; values in there
 may be overwritten using ExtraConfig.
 
+Tests may be skipped by modifying the existing tests2skip.txt file or
+supplying a custom one (see tempestrunrc).
+See tests2skip.py for more details on how to include and skip tests.
+
 TODO:
 * Remove as many of the filters in tests2skip.txt as possible
 * Investigate setting run_ssh to true
