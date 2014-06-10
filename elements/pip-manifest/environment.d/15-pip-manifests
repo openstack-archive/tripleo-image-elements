@@ -15,10 +15,6 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 #
-set -eux
+set -eu
 
-if [ -d $TMP_MOUNT_PATH/etc/dib-pip-manifests ]; then
-    mkdir -p ${IMAGE_NAME}-manifests
-    cp --no-preserve=ownership -rv $TMP_MOUNT_PATH/etc/dib-pip-manifests \
-        ${IMAGE_NAME}-manifests/
-fi
+export DIB_MANIFEST_PIP_DIR=${DIB_MANIFEST_PIP_DIR:-${DIB_MANIFEST_IMAGE_DIR}/dib-manifests-pip}

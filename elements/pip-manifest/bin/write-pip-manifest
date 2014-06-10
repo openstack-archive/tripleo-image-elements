@@ -19,4 +19,6 @@ set -eux
 
 name=${1:?"Usage: ${0} <name>"}
 
-pip freeze -l | tee /etc/dib-pip-manifests/dib-pip-manifest-${name//[^A-Za-z0-9]/_}
+manifest_name=dib-manifest-pip-${name//[^A-Za-z0-9]/_}
+
+pip freeze -l | tee ${DIB_MANIFEST_PIP_DIR}/${manifest_name}

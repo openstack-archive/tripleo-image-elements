@@ -18,7 +18,8 @@
 set -eux
 
 name=${1:?"Usage: ${0} <name>"}
-build_manifest=/etc/dib-pip-manifests/dib-pip-build-manifest-${name//[^A-Za-z0-9]/_}
+
+build_manifest=${DIB_MANIFEST_PIP_DIR}/dib-pip-build-manifest-${name//[^A-Za-z0-9]/_}
 
 if [[ -f "${build_manifest}" ]]; then
     echo "${build_manifest}"

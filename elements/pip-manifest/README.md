@@ -55,9 +55,3 @@ into the image chroot environment.
 ### 01-pip-manifest
 Installs the scripts in this element into the image for later use by other elements.
 
-## cleanup.d
-
-### 01-copy-pip-manifests
-Runs outside of the chroot and copies created manifests back to the
-build environment for re-use in repeating the image build.
-
