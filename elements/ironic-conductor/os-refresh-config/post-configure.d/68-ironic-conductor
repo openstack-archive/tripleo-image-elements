@@ -13,3 +13,9 @@ done
 os-svc-enable -n ironic-conductor
 
 service ironic-conductor restart
+
+# ssh really wants these permissions
+chmod 600 /mnt/state/var/lib/ironic/virtual-power-key
+
+# make sure ironic can read the ssh key
+chown ironic:ironic /mnt/state/var/lib/ironic/virtual-power-key
