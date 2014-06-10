@@ -6,15 +6,13 @@ set -eu
 # xtradb-cluster is built expecting libssl and libcryto have the following
 # versions. Doing this is terrifying stability-wise for a database.
 
-DISTRO=`lsb_release -si` || true
-
-if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
+if [[ "rhel rhel7 centos fedora" =~ "$DISTRO_NAME" ]]; then
     if [ "$ARCH" == "amd64" ]; then
         LIB_PREFIX=/usr/lib64
     else
         LIB_PREFIX=/usr/lib
     fi
-elif [[ "Debian" =~ "$DISTRO" ]]; then
+elif [[ "debian" =~ "$DISTRO_NAME" ]]; then
     if [ "$ARCH" == "amd64" ]; then
         LIB_PREFIX=/usr/lib/x86_64-linux-gnu
     else

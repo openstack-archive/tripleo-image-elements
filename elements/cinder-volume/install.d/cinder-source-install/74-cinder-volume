@@ -4,10 +4,8 @@ set -eux
 os-svc-daemon -i "$CINDER_VENV_DIR" cinder-volume cinder cinder-volume "--config-dir /etc/cinder"
 
 # Ensure the loop block device is available
-case $(lsb_release -si) in
-    Ubuntu|Debian)
-        if ! grep -Fxq loop /etc/modules; then
-            echo "loop" >> /etc/modules
-        fi
-        ;;
-esac
+if [[ "ubuntu debian" =~ "$DISTRO_NAME" ]]; then
+    if ! grep -Fxq loop /etc/modules; then
+        echo "loop" >> /etc/modules
+    fi
+fi

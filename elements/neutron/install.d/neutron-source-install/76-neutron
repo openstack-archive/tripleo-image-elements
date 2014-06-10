@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eux
 
-DISTRO=`lsb_release -si` || true
-
 install-packages openvswitch-switch openvswitch-datapath-dkms
 
 # for BUG: https://bugs.launchpad.net/neutron/+bug/1225232

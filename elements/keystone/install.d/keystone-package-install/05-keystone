@@ -2,12 +2,10 @@
 
 set -eux
 
-DISTRO=`lsb_release -si`
-
 install-packages openstack-keystone
 
 KEYSTONE_USER=keystone
-if [ "openSUSE project" = "$DISTRO" ]; then
+if [ "opensuse" = "$DISTRO_NAME" ]; then
     KEYSTONE_USER=openstack-keystone
 fi
 
