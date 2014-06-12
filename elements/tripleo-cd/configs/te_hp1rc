@@ -8,10 +8,9 @@ export TE_OVERCLOUDIP=10.10.16.136
 export TE_OVERCLOUDDNS=ci-overcloud.tripleo.org
 export TE_OVERCLOUDPASSWD=$(awk '$1=="tripleo-ci" { print $2 }' < /os-asserted-users)
 export TE_AUTHURL=http://$TE_OVERCLOUDIP:5000/v2.0
-export TE_GEARMANHOST=192.168.1.1
-export TE_PUBLICINTERFACE=em3
-export TE_COUNT=10
-export TE_EXTRA_ELEMENTS="stable-interface-names"
+export TE_PUBLICINTERFACE=eth2
+export TE_COUNT=23
+#export TE_EXTRA_ELEMENTS="stable-interface-names"
 # (No local pypi mirror yet...)
 #export DIB_DISTRIBUTION_MIRROR=http://10.10.16.169/ubuntu
 #export PYPI_MIRROR_URL=http://10.10.16.169/pypi/simple
