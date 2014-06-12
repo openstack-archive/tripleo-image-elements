@@ -3,10 +3,10 @@
 wsrep_provider=/usr/local/mysql/lib/libgalera_smm.so
 
 # Addresses of nodes in cluster
-wsrep_cluster_address=gcomm://{{mysql.nodes}}
+wsrep_cluster_address=gcomm://{{#mysql.nodes}}{{ip}},{{/mysql.nodes}}
 
 # SST method
 wsrep_sst_method=rsync
 
 # Cluster name
-wsrep_cluster_name=tripleo-{{mysql.cluster-name}}
+wsrep_cluster_name=tripleo-{{mysql.cluster_name}}
