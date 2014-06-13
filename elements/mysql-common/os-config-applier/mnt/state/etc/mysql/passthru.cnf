@@ -1,0 +1,19 @@
+# Passthrough configuration
+{{#mysql}}
+{{#config}}
+[{{{section}}}]
+{{#values}}
+{{#comment}}
+# {{{.}}}
+{{/comment}}
+{{#option}}
+{{#value}}
+{{{option}}} = {{{.}}}
+{{/value}}
+{{^value}}
+{{{option}}}
+{{/value}}
+{{/option}}
+{{/values}}
+{{/config}}
+{{/mysql}}
