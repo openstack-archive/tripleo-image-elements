@@ -1,4 +1,6 @@
 #!/bin/bash
+set -ue
+
 # If https://bugs.launchpad.net/heat/+bug/1239377 is ever fixed we can
 # configure heat to purge automatically and remove this.
 cat <<EOF > /etc/cron.d/heat

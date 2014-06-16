@@ -1,4 +1,5 @@
 #!/bin/bash
+# dib-lint: disable=sete
 
 export TRIPLEO_ROOT="$(readlink -f $(dirname $0)/../../../..)"
 source $(dirname ${BASH_SOURCE})/te_commonrc

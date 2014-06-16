@@ -1,4 +1,5 @@
 #!/bin/bash
+set -ue
 set -x
 
 SCRIPTDIR=$(dirname $0)

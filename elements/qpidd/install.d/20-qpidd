@@ -1,4 +1,5 @@
 #!/bin/bash
+set -ue
 
 install-packages qpidd qpid-tools qpid-client
 
