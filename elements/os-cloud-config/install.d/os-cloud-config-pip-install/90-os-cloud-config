@@ -1,0 +1,31 @@
+#!/bin/bash
+set -eux
+set -o pipefail
+
+manifest=$(get-pip-manifest os-cloud-config)
+VENV=/opt/stack/venvs/os-cloud-config
+
+virtualenv --setuptools $VENV
+set +u
+source ${VENV}/bin/activate
+set -u
+
+if [ -n "$manifest" ]; then
+    use-pip-manifest $manifest
+else
+    # bug #1201253 : virtualenv-1.10.1 embeds setuptools-0.9.8, which
+    # doesn't manage correctly HTTPS sockets when downloading pbr from
+    # https://pypi.python.org/simple/ if using http_proxy and https_proxy
+    # envvars
+    ${VENV}/bin/pip install -U 'setuptools>=1.0'
+    # bug #1293812 : Avoid easy_install triggering on pbr.
+    ${VENV}/bin/pip install -U 'pbr>=0.6,<1.0'
+    ${VENV}/bin/pip install --install-option="--install-scripts=/usr/local/bin" -U os-cloud-config
+fi
+
+# Write the manifest of what was installed
+write-pip-manifest os-cloud-config
+
+set +u
+deactivate
+set -u
