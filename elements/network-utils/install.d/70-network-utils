@@ -4,7 +4,7 @@ set -eux
 install-packages openvswitch-switch
 
 if [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
-  systemctl enable openvswitch.service
+    systemctl enable openvswitch.service
 fi
 
 if [ "$DIB_INIT_SYSTEM" == "upstart" ] ; then

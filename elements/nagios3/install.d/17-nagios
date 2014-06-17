@@ -7,7 +7,7 @@ install-packages nagios3
 sed -i "s/check_external_commands=0/check_external_commands=1/" /etc/nagios3/nagios.cfg
 # fix a minior display issue
 if [ -f /etc/nagios3/conf.d/extinfo_nagios2.cfg ]; then
-  sed -i "s/base\/debian/debian/g" /etc/nagios3/conf.d/extinfo_nagios2.cfg
+    sed -i "s/base\/debian/debian/g" /etc/nagios3/conf.d/extinfo_nagios2.cfg
 fi
 mkdir -p /etc/nagios3/pynag
 if ! grep -q '^cfg_dir=/etc/nagios3/pynag' /etc/nagios3/nagios.cfg ; then

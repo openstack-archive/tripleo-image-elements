@@ -34,12 +34,12 @@ PHYSICAL_INTERFACE_RAW_DEVICE=$(os-apply-config --key neutron.ovs.public_interfa
 PUBLIC_INTERFACE_ROUTE=$(os-apply-config --key neutron.ovs.public_interface_route --type netaddress --key-default '')
 
 if [ -n "$PHYSICAL_INTERFACE_RAW_DEVICE" ]; then
-  if ! (ip link show dev $PHYSICAL_INTERFACE) ; then
-    VLAN_ID=$(echo $PHYSICAL_INTERFACE | sed s/vlan//)
-    vconfig set_name_type VLAN_PLUS_VID_NO_PAD
-    vconfig add $PHYSICAL_INTERFACE_RAW_DEVICE $VLAN_ID
-  fi
-  ip link set $PHYSICAL_INTERFACE up
+    if ! (ip link show dev $PHYSICAL_INTERFACE) ; then
+        VLAN_ID=$(echo $PHYSICAL_INTERFACE | sed s/vlan//)
+        vconfig set_name_type VLAN_PLUS_VID_NO_PAD
+        vconfig add $PHYSICAL_INTERFACE_RAW_DEVICE $VLAN_ID
+    fi
+    ip link set $PHYSICAL_INTERFACE up
 fi
 
 # NOTE: ensure-bridge actually takes care of this now but it

@@ -3,13 +3,13 @@
 set -eux
 
 function usage() {
-  echo "options:"
-  echo "  -h   show usage and exit"
-  echo "  -c   client bin name"
-  echo "  -i   Optional: installation directory for the virtualenv."
-  echo "       If not specified defaults to /opt/stack/venv/python-<client name>client"
-  echo "  -s   enable --system-site-packages in the virtualenv."
-  exit $1
+    echo "options:"
+    echo "  -h   show usage and exit"
+    echo "  -c   client bin name"
+    echo "  -i   Optional: installation directory for the virtualenv."
+    echo "       If not specified defaults to /opt/stack/venv/python-<client name>client"
+    echo "  -s   enable --system-site-packages in the virtualenv."
+    exit $1
 }
 
 client=""
@@ -30,8 +30,8 @@ while getopts "hsi:c:" opt; do
 done
 
 if [[ -z "$client" ]]; then
-  echo "missing required 'client' parameter"
-  exit 1
+    echo "missing required 'client' parameter"
+    exit 1
 fi
 
 repo=python-${client}client
@@ -58,20 +58,20 @@ set -u
 pushd /opt/stack/$repo
 client_manifest=$(get-pip-manifest ${repo})
 if [ -n "$client_manifest" ]; then
-  use-pip-manifest $client_manifest
+    use-pip-manifest $client_manifest
 else
-  # Need setuptools>=1.0 to manage connections when
-  # downloading from pypi using http_proxy and https_proxy
-  pip install -U 'setuptools>=1.0'
+    # Need setuptools>=1.0 to manage connections when
+    # downloading from pypi using http_proxy and https_proxy
+    pip install -U 'setuptools>=1.0'
 
-  # bug #1293812 : Avoid easy_install triggering on pbr.
-  pip install -U 'pbr>=0.5.21,<1.0'
+    # bug #1293812 : Avoid easy_install triggering on pbr.
+    pip install -U 'pbr>=0.5.21,<1.0'
 
-  if [ -e requirements.txt ]; then
-      pip install -r requirements.txt
-  elif [ -e tools/pip-requires ]; then
-      pip install -r tools/pip-requires
-  fi
+    if [ -e requirements.txt ]; then
+        pip install -r requirements.txt
+    elif [ -e tools/pip-requires ]; then
+        pip install -r tools/pip-requires
+    fi
 fi
 
 # Always replay this, as we cannot use the entry this would generate in the manifest
