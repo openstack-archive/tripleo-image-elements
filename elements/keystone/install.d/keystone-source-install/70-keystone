@@ -12,6 +12,9 @@ ln -s $KEYSTONE_VENV_DIR/bin/keystone-manage /usr/local/bin/keystone-manage
 cp /opt/stack/keystone/etc/policy.json /etc/keystone/policy.json
 cp /opt/stack/keystone/etc/keystone-paste.ini /etc/keystone/keystone-paste.ini
 
+# Reserve the Keystone port out of the ephemeral port range.
+sysctl-append-value net.ipv4.ip_local_reserved_ports 35357
+
 # Install scripts to clean up tokens
 install -m 0755 -o root -g root $(dirname $0)/../cleanup-keystone-tokens.sh /usr/local/bin
 install -m 0640 -o root -g root $(dirname $0)/../keystone.crontab /etc/cron.d/keystone
