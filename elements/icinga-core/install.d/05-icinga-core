@@ -1,8 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
 # install icinga-core
 
-set -e
-set -o xtrace
+set -eux
+set -o pipefail
 
 install-packages icinga-core
+
+# check_icmp needs to be setuid 0 to run correctly
+# but for some reason the package doesn't do this.
+chmod u+s /usr/lib/nagios/plugins/check_icmp
