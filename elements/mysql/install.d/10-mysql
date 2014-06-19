@@ -2,7 +2,7 @@
 
 # Install controller base required packages
 
-set -e
+set -eu
 set -o xtrace
 
 if [ "$(dib-init-system)" = "upstart" ] ; then
