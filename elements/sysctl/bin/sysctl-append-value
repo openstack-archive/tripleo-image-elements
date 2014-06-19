@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Append values to a sysctl value.
+
+# The script is called with name/value pairs which are stored
+# in the system default sysctl.d directory. Existing values are
+# fetched, and the new value appended using ',' to seperate them.
+# Once finished sysctl is used to activate the changes.
+set -eu
+set -o pipefail
+
+NAME=${1:-}
+NEW_VALUE=${2:-}
+# Optional comment used to describe the setting
+COMMENT=${3:-"This file is managed via the TripleO sysctl image element."}
+
+if [ -z "$NAME" -o -z "$NEW_VALUE" ]; then
+    echo "Usage: sysctl-append-value <name> <new value> [comment]"
+    exit 1
+fi
+
+FILENAME="/etc/sysctl.d/${NAME}.conf"
+
+if [ -f "$FILENAME" ]; then
+    if grep "$NEW_VALUE" $FILENAME; then
+        echo "Info: $NEW_VALUE already present in $NAME"
+    fi
+    VALUE=$(tail -n 1 $FILENAME | awk '{ print $3 }')
+    VALUE="$VALUE,$NEW_VALUE"
+else
+    VALUE=$NEW_VALUE
+fi
+
+sysctl-write-value $NAME $VALUE $COMMENT
