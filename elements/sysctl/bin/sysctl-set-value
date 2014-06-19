@@ -23,9 +23,9 @@ FILENAME="/etc/sysctl.d/${NAME}.conf"
 
 if [ -f $FILENAME ]; then
     # check to make sure the settings match... otherwise fail
-    if ! cat $FILENAME | grep -q "^$NAME = $VALUE"; then
+    if ! grep -q "^$NAME = $VALUE" $FILENAME; then
         echo "Conflicting sysctl.conf setting for $NAME == $VALUE. Found:"
-        cat $FILENAME | grep "^$NAME"
+        grep "^$NAME" $FILENAME
         exit 1
     fi
 else
