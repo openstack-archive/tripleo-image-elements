@@ -85,13 +85,15 @@ for createuser in to_create:
         cursor = conn.cursor()
         cursor.execute(cmd)
         cursor.close()
-    # Inform Heat of new password for this user
-    cmd = ['/opt/aws/bin/cfn-signal', '-i', dbvalue['username'],
-           '-s', 'true', '--data', password, dbvalue['userhandle']]
-    if opts.noop:
-        print cmd
-    else:
-        subprocess.check_call(cmd)
+
+    if 'userhandle' in dbvalue:
+      # Inform Heat of new password for this user
+      cmd = ['/opt/aws/bin/cfn-signal', '-i', dbvalue['username'],
+             '-s', 'true', '--data', password, dbvalue['userhandle']]
+      if opts.noop:
+          print cmd
+      else:
+          subprocess.check_call(cmd)
 
 if to_delete:
     logger.warn('The following users are not accounted for: %s' % to_delete)
