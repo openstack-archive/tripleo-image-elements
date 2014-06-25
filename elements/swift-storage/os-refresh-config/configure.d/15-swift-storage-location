@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eu
+
+[ -d /mnt/state/srv/node ] && exit 0
+install -d -o swift -g swift /mnt/state/srv/node
