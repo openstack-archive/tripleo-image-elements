@@ -2,7 +2,7 @@
 
 # Install controller base required packages
 
-set -e
+set -eu
 set -o xtrace
 
 install-packages libaio1 pv rsync lsof
