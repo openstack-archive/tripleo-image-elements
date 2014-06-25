@@ -4,15 +4,27 @@ set -uex
 
 install-packages python-psutil gcc python-dev
 
-mkdir -p /opt/stack/venvs
+if [[ "Fedora" = "$DISTRO" ]]; then
+  # Remove the pre-installed package version of heat-cfntools
+  yum remove -y heat-cfntools
+fi
 
 VENV=/opt/stack/venvs/heat-cfntools
-virtualenv $VENV
+virtualenv --setuptools $VENV
 
+set +u
+source $VENV/bin/activate
+set -u
+
+# Ensure latest pip rather than the one bundled with virtualenv
+$VENV/bin/pip install -U pip
+
+# Need setuptools>=1.0 to manage connections when
+# downloading from pypi using http_proxy and https_proxy
+$VENV/bin/pip install -U 'setuptools>=1.0'
 # bug #1293812 : Avoid easy_install triggering on pbr.
-$VENV/bin/pip install -U 'pbr>=0.5.21,<1.0'
-
-$VENV/bin/pip install heat-cfntools
+$VENV/bin/pip install -U 'pbr>=0.6,<1.0'
+$VENV/bin/pip install --pre -U heat-cfntools
 
 # symlink to /opt/aws/bin
 $VENV/bin/cfn-create-aws-symlinks --source $VENV/bin
