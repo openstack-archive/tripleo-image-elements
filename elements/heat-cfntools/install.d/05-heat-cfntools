@@ -4,7 +4,7 @@ set -uex
 
 install-packages python-psutil gcc python-dev
 
-if [[ "Fedora" = "$DISTRO" ]]; then
+if [[ "fedora" = "$DISTRO_NAME" ]]; then
   # Remove the pre-installed package version of heat-cfntools
   yum remove -y heat-cfntools
 fi
