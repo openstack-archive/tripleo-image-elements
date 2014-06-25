@@ -29,12 +29,16 @@ respawn limit 2 5
 env OS_SVC_ENABLE_CONTROL=1
 export OS_SVC_ENABLE_CONTROL
 
+pre-start script
+    [ -d "/var/run/rabbitmq" ] || install -d -D -m 0755 -o rabbitmq -g rabbitmq /var/run/rabbitmq
+end script
 exec /usr/sbin/rabbitmq-server > /var/log/rabbitmq/startup_log 2> /var/log/rabbitmq/startup_err
 post-start exec /usr/sbin/rabbitmqctl wait /var/run/rabbitmq/pid >/dev/null 2>&1
 pre-stop exec /usr/sbin/rabbitmqctl stop /var/run/rabbitmq/pid >/dev/null 2>&1
 
 # Get the Erlang nameserver too.
 post-stop exec /usr/bin/pkill -u rabbitmq >/dev/null 2>&1
+
 eof
 fi
 
