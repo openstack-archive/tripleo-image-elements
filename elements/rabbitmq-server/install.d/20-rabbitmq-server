@@ -2,15 +2,13 @@
 
 set -eux
 
-DISTRO=`lsb_release -si` || true
-
 install-packages rabbitmq-server
 
 # Note(jang): the rabbitmq-server service is installed, but not started, since
 # the first run of os-collect-config is required to configure it properly.
 
 # In Ubuntu rabbit's default init.d script is broken.
-if [ "$DISTRO" = "Ubuntu" ] || [ "$DISTRO" = "Debian" -a "$DIB_INIT_SYSTEM" = "upstart" ]; then
+if [ "$DISTRO_NAME" = "ubuntu" ] || [ "$DISTRO_NAME" = "debian" -a "$DIB_INIT_SYSTEM" = "upstart" ]; then
     update-rc.d -f rabbitmq-server remove
     rm /etc/init.d/rabbitmq-server
 

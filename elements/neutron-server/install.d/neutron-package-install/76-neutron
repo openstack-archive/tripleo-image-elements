@@ -2,11 +2,9 @@
 
 set -eux
 
-DISTRO=`lsb_release -is`
-
 install-packages openstack-neutron openstack-neutron-ml2
 
-if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
+if [[ "rhel rhel7 centos fedora" =~ "$DISTRO_NAME" ]]; then
     ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
 
     # Packaged neutron is providing a requires.txt which breaks dependencies at
