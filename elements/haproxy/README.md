@@ -10,6 +10,9 @@ The following properties are supported for configuring haproxy
   proxy_port sub-properties.
 * haproxy.nodes: A list of server <name> <ip>:<port> lines. These are added to
   any haproxy.services which do not define this sub-property.
+* haproxy.stats.disabled: Set to true to disable the stats service
+* haproxy.stats.port: Port for the stats service. Defaults to 1993.
+* haproxy.stats.uri: URI for the stats service. Defaults to /.
 
 Each haproxy.services can define the following sub-properties
 
