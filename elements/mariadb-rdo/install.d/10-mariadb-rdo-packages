@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# Install controller base requiered packages
-
-set -eux
-
-install-packages sysstat mytop python-mysqldb mariadb-rdo-galera-server mariadb-galera galera
