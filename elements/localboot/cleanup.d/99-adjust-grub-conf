@@ -1,0 +1,49 @@
+#!/bin/bash
+#
+# Copyright 2014 Hewlett-Packard Development Company, L.P.
+# All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+set -eux
+set -o pipefail
+
+source $_LIB/img-functions
+
+# Dig up the initrd and kernel.
+select_boot_kernel_initrd $TARGET_ROOT
+BOOTDIR=$TARGET_ROOT/boot
+
+# For Grub 2, config file will be generated once system is booted up.
+# But for legacy grub, there is no command to generate config file so
+# legacy grub config file needs to be adjusted here
+if [ -f $BOOTDIR/grub/grub.conf ] ; then
+    # Fix root and update kernel/initrds
+    kernel_parms=`awk '!/^#/ && /vmlinuz-/' $BOOTDIR/grub/grub.conf`
+    for parm in $kernel_parms ; do
+        case $parm in
+            root=*)
+                sed -i "s,${parm#root=},LABEL=cloudimg-rootfs,g" $BOOTDIR/grub/grub.conf
+                ;;
+            /boot/vmlinuz-*)
+                KERNEL_VERSION=${KERNEL#vmlinuz-}
+                if [ -n "$KERNEL_VERSION" ] ; then
+                    OLD_KER_VER=${parm#/boot/vmlinuz-}
+                    sed -i "s/${OLD_KER_VER}\([ )]\|\(\.[a-zA-Z]\)\|$\)/${KERNEL_VERSION}\1/g" $BOOTDIR/grub/grub.conf
+                fi
+                ;;
+            *)
+                ;;
+        esac
+    done
+fi
