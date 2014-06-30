@@ -67,3 +67,6 @@ Note that if you are feeding this Metadata to ControllerResource it
 will not be fed into the process until the Heat Metadata is refreshed,
 since the initial Metadata copy will have '0.0.0.0' (as we don't know
 the address until after we create a server record).
+
+Some configuration is tied into the neutron-openvswitch-agent - see the
+README.md there as well.
