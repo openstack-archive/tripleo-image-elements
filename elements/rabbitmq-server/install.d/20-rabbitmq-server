@@ -56,3 +56,6 @@ MNESIA_BASE=/mnt/state/var/lib/rabbitmq/mnesia
 PID_FILE=/var/run/rabbitmq/pid
 EOF
 
+# Enable ulimits in pam if needed
+PAM_FILE=/etc/pam.d/su
+sed -i '/# session.*pam_limits\.so/s/# //' ${PAM_FILE}
