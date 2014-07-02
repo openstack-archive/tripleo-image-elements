@@ -13,3 +13,24 @@ cinder:
     - Print debugging output (set logging level to DEBUG instead of default WARNING level).
   iscsi-helper: tgtadm
     - Specifies the iSCSI helper to use.  Must match the target element included in the image.
+
+Rootwrap Configuration
+----------------------
+
+It is possible to add custom configuration to the rootwrap.conf used by cinder
+by supplying an ExtraConfig snippet of the following form:
+
+    {
+      "cinder": {
+        "rootwrap_config": [
+          {"section": "SECTIONNAME",
+           "values": [
+              {
+                "option": "OPTIONNAME",
+                "value": "VALUENAME"
+              }
+            ]
+          }
+        ]
+      }
+    }
