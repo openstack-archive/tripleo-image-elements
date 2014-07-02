@@ -1,13 +1,10 @@
 #!/bin/bash
 # Note that this relies on the detail that all elements share one dir
 # inside the chroot. This will copy all the files that elements have
-# added to element/os-config-applier or element/os-apply-config into the
-# appropriate location.
+# added to element/os-apply-config into the appropriate location.
 set -eux
 TEMPLATE_ROOT=$(os-apply-config --print-templates)
-TEMPLATE_SOURCE=$(dirname $0)/../os-config-applier
-mkdir -p $TEMPLATE_ROOT
-
-[ -d $TEMPLATE_SOURCE ] && rsync --exclude='.*.swp' -Cr $TEMPLATE_SOURCE/ $TEMPLATE_ROOT/
 TEMPLATE_SOURCE=$(dirname $0)/../os-apply-config
+
+mkdir -p $TEMPLATE_ROOT
 [ -d $TEMPLATE_SOURCE ] && rsync --exclude='.*.swp' -Cr $TEMPLATE_SOURCE/ $TEMPLATE_ROOT/
