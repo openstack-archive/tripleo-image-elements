@@ -1,0 +1,8 @@
+#!/bin/bash
+set -eux
+
+NET_CONFIG=$(os-apply-config --key os_net_config --type raw --key-default '')
+
+if [ -n "$NET_CONFIG" ]; then
+    os-net-config -c /etc/os-net-config/config.json -d
+fi
