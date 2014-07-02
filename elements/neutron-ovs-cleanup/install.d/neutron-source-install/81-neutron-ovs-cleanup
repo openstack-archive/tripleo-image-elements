@@ -9,4 +9,6 @@ ln -sf $NEUTRON_VENV_DIR/bin/neutron-ovs-cleanup /usr/local/bin/neutron-ovs-clea
 DIB_INIT_SYSTEM=$(dib-init-system)
 if [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
     install -D -g root -o root -m 0755 ${SCRIPTDIR}/neutron-ovs-cleanup.service /usr/lib/systemd/system/neutron-ovs-cleanup.service
+elif [ "$DIB_INIT_SYSTEM" == "upstart" ]; then
+    install -D -g root -o root -m 0755 ${SCRIPTDIR}/neutron-ovs-cleanup.conf /etc/init/neutron-ovs-cleanup.conf
 fi
