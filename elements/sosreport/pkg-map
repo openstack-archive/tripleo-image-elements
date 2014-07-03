@@ -1,0 +1,10 @@
+{
+  "family": {
+    "redhat": {
+      "sosreport_package": "sos"
+    }
+  },
+  "default": {
+    "sosreport_package": "sosreport"
+  }
+}
