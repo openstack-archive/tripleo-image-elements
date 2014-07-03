@@ -1,0 +1,12 @@
+{
+  "family": {
+    "redhat": {
+      "libffi_dev_package": "libffi-devel",
+      "swift_package": "openstack-swift"
+    }
+  },
+  "default": {
+    "libffi_dev_package": "libffi-dev",
+    "swift_package": "openstack-swift"
+  }
+}
