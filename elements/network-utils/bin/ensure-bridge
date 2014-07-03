@@ -219,7 +219,6 @@ if [ -n "$PUBLIC_INTERFACE_ROUTE" ]; then
             # No explicit route to 169.254.169.254 - set one.
             ip route add 169.254.169.254/32 via $DEFAULT_VIA
         fi
-        ip route prepend dev $EXTERNAL_BRIDGE default via $PUBLIC_INTERFACE_ROUTE
-        ip route del default via $DEFAULT_VIA
+        ip route replace default via $PUBLIC_INTERFACE_ROUTE
     fi
 fi
