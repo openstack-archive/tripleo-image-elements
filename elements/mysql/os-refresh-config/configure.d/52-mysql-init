@@ -17,6 +17,11 @@ if [ ! -e ${MYSQL_INITIALIZED} ]; then
 
         touch ${MYSQL_INITIALIZED}
     elif [ $? -eq 1 ]; then
+        if grep -qE '^wsrep_cluster_address[[:space:]]*=[[:space:]]*gcomm://[[:space:]]*$' /etc/mysql/conf.d/cluster.cnf; then
+            echo "We are configured as joiner and have no nodes configured for the cluster. Refusing to proceed until cluster nodes are known."
+            exit 1
+        fi
+
         os-svc-restart -n mysql
 
         touch ${MYSQL_INITIALIZED}
