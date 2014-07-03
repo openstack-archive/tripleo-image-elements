@@ -38,7 +38,11 @@ if [ "$DIB_INIT_SYSTEM" == "upstart" ] ; then
 start on runlevel [2345]
 stop on runlevel [016]
 respawn
-exec os-collect-config
+
+# We're logging to syslog
+console none
+
+exec os-collect-config  2>&1 | logger -t os-collect-config
 eof
 
 elif [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
