@@ -35,10 +35,7 @@ else
         exit 1
     fi
 
-    cat > $FILENAME <<-EOF_CAT
-# $COMMENT
-$NAME = $VALUE
-EOF_CAT
+    sysctl-write-value $NAME $VALUE $COMMENT
 
     sysctl -p$FILENAME
 
