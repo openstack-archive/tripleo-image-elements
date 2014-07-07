@@ -2,10 +2,12 @@
 
 set -eu
 
-QUORUM_POLICY=$(os-apply-config --key pacemaker.quorum_policy --type raw --key-default ignore)
-RECHECK_INTERVAL=$(os-apply-config --key pacemaker.recheck_interval --type raw --key-default 5)
-STONITH_ENABLED=$(os-apply-config --key pacemaker.stonith_enabled --type raw --key-default false)
+if os-is-bootstrap-host; then
+  QUORUM_POLICY=$(os-apply-config --key pacemaker.quorum_policy --type raw --key-default ignore)
+  RECHECK_INTERVAL=$(os-apply-config --key pacemaker.recheck_interval --type raw --key-default 5)
+  STONITH_ENABLED=$(os-apply-config --key pacemaker.stonith_enabled --type raw --key-default false)
 
-crm configure property no-quorum-policy=$QUORUM_POLICY \
-    cluster-recheck-interval=$RECHECK_INTERVAL"min" \
-    stonith-enabled=$STONITH_ENABLED
+  crm_attribute -t crm_config -n stonith-enabled -v $STONITH_ENABLED
+  crm_attribute -t crm_config -n no-quorum-policy -v $QUORUM_POLICY
+  crm_attribute -t crm_config -n cluster-recheck-interval -v "${RECHECK_INTERVAL}min"
+fi
