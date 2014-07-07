@@ -2,6 +2,7 @@
 set -eux
 
 install-packages libapache2-mod-wsgi libssl-dev libffi-dev
+$HORIZON_VENV_DIR/bin/pip install python-memcached
 
 TEMPLATE_ROOT=$(os-apply-config --print-templates)
 
