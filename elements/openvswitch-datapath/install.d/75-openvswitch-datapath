@@ -9,5 +9,5 @@ min=$(printf "%02d" ${KERNEL_VERSION#*.})
 # Open vSwitch GRE tunneling included in kernel 3.11 and
 # VXLAN tunneling in kernel 3.12
 if [[ $((10#$maj$min)) -lt 312 ]]; then
-    install-packages openvswitch-datapath-dkms
+    install-packages -m openvswitch-datapath openvswitch-datapath-dkms_package
 fi

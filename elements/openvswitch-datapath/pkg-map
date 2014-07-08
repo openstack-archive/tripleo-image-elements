@@ -1,0 +1,10 @@
+{
+  "family": {
+    "debian": {
+      "openvswitch-datapath-dkms_package": "openvswitch-datapath-dkms"
+    },
+    "suse": {
+       "openvswitch-switch-dkms_package": "openvswitch-kmp"
+    }
+  }
+}
