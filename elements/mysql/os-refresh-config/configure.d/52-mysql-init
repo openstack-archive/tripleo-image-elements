@@ -9,7 +9,7 @@ chown mysql:root $(dirname $pid_path)
 
 if [ ! -e ${MYSQL_INITIALIZED} ]; then
     if os-is-bootstrap-host; then
-       # Needed to setup initial tables. This command is idempotent.
+        # Needed to setup initial tables. This command is idempotent.
         /usr/local/mysql/scripts/mysql_install_db --user=mysql --basedir=/usr/local/mysql --datadir=/mnt/state/var/lib/mysql --no-defaults --pid-file=$pid_path  --wsrep-new-cluster
 
         # We install this init script so we can trust this path exists
@@ -23,5 +23,15 @@ if [ ! -e ${MYSQL_INITIALIZED} ]; then
     else
         echo "We are neither cluster initializer or joiner. Refusing to bootstrap mysql cluster until role is known."
         exit 1
+    fi
+else
+    # For single node setups we can re-bootstrap if were not currently running
+    # We need to ensure we are bootstrap host to prevent our regex succeeding
+    # in case mysql.hosts comes in piecemeal
+    LOCAL_IP=$(os-apply-config --key local-ipv4 --type netaddress --key-default '')
+    if os-is-bootstrap-host && grep -Eq "^wsrep_cluster_address=gcomm://$LOCAL_IP,?\$" /etc/mysql/conf.d/cluster.cnf; then
+        if ! /etc/init.d/mysql status; then
+            /etc/init.d/mysql bootstrap-pxc
+        fi
     fi
 fi
