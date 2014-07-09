@@ -1,0 +1,20 @@
+#!/bin/bash
+set -eu
+
+MYSQL_INITIALIZED="/mnt/state/var/lib/mysql/galera.initialized"
+
+if [ ! -e ${MYSQL_INITIALIZED} ]; then
+    if os-is-bootstrap-host; then
+        # We install this init script so we can trust this path exists
+        /etc/init.d/mysql bootstrap
+
+        touch ${MYSQL_INITIALIZED}
+    elif [ $? -eq 1 ]; then
+        /etc/init.d/mysql restart
+
+        touch ${MYSQL_INITIALIZED}
+    else
+        echo "We are neither cluster initializer or joiner. Refusing to bootstrap mysql cluster until role is known."
+        exit 1
+    fi
+fi
