@@ -3,3 +3,10 @@ set -eux
 
 [ -d /mnt/state/etc/keystone/ssl/certs ] || install -m 0750 -o keystone -g keystone -d /mnt/state/etc/keystone/ssl/certs
 [ -d /mnt/state/etc/keystone/ssl/private ] || install -m 0750 -o keystone -g keystone -d /mnt/state/etc/keystone/ssl/private
+
+# precreate ssl key file with correct permissions
+# TODO: this can be replaced with mode metadata header when supported in
+# os-apply-config (spec's Change-Id: I8fe7126d7261c1f106d7413bd31aa379e9ae5c3e)
+touch /mnt/state/etc/keystone/ssl/private/signing_key.pem
+chown keystone.keystone /mnt/state/etc/keystone/ssl/private/signing_key.pem
+chmod 0640 /mnt/state/etc/keystone/ssl/private/signing_key.pem
