@@ -145,16 +145,6 @@ function configure_bridge_interface_dhcp_eni() {
     sed -e "/auto $interface\$/,/^$/d" -i $tmp_config
     sed -e "/auto $bridge\$/,/^$/d" -i $tmp_config
 
-    #interface config
-    cat >> $tmp_config <<-EOF_CAT
-auto $interface
-allow-$bridge $interface
- iface $interface inet manual
- ovs_bridge $bridge
- ovs_type OVSPort
-
-EOF_CAT
-
     #bridge config
     if [ -z "$bridge_ip_addr" ]; then
         cat >> $tmp_config <<EOF_CAT
@@ -178,6 +168,16 @@ iface $bridge inet static
 
 EOF_CAT
     fi
+
+    #interface config
+    cat >> $tmp_config <<-EOF_CAT
+auto $interface
+allow-$bridge $interface
+ iface $interface inet manual
+ ovs_bridge $bridge
+ ovs_type OVSPort
+
+EOF_CAT
 
     if ! diff $tmp_config $config &>/dev/null; then
         ifdown $interface &>/dev/null || true
