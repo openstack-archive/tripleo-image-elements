@@ -2,4 +2,4 @@
 set -eux
 
 # ensure we have tftp and pxe requirements
-install-packages syslinux tftpd-hpa xinetd parted
+install-packages syslinux tftpd-hpa xinetd parted psmisc
