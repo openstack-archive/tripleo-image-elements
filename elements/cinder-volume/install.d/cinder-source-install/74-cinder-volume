@@ -1,6 +1,9 @@
 #!/bin/bash
 set -eux
 
+# qemu-img is required when creating volumes from Glance images
+install-packages -m cinder-volume qemu_img_package
+
 os-svc-daemon -i "$CINDER_VENV_DIR" cinder-volume cinder cinder-volume "--config-dir /etc/cinder"
 
 # Ensure the loop block device is available
