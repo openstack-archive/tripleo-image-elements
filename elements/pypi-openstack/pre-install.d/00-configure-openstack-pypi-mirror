@@ -2,7 +2,7 @@
 
 set -eu
 
-PYPIURL=http://pypi.openstack.org/openstack/
+PYPIURL=http://pypi.openstack.org/simple/
 mkdir -p ~/.pip
 
 if [ -e ~/.pip/pip.conf ]; then
