@@ -2,4 +2,4 @@
 
 set -eu
 
-ln -sf /opt/stack/venvs/cinder/bin/cinder-rtstool /usr/local/bin/cinder-rtstool
+ln -sf $CINDER_VENV_DIR/bin/cinder-rtstool /usr/local/bin/cinder-rtstool
