@@ -1,49 +1,34 @@
 #!/bin/bash
 set -eux
 
-RUN_DB_SYNC=${1:-""}
-function run_db_sync() {
-    [ -n "$RUN_DB_SYNC" ]
-}
-
 db_pass=$(os-apply-config --key db-password)
 
 PATH=/usr/local/bin:$PATH
 
 os-db-create keystone keystone $db_pass
-run_db_sync && keystone-manage db_sync
 
 if which cinder-manage 1>/dev/null 2>&1; then
     os-db-create cinder cinder $db_pass
-    run_db_sync && cinder-manage db sync
 fi
 
 if which ironic-dbsync 1>/dev/null 2>&1; then
     os-db-create ironic ironic $db_pass
-    run_db_sync && ironic-dbsync --config-file /etc/ironic/ironic.conf
 fi
 
 if which tuskar-dbsync 1>/dev/null 2>&1; then
     os-db-create tuskar tuskar $db_pass
-    run_db_sync && tuskar-dbsync --config-file /etc/tuskar/tuskar.conf
 fi
 
 if which ceilometer-dbsync 1>/dev/null 2>&1; then
     os-db-create ceilometer ceilometer $db_pass
-    run_db_sync && ceilometer-dbsync --config-file /etc/ceilometer/ceilometer.conf
 fi
 
 os-db-create nova nova $db_pass
-run_db_sync && nova-manage db sync
 
 os-db-create nova_bm nova $db_pass
-run_db_sync && nova-baremetal-manage db sync
 
 os-db-create glance glance $db_pass
-run_db_sync && glance-manage db_sync
 
 os-db-create heat heat $db_pass
-run_db_sync && heat-manage db_sync
 
 os-db-create ovs_neutron neutron $db_pass
-neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head

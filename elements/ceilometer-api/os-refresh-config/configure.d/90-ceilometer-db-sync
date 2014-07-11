@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eux
+
+if os-is-bootstrap-host ; then
+    ceilometer-dbsync --config-file /etc/ceilometer/ceilometer.conf
+fi

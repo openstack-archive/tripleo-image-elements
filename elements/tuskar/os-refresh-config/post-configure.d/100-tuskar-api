@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eux
 
-tuskar-dbsync --config-file /etc/tuskar/tuskar.conf
-
 os-svc-enable -n tuskar-api
 
 service tuskar-api restart

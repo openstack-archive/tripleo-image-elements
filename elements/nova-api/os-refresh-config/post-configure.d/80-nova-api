@@ -9,8 +9,6 @@ chown -R nova:nova /var/run/openstack
 mkdir -p /var/run/nova
 chown -R nova:nova /var/run/nova
 
-nova-manage db sync
-
 os-svc-enable -n nova-conductor
 os-svc-enable -n nova-api
 os-svc-enable -n nova-cert
