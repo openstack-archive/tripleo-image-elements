@@ -1,0 +1,71 @@
+#!/bin/bash
+#
+# Copyright 2014 Hewlett-Packard Development Company, L.P.
+# All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+set -eu
+set -o pipefail
+
+echo Installing Boot Loader
+if [[ "aarch64 armhf" =~ "$(uname -m)" ]]; then
+    KERNEL_RELEASE="$(uname -r)"
+    KERNEL="/boot/vmlinuz-$KERNEL_RELEASE"
+    RAMDISK="/boot/initrd.img-$KERNEL_RELEASE"
+    FILE="/boot/boot.cmd"
+    #this file will contain script with boot parameters like ramdisk and kernel
+    #address and console parameters. This varies from arm board to board, User
+    #will provide boot script.
+    if [ -f "$FILE" ] ; then
+        #boot.scr file is created by below command which requires u-boot-tools package.
+        mkimage -C none -A arm -T script -d "$FILE" /boot/boot.scr
+    else
+        echo "$FILE file not found to generate boot.scr"
+    fi
+
+else
+    grub_bin=$(which grub)
+    if [ -n "$grub_bin" ] ; then
+        grub_ver="$($grub_bin --version | grep 0\.97)"
+        if [ -n "$grub_ver" ] ; then
+            echo "Legacy grub 0.97 found"
+            $grub_bin --batch << EOF
+root (hd0,0)
+setup (hd0)
+EOF
+        else
+            echo "unknown legacy grub version"
+        fi
+    else
+        # Some distros have grub2 binaries named as grub2-install, grub2-mkconfig, etc.
+        # Others have grub-install, grub-mkconfig, etc..
+        grub_bin_prefix="grub"
+        grub_bin="$(which ${grub_bin_prefix}-mkconfig)"
+        if [ -n "${grub_bin}" ] ; then
+            grub_bin_prefix="grub2"
+            grub_bin="$(which ${grub_bin_prefix}-mkconfig)"
+        fi
+        if [ -n "$grub_bin" ] ; then
+            grub_ver="$($grub_bin --version | grep 2\...)"
+            if [ -n "$grub_ver" ] ; then
+                echo "GRUB 2.xx found"
+                ${grub_bin_prefix}-mkconfig -o /boot/${grub_bin_prefix}/grub.cfg
+                ${grub_bin_prefix}-install --force /dev/sda
+            else
+                echo "unknown grub version"
+            fi
+        fi
+    fi
+
+fi

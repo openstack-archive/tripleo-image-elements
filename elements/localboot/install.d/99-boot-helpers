@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -eux
+set -o pipefail
+
+if [ "$ARCH" == "amd64" -o "$ARCH" == "i386" ]; then
+    install-packages grub-pc
+
+elif [ "$ARCH" == "aarch64" -o "$ARCH" == "armhf" ]; then
+    install-package u-boot-tools
+    #This copies uboot scripts to boot folder
+    if [ -f "$UBOOT_SCRIPT_FILE_PATH" ] ; then
+        cp "$UBOOT_SCRIPT_FILE_PATH" "$TARGET_ROOT/boot/boot.cmd"
+    fi
+
+else
+    echo "ERROR: localboot is not supported for $ARCH architectures."
+    exit 1
+fi
