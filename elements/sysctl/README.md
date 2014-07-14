@@ -1,15 +1,23 @@
 Manages sysctl settings.
 
-Two ways to make use of this element:
+There are three ways to make use of this element:
 
 1) Elements can make use of sysctl-set-value directly by requiring
 this element and calling /usr/local/bin/sysctl-set-value. This will
 help ensure conflicting sysctl values are not in use across elements.
+Please note that this script calls sysctl -p, which will set the sysctl
+value on the build host while the image is building, which may be
+unintended.
 
-2) Alternately you can make use of the element via Heat by adding
-metadata in the configuration example below. The sysctl-set-data
-binary will take care of applying these settings during
-configuration time.
+2) Elements can make use of sysctl-write-value directly by requiring
+this element and calling /usr/local/bin/sysctl-write-value. This script
+does not verify values, or set them on the build host, it only writes the
+files into the image, so that the values will be set when the image is
+booted.
+
+3) Alternately you can make use of the element via Heat by adding
+metadata in the configuration example below. sysctl-set-value
+will take care of applying these settings during configuration time.
 
 Configuration example
 ---------------------
