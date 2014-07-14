@@ -1,0 +1,14 @@
+#!/bin/bash
+set -eux
+set -o pipefail
+
+[ -x /usr/sbin/semanage ] || exit 0
+
+# Updates the selinux-policy if one is available. We should
+# be loading the latest version.
+install-packages selinux-policy selinux-policy-targeted
+
+# Loads the selinux policy during image build.
+# This allows commands like setsebool and semange to work
+# during image build.
+load_policy -i
