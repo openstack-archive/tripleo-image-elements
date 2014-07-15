@@ -1,4 +1,9 @@
 #!/bin/bash
 set -eux
+set -o pipefail
 
-service keepalived restart
+if [ -e /var/run/keepalived.pid ] && pgrep -F /var/run/keepalived.pid keepalived &>/dev/null; then
+    service keepalived reload
+else
+    service keepalived restart
+fi
