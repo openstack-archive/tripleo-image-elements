@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Install controller base required packages
+
+set -eux
+
+install-packages -m mariadb-rpm galera_server_package python_mysqldb_package
+install-packages sysstat mytop
