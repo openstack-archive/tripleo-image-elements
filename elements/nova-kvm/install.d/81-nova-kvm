@@ -7,8 +7,6 @@ set -eux
 rm -f /etc/libvirt/qemu/networks/autostart/default.xml
 rm -f /etc/libvirt/qemu/networks/default.xml
 
-register-state-path --leave-symlink /etc/libvirt/qemu
-
 SCRIPTDIR=$(dirname $0)
 
 if [ -f /etc/sysconfig/libvirtd ]; then
