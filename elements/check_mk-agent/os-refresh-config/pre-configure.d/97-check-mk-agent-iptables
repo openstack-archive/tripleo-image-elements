@@ -1,7 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 # configure the IPTables rules required for check_mk
 
-set -eu
+set -eux
+set -o pipefail
 
 add-rule INPUT -p tcp --dport 6556 -j ACCEPT
