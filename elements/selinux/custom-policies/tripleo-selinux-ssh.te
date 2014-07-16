@@ -1,0 +1,13 @@
+
+module tripleo-selinux-ssh 1.0;
+
+require {
+	type ssh_keygen_t;
+	type init_tmp_t;
+	class file open;
+}
+
+#============= ssh_keygen_t ==============
+# https://bugs.launchpad.net/tripleo/+bug/1284485
+# https://bugzilla.redhat.com/show_bug.cgi?id=1125442
+allow ssh_keygen_t init_tmp_t:file open;
