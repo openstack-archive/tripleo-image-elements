@@ -1,0 +1,18 @@
+
+module tripleo-selinux-nova 1.0;
+
+require {
+	type tmpfs_t;
+	type nova_api_t;
+	class dir { write remove_name search add_name };
+	class file { write getattr link read create unlink open };
+	class filesystem getattr;
+}
+
+#============= nova_api_t ==============
+# https://bugs.launchpad.net/tripleo/+bug/1344452
+# https://bugzilla.redhat.com/show_bug.cgi?id=1125458
+allow nova_api_t tmpfs_t:dir { write remove_name search add_name };
+allow nova_api_t tmpfs_t:file { getattr unlink };
+allow nova_api_t tmpfs_t:file { read write create open link };
+allow nova_api_t tmpfs_t:filesystem getattr;
