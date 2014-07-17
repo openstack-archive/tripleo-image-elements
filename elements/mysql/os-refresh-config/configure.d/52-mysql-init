@@ -35,3 +35,5 @@ else
         fi
     fi
 fi
+
+os-svc-enable -n mysql
