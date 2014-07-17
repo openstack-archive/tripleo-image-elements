@@ -3,3 +3,5 @@
 set -eux
 
 install-openstack-client $NOVACLIENT_EXTRA_INSTALL_OPTS -c nova -i $NOVACLIENT_VENV_DIR
+
+add-selinux-path-substitution /usr/bin $NOVACLIENT_VENV_DIR/bin

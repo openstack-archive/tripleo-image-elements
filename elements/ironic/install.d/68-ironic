@@ -18,3 +18,4 @@ ln -s $IRONIC_VENV_DIR/bin/ironic-dbsync /usr/local/bin/ironic-dbsync
 
 ln -sf $IRONIC_VENV_DIR/bin/ironic-rootwrap /usr/local/bin/ironic-rootwrap
 
+add-selinux-path-substitution /usr/bin $IRONIC_VENV_DIR/bin

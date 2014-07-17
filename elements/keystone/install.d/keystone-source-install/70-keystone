@@ -24,3 +24,5 @@ if [[ "ubuntu rhel rhel7 centos" =~ "$DISTRO_NAME" ]]; then
     fi
     install-packages percona-toolkit
 fi
+
+add-selinux-path-substitution /usr/bin $KEYSTONE_VENV_DIR/bin

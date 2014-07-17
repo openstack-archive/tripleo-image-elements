@@ -14,3 +14,5 @@ ln -sf $CINDER_VENV_DIR/bin/cinder-rootwrap /usr/local/bin/cinder-rootwrap
 echo "cinder ALL=(root) NOPASSWD: /usr/local/bin/cinder-rootwrap" > /etc/sudoers.d/cinder
 chmod 0440 /etc/sudoers.d/cinder
 visudo -c
+
+add-selinux-path-substitution /usr/bin $CINDER_VENV_DIR/bin

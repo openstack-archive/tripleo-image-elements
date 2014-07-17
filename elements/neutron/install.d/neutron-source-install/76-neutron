@@ -24,3 +24,5 @@ visudo -c
 if [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
     systemctl enable openvswitch.service
 fi
+
+add-selinux-path-substitution /usr/bin $NEUTRON_VENV_DIR/bin

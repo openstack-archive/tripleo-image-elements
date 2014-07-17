@@ -9,3 +9,5 @@ os-svc-install $HEAT_EXTRA_INSTALL_OPTS -i "$HEAT_VENV_DIR" -u heat -r /opt/stac
 cp /opt/stack/heat/etc/heat/policy.json /etc/heat/policy.json
 
 install -d -m 0770 -o root -g heat /var/log/heat
+
+add-selinux-path-substitution /usr/bin $HEAT_VENV_DIR/bin

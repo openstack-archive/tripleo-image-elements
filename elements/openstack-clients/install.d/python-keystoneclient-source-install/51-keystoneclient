@@ -3,3 +3,5 @@
 set -eux
 
 install-openstack-client $KEYSTONECLIENT_EXTRA_INSTALL_OPTS -c keystone -i $KEYSTONECLIENT_VENV_DIR
+
+add-selinux-path-substitution /usr/bin $KEYSTONECLIENT_VENV_DIR/bin
