@@ -9,6 +9,7 @@ os-svc-install $NOVA_EXTRA_INSTALL_OPTS -i "$NOVA_VENV_DIR" -u nova -r /opt/stac
 cp /opt/stack/nova/etc/nova/policy.json /etc/nova/policy.json
 cp /opt/stack/nova/etc/nova/api-paste.ini /etc/nova/api-paste.ini
 cp -a /opt/stack/nova/etc/nova/rootwrap* /etc/nova
+chown -R root.nova /etc/nova
 
 ln -sf $NOVA_VENV_DIR/bin/nova-rootwrap /usr/local/bin/nova-rootwrap
 
