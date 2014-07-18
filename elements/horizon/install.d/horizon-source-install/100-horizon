@@ -2,7 +2,6 @@
 set -eux
 
 install-packages libapache2-mod-wsgi libssl-dev libffi-dev
-$HORIZON_VENV_DIR/bin/pip install python-memcached
 
 TEMPLATE_ROOT=$(os-apply-config --print-templates)
 
@@ -26,6 +25,14 @@ if [ -d /etc/apache2 ]; then
 fi
 
 os-svc-install $HORIZON_EXTRA_INSTALL_OPTS -i "$HORIZON_VENV_DIR" -u horizon -r /opt/stack/horizon
+set +u
+source $HORIZON_VENV_DIR/bin/activate
+set -u
+pip install python-memcached
+write-pip-manifest horizon
+set +u
+deactivate
+set -u
 
 # Django won't start otherwise:
 touch /etc/horizon/.secret_key_store
