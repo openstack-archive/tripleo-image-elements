@@ -46,7 +46,13 @@ HORIZON_CONFIG = {
 
 CACHES = {
     'default': {
+        {{#horizon.caches.memcached}}
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': [{{#nodes}}'{{.}}',{{/nodes}}]
+        {{/horizon.caches.memcached}}
+        {{^horizon.caches.memcached}}
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
+        {{/horizon.caches.memcached}}
     }
 }
 
