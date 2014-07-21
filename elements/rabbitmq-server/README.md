@@ -50,10 +50,15 @@ Additional parameters in heat template are required for each clustered node:
 If a node has 'rabbit.nodes' set to true, this node is added into
 cluster with other nodes listed in 'rabbit.nodes'.
 
-RabbitMQ inter-node communication is restricted to port 5535 only in config file
+RabbitMQ inter-node communication is restricted to port 61000 only in config file
 (otherwise random ports would be used) to make sure this port can be enabled in
 firewall.
 
+Due to bug http://bugzilla.redhat.com/show_bug.cgi?id=1105850, we must use a port
+within the ephemeral port range (32768-61000).
+
+Port 61000 is reserved by using sysctl to set net.ipv4.ip_local_reserved_ports
+to 61000.
 
 Sample 2-node cluster definition:
 
