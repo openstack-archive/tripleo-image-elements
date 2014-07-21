@@ -17,3 +17,8 @@ echo >> /var/run/hosts.d/new-hosts
 cat /var/run/hosts.d/tail >> /var/run/hosts.d/new-hosts
 echo >> /var/run/hosts.d/new-hosts
 mv /var/run/hosts.d/new-hosts /etc/hosts
+
+# /etc/hosts may have the wrong SELinux file contexts.
+if [ -x /usr/sbin/semanage ]; then
+    restorecon -v /etc/hosts
+fi
