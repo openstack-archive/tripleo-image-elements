@@ -1,3 +1,4 @@
 os-apply-config
 os-svc-install
+selinux
 source-repositories

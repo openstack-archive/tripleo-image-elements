@@ -16,3 +16,5 @@ if [ -f /opt/stack/ceilometer/etc/ceilometer/sources.json ]; then
 fi
 
 ln -s $CEILOMETER_VENV_DIR/bin/ceilometer-dbsync /usr/local/bin/ceilometer-dbsync
+
+add-selinux-path-substitution /usr/bin $CEILOMETER_VENV_DIR/bin

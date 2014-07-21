@@ -14,3 +14,5 @@ cp /opt/stack/glance/etc/glance-registry-paste.ini /etc/glance/glance-registry-p
 
 os-svc-daemon -i "$GLANCE_VENV_DIR" glance-api glance glance-api
 os-svc-daemon -i "$GLANCE_VENV_DIR" glance-reg glance glance-registry
+
+add-selinux-path-substitution /usr/bin $GLANCE_VENV_DIR/bin

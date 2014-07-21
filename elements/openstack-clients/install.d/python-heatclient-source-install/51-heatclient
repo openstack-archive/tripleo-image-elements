@@ -3,3 +3,5 @@
 set -eux
 
 install-openstack-client $HEATCLIENT_EXTRA_INSTALL_OPTS -c heat -i $HEATCLIENT_VENV_DIR
+
+add-selinux-path-substitution /usr/bin $HEATCLIENT_VENV_DIR/bin
