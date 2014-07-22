@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eux
 
-ceilometer-dbsync --config-file /etc/ceilometer/ceilometer.conf
-
 os-svc-enable -n ceilometer-api
 
 [ -d /mnt/state/var/lib/ceilometer ] || install -d -D -m 0770 -o ceilometer -g ceilometer /mnt/state/var/lib/ceilometer

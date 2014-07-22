@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eux
+
+if os-is-bootstrap-host ; then
+    tuskar-dbsync --config-file /etc/tuskar/tuskar.conf
+fi

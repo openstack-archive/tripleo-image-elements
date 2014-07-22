@@ -1,4 +1,5 @@
 iptables
 nova-compute
 os-apply-config
+os-is-bootstrap-host
 os-refresh-config

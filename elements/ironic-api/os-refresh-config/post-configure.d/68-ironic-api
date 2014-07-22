@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eu
 
-ironic-dbsync --config-file /etc/ironic/ironic.conf
-
 os-svc-enable -n ironic-api
 
 service ironic-api restart

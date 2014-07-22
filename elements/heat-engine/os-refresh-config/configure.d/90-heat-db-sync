@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eux
+
+if os-is-bootstrap-host ; then
+    heat-manage db_sync
+fi

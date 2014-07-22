@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eu
 
-cinder-manage db sync
-
 os-svc-enable -n cinder-api
 os-svc-enable -n cinder-scheduler
 os-svc-restart -n cinder-api
