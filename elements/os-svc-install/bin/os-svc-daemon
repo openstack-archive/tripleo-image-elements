@@ -179,6 +179,7 @@ Description=Create /var/run/$dirname
 
 [Service]
 ExecStartPre=/bin/mkdir -p /var/run/$dirname
+ExecStartPre=/usr/local/bin/restore-selinux-file-context /var/run/$dirname
 ExecStart=/bin/chown -R $user:$user /var/run/$dirname
 
 [Install]
