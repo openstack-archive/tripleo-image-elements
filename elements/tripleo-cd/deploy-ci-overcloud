@@ -47,7 +47,7 @@ OVERCLOUD_LIBVIRT_TYPE="kvm" \
     138.35.77.126 138.35.77.0/25 \
     $TRIPLEO_ROOT/tripleo-incubator/tripleo-cloud/tripleo-cd-admins \
     $TRIPLEO_ROOT/tripleo-incubator/tripleo-cloud/tripleo-cd-users \
-    $STACKNAME /root/ssl/ci-overcloud.tripleo.org \
+    $STACKNAME /home/shared/ssl/ci-overcloud.hp1.tripleo.org \
     ci-overcloud.tripleo.org
 RESULT=$?
 set -e

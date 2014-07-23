@@ -2,7 +2,9 @@
 
 ## Configuration
 
-None needed.
+See configs/ for per-cloud configuration. The \_network.json files there
+describe the deployment layer configuration for a cloud. The \_env.json
+files are heat environment files for a cloud.
 
 ## Caveats
 
