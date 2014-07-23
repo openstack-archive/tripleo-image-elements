@@ -7,6 +7,12 @@ PARTPOWER=$(os-apply-config --key swift.part-power --key-default 10)
 REPLICAS=$(os-apply-config --key swift.replicas --key-default 1)
 DEVICES=$(os-apply-config --key swift.devices --key-default "" --type raw)
 ZONES=$(os-apply-config --key swift.zones --key-default 1)
+BUILD_RINGS=$(os-apply-config --key swift.ring-build --key-default "True" | tr '[:upper:]' '[:lower:]')
+
+if [ "$BUILD_RINGS" == "false" ] || [ "$BUILD_RINGS" == "f" ]; then
+    echo "Won't build rings"
+    exit 0
+fi
 
 get_bind_port () {
     # first argument is the config file path
