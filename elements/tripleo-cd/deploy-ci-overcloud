@@ -20,35 +20,37 @@ set -eux
 cd /
 
 # We want to map the DC network into the VMs:
-export OVERCLOUD_FLAT_NETWORKS=tripleo-bm-test
-export OVERCLOUD_BRIDGE_MAPPINGS=tripleo-bm-test:br-untagged
-export OVERCLOUD_HYPERVISOR_PHYSICAL_BRIDGE=br-untagged
 export OVERCLOUD_HYPERVISOR_PUBLIC_INTERFACE=eth2
 
 # API endpoint for host file injection
-export OVERCLOUD_NAME=ci-overcloud.tripleo.org
+export OVERCLOUD_NAME=ci-overcloud.hp1.tripleo.org
 
-# How many hypervisors
-export OVERCLOUD_COMPUTESCALE=10
+# How many machines (46 machines in theory)
+export OVERCLOUD_CONTROLSCALE=3
+export OVERCLOUD_COMPUTESCALE=16
+# testenv count = 25, 3:2 memory ratio between testenv needs and CI slaves.
 
 # And a unique name for the thing we're deploying.
 export STACKNAME=ci-overcloud
 
-export OVERCLOUD_DIB_EXTRA_ARGS="pypi"
+#export OVERCLOUD_DIB_EXTRA_ARGS="pypi"
 export NODE_ARCH=amd64
 # We need to inject a static mapping to the API endpoint.
-export DIB_COMMON_ELEMENTS="pypi-openstack pip-cache stackuser hosts"
-source /opt/stack/tripleo-incubator/scripts/refresh-env /opt/stack
-source /opt/stack/tripleo-incubator/scripts/devtest_variables.sh
-source /root/stackrc
+export DIB_COMMON_ELEMENTS="stackuser hosts use-ephemeral"
+#export DIB_COMMON_ELEMENTS="pypi-openstack pip-cache stackuser hosts"
+#source /opt/stack/tripleo-incubator/scripts/refresh-env /opt/stack
+#source /opt/stack/tripleo-incubator/scripts/devtest_variables.sh
+#source /root/stackrc
+
+export OVERCLOUD_NTP_SERVER=10.10.16.134
 set +e
 OVERCLOUD_LIBVIRT_TYPE="kvm" \
-    devtest_overcloud.sh vlan25 138.35.77.16/25 eth2 138.35.77.1 138.35.77.17 \
+    devtest_overcloud.sh eth2 "" "" "" 138.35.77.13 \
     138.35.77.126 138.35.77.0/25 \
     $TRIPLEO_ROOT/tripleo-incubator/tripleo-cloud/tripleo-cd-admins \
     $TRIPLEO_ROOT/tripleo-incubator/tripleo-cloud/tripleo-cd-users \
     $STACKNAME /home/shared/ssl/ci-overcloud.hp1.tripleo.org \
-    ci-overcloud.tripleo.org
+    ci-overcloud.hp1.tripleo.org
 RESULT=$?
 set -e
 MSG=$(echo "************** $STACKNAME complete status=$RESULT ************")
