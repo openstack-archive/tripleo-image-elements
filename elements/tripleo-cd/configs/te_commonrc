@@ -11,7 +11,7 @@ fi
 export TE_DISTRO=$TRIPLEO_OS_DISTRO
 export TE_EXTRA_ELEMENTS=
 export TE_PROVIDER_NET_NAME=datacentre
-export TE_GEARMANHOST=192.168.1.254
+export TE_GEARMANHOST=172.16.3.254
 
 export TE_OVERCLOUDPASSWD=$(awk '$1=="tripleo-ci" { print $2 }' < /os-asserted-users)
 export TE_OVERCLOUDNPPASSWD=$(awk '$1=="openstack-nodepool" { print $2 }' < /os-asserted-users)
