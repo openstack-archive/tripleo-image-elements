@@ -23,6 +23,19 @@ sed -i -e 's,^#\!/bin/sh$,#\!/bin/bash,' /etc/init.d/mysql
 sed -i -e 's,^basedir=$,basedir=/usr/local/mysql,' /etc/init.d/mysql
 sed -i -e 's,^datadir=$,datadir=/mnt/state/var/lib/mysql,' /etc/init.d/mysql
 
+# The following line are due to a bug found in the Percona supplied init
+# script where the start sequence does not capture and return an error
+# code. See https://bugs.launchpad.net/percona-xtradb-cluster/+bug/1339894
+# Percona has committed but not yet released this fix.
+if ! grep -q 'if \! $0 start $other_args; then' /etc/init.d/mysql; then
+    sed -ie 's/$0 start $other_args$/if \! $0 start $other_args; then\n        exit 1\n      fi/' /etc/init.d/mysql
+else
+    echo "WARNING: https://review.openstack.org/#/c/104569/ should be reverted if"
+    echo "WARNING: https://bugs.launchpad.net/percona-xtradb-cluster/+bug/1339894"
+    echo "WARNING: has been released, and the project has been updated to make"
+    echo "WARNING: use of the updated percona-xtradb-cluster release."
+fi
+
 # Templates write the configs into /mnt/state. However, MySQL makes it very
 # difficult not to use this as the directory for configs.
 rm -rf /etc/mysql
