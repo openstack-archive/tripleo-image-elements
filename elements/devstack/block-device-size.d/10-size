@@ -1,7 +1,7 @@
 #!/bin/bash
 # Enforce a maximum size on the image size
 
-set -e
+set -eu
 
 if (( '16' '>' $DIB_IMAGE_SIZE )); then
     echo DIB_IMAGE_SIZE=16

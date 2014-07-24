@@ -3,7 +3,7 @@
 # (also includes the bootstrap-from-devstack facilities needed until we have
 # full image mastering of openstack).
 
-set -e
+set -eu
 set -o xtrace
 
 install-packages git

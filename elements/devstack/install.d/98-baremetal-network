@@ -1,7 +1,7 @@
 #!/bin/bash
 # Configure eth1, the baremetal network.
 
-set -e
+set -eu
 set -o xtrace
 
 cat << EOF >> /etc/network/interfaces

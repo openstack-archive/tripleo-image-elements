@@ -1,7 +1,7 @@
 #!/bin/bash
 # Add the stack user we recommend folk use.
 
-set -e
+set -eu
 set -o xtrace
 
 useradd -m stack -s /bin/bash
