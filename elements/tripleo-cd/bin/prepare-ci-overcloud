@@ -65,9 +65,11 @@ if [ ! -e $BROKER_IMG -o "$USE_CACHE" != "1" ] ; then
     $TRIPLEO_ROOT/diskimage-builder/bin/disk-image-create -a amd64 -o $BROKER_IMG \
         $TE_DISTRO vm geard stackuser dhcp-all-interfaces
 fi
-if ! glance image-show "te-broker" ; then
-    glance image-create --name "te-broker" --disk-format qcow2 --container-format bare --is-public 1 --file $BROKER_IMG --progress
+# XXX(lifeless) make a load-image patch for virt use
+if glance image-show te-broker &> /dev/null; then
+    glance image-delete te-broker
 fi
+glance image-create --name "te-broker" --disk-format qcow2 --container-format bare --is-public 1 --file $BROKER_IMG --progress
 
 NP_CREDS="--os-username=tripleo-ci --os-password=$TE_OVERCLOUDPASSWD --os-tenant-name=openstack-nodepool"
 if ! nova $NP_CREDS keypair-list | grep -q " default "; then
@@ -84,9 +86,11 @@ if [ ! -e $SQUID_IMG -o "$USE_CACHE" != "1" ] ; then
     $TRIPLEO_ROOT/diskimage-builder/bin/disk-image-create -a amd64 -o $SQUID_IMG \
         $TE_DISTRO vm squid stackuser dhcp-all-interfaces
 fi
-if ! glance image-show squid ; then
-    glance image-create --name squid --disk-format qcow2 --container-format bare --is-public 1 --file $SQUID_IMG --progress
+# XXX(lifeless) make a load-image patch for virt use
+if glance image-show squid &> /dev/null; then
+    glance image-delete squid
 fi
+glance image-create --name squid --disk-format qcow2 --container-format bare --is-public 1 --file $SQUID_IMG --progress
 
 if ! nova $NP_CREDS show squid ; then
     nova $NP_CREDS boot --image "squid" --flavor $TE_BROKER_FLAVOR --nic net-id=$DEFAULT_NET --nic net-id=$TESTNETID,v4-fixed-ip=192.168.1.253 --key-name default squid
