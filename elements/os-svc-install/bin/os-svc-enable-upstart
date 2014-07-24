@@ -47,8 +47,14 @@ if [ "$action" != "enabled" ] ; then
     fi
 fi
 
-if ! [ -e "/etc/init/${job_name}.conf" ] ; then
-    echo "WARNING: $job_name does not exist!"
+if [ ! -e "/etc/init/${job_name}.conf" ] ; then
+    # Perhaps it's an init.d script.
+    if [ "$action" = "enable" -a -e "/etc/init.d/$job_name" ]; then
+        update-rc.d $job_name defaults 2>/dev/null
+        exit 0
+    else
+        echo "WARNING: $job_name does not exist!"
+    fi
 fi
 
 enable_file="${OS_UPSTART_STATE_DIR}/${job_name}.enable"
