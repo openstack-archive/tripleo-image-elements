@@ -1,0 +1,50 @@
+#! /bin/bash
+#
+# Copyright 2014 Red Hat
+# All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+set -eux
+set -o pipefail
+
+function show_options() {
+    echo "Usage: $0 TYPE TARGET_PATH"
+    echo
+    echo "Adds SELinux TYPE for TARGET_PATH"
+    echo
+    echo "TARGET_PATH can be a specific file or directory"
+    echo "Or an expression that includes everything under a"
+    echo "specific directory."
+    echo
+    echo "Example:"
+    echo
+    echo "add-selinux-file-context nova_var_run_t /var/run/nova(/.*)"
+    echo
+    echo "Applies the type nova_var_run_type to /var/run/nova and"
+    echo "every file and directory under that directory."
+}
+
+TYPE=${1:-""}
+TARGET_PATH=${2:-""}
+
+if [ -z "$TYPE" -o -z "$TARGET_PATH" ]; then
+    show_options
+fi
+
+if [ ! -x /usr/sbin/semanage ]; then
+    echo "SELinux not available"
+    exit 0
+fi
+
+semanage fcontext -a -t $TYPE $TARGET_PATH
