@@ -53,6 +53,17 @@ OVERCLOUD_LIBVIRT_TYPE="kvm" \
     ci-overcloud.hp1.tripleo.org
 RESULT=$?
 set -e
+
+if [ $RESULT == 0 ] ; then
+    set +e
+    export TE_DATAFILE=$TRIPLEO_ROOT/testenv.json
+    source $TRIPLEO_ROOT/tripleo-incubator/overcloudrc
+    $TRIPLEO_ROOT/tripleo-image-elements/elements/tripleo-cd/bin/prepare-ci-overcloud \
+        $TRIPLEO_ROOT/tripleo-image-elements/elements/tripleo-cd/configs/te_hp1rc
+    RESULT=$?
+    set -e
+fi
+
 MSG=$(echo "************** $STACKNAME complete status=$RESULT ************")
 echo "$MSG"
 set -x

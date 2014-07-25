@@ -4,9 +4,8 @@
 export TRIPLEO_ROOT="$(readlink -f $(dirname $0)/../../../..)"
 source $(dirname ${BASH_SOURCE})/te_commonrc
 
-export TE_OVERCLOUDIP=10.10.16.136
-export TE_OVERCLOUDDNS=ci-overcloud.tripleo.org
-export TE_OVERCLOUDPASSWD=$(awk '$1=="tripleo-ci" { print $2 }' < /os-asserted-users)
+export TE_OVERCLOUDIP=10.10.16.155
+export TE_OVERCLOUDDNS=ci-overcloud.hp1.tripleo.org
 export TE_AUTHURL=http://$TE_OVERCLOUDIP:5000/v2.0
 export TE_PUBLICINTERFACE=eth2
 export TE_COUNT=23
@@ -15,3 +14,4 @@ export TE_COUNT=23
 #export DIB_DISTRIBUTION_MIRROR=http://10.10.16.169/ubuntu
 #export PYPI_MIRROR_URL=http://10.10.16.169/pypi/simple
 #export DIB_NO_PYPI_PIP=1
+export TE_NP_RAM_QUOTA=900000
