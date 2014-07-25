@@ -1,0 +1,16 @@
+{
+  "family": {
+    "redhat": {
+      "qemu_img_package": "qemu-img"
+    },
+    "debian": {
+      "qemu_img_package": "qemu-utils"
+    },
+    "suse": {
+      "qemu_img_package": "qemu-tools"
+    }
+  },
+  "default": {
+    "qemu_img_package": "qemu-img"
+  }
+}

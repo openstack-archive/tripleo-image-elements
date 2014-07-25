@@ -2,3 +2,4 @@ cinder
 os-refresh-config
 os-svc-install
 use-ephemeral
+pkg-map
