@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eu
+
+image_conversion_dir=$(os-apply-config --key cinder.image_conversion_dir --key-default "/mnt/state/var/lib/cinder/conversion" --type raw)
+mkdir -p $image_conversion_dir
+chown cinder:cinder $image_conversion_dir
