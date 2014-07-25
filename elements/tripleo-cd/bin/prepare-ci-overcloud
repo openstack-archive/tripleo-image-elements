@@ -39,6 +39,9 @@ neutron subnet-update $DEFAULTSUBNETID --dns-nameservers list=true 8.8.8.8
 # XXX: we can query this membership.
 keystone user-role-add --role Member --user tripleo-ci --tenant openstack-nodepool || true
 
+# Create the flavor nodepool uses
+nova flavor-show h1.ci || nova flavor-create h1.ci auto 8192 20 1
+
 # The the images that nodepool uses to creat templates
 F20_IMAGE_URL=http://cloud.fedoraproject.org/fedora-20.x84_64.qcow2
 F20_IMAGE_FILE=$TRIPLEO_ROOT/fedora-20.x86_64.qcow2
