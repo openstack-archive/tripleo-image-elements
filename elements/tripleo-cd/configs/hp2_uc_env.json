@@ -1,0 +1,10 @@
+{
+  "parameters": {
+    "MysqlInnodbBufferPoolSize": 4096,
+    "NeutronPublicInterface": "vlan25",
+    "NeutronPublicInterfaceIP": "15.126.48.3/24",
+    "NeutronPublicInterfaceRawDevice": "eth2",
+    "NeutronPublicInterfaceDefaultRoute": "15.126.48.1",
+    "NtpServer": "15.126.48.2"
+  }
+}
