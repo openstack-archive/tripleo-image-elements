@@ -28,6 +28,7 @@ stunnel:
    - name: 'cinder'
      accept: 13776
      connect: 8776
+     connect_host: localhost
 
 The certificate and key data will be written to /etc/ssl/from-heat.{crt,key}.
 
@@ -37,3 +38,5 @@ from this implementation.
 
 Note that the public API endpoints in keystone need to be registered with https
 urls, which is outside the scope of the local machine configuration process.
+
+See the stunnel man page for documentation on crt and key formats etc.
