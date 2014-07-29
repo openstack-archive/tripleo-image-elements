@@ -1,0 +1,10 @@
+{
+  "family": {
+    "redhat": {
+      "multipath_tools_package": "device-mapper-multipath"
+    }
+  },
+  "default": {
+    "multipath_tools_package": "multipath-tools"
+  }
+}
