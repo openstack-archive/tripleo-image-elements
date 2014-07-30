@@ -26,6 +26,8 @@ Each haproxy.services can define the following sub-properties
 * port: Port to connect to for each of the haproxy.nodes.
 * options: A list of arbitrary params (eg. timeout server 1h) to be configured
   for the listener
+* extra_server_params: A list of parameters that will be appended to each
+  backend server line that is generated.
 * proxy_ip: *DEPRECATED* IP address for a service to bind to. Defaults to all
   IP's (0.0.0.0).
 * proxy_port: *DEPRECATED* Port for a service to bind to.
@@ -69,6 +71,10 @@ haproxy:
     proxy_port: 9293
     port:9292
     balance: source
+  - name: mysql
+    port: 3306
+    extra_server_params:
+    - backup
 
 You can override set of nodes for a service by setting its own set of
 haproxy.nodes inside a service definition:
