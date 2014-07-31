@@ -1,6 +1,6 @@
 export NOVA_VERSION=1.1
 export OS_PASSWORD={{admin-password}}
-export OS_AUTH_URL=http://localhost:5000/v2.0
+export OS_AUTH_URL=http://{{keystone.host}}:5000/v2.0
 export OS_USERNAME=admin
 export OS_TENANT_NAME=admin
 export COMPUTE_API_VERSION=1.1
