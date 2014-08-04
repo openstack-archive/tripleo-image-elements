@@ -22,8 +22,10 @@ Each haproxy.services can define the following sub-properties
 * net_binds: A list of ip addresses and ports to bind to. Each element in the
   list must define a port and can define an IP. If no IP is defined then the
   service binds to all IP's.
-* balance: A balancing strategy for the service. Defaults to source.
+* balance: *DEPRECATED* A balancing strategy for the service. Defaults to source.
 * port: Port to connect to for each of the haproxy.nodes.
+* options: A list of arbitrary params (eg. timeout server 1h) to be configured
+  for the listener
 * proxy_ip: *DEPRECATED* IP address for a service to bind to. Defaults to all
   IP's (0.0.0.0).
 * proxy_port: *DEPRECATED* Port for a service to bind to.
