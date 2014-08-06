@@ -7,6 +7,24 @@ install-packages haproxy
 [ -d /var/lib/haproxy ] || install -d -D -m 0755 -o root -g root /var/lib/haproxy
 
 if [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1126955
+    # The haproxy service file on Fedora is broken for reloads right now, so
+    # replace it with a fixed version.  Once the bug above is fixed we can
+    # remove this workaround.
+    if [ -f /lib/systemd/system/haproxy.service  -a -f /usr/sbin/haproxy-systemd-wrapper ]; then
+        cat > /lib/systemd/system/haproxy.service <<EOF
+[Unit]
+Description=HAProxy Load Balancer
+After=syslog.target network.target
+
+[Service]
+ExecStart=/usr/sbin/haproxy-systemd-wrapper -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid
+ExecReload=/bin/kill -USR2 \$MAINPID
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    fi
     systemctl enable haproxy.service
 fi
 
