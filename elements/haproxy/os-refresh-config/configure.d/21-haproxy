@@ -1,4 +1,8 @@
 #!/bin/bash
 set -eux
 
-service haproxy restart
+if service haproxy status; then
+    service haproxy reload
+else
+    service haproxy restart
+fi
