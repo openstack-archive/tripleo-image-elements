@@ -1,4 +1,4 @@
-Install and configure stunnel4 for local services.
+Configure stunnel4 for local services.
 
 Configuration
 -------------

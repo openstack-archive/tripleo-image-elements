@@ -30,10 +30,9 @@ PPP_RESTART=0
 EOF
 fi
 
-SCRIPTDIR=$(dirname $0)
-DIB_INIT_SYSTEM=$(dib-init-system)
-
-if [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
-    install -D -g root -o root -m 0755 ${SCRIPTDIR}/stunnel4.service /usr/lib/systemd/system/stunnel4.service
+FILES=$(dirname $0)/../files
+FILE=/usr/lib/systemd/system/stunnel4.service
+if [ "$(dib-init-system)" == "systemd" ]; then
+    install -D -g root -o root -m 0755 "${FILES}${FILE}" "${FILE}"
 fi
 
