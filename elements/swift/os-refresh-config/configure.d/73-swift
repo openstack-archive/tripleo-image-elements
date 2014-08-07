@@ -1,12 +1,30 @@
 #!/bin/bash
 
-set -eu
+set -eux
 set -o pipefail
 
 PARTPOWER=$(os-apply-config --key swift.part-power --key-default 10)
 REPLICAS=$(os-apply-config --key swift.replicas --key-default 1)
 DEVICES=$(os-apply-config --key swift.devices --key-default "" --type raw)
 ZONES=$(os-apply-config --key swift.zones --key-default 1)
+
+get_bind_port () {
+    # first argument is the config file path
+    # second argument is a default port number if it is not found
+    # in the config file
+    bind_string=$(grep bind_port $1)
+    if [ "$bind_string" != "" ]; then
+        equals_index=$(expr index "$bind_string" "=")
+        port_number=${bind_string:$equals_index}
+        echo ${port_number/ /}
+    else
+        echo $2
+    fi
+}
+
+OBJECT_PORT=$(get_bind_port /etc/swift/object-server.conf 6000)
+CONTAINER_PORT=$(get_bind_port /etc/swift/container-server.conf 6001)
+ACCOUNT_PORT=$(get_bind_port /etc/swift/account-server.conf 6002)
 
 if [ -z "$DEVICES" ] ; then
     echo "No swift devices to configure"
@@ -28,9 +46,9 @@ function place_in_zone () {
 
 for DEVICE in ${DEVICES//,/ } ; do
     DEVICE=$(place_in_zone $DEVICE)
-    swift-ring-builder /etc/swift/object.builder add ${DEVICE/\%PORT\%/6000} 100
-    swift-ring-builder /etc/swift/container.builder add ${DEVICE/\%PORT\%/6001} 100
-    swift-ring-builder /etc/swift/account.builder add ${DEVICE/\%PORT\%/6002} 100
+    swift-ring-builder /etc/swift/object.builder add ${DEVICE/\%PORT\%/$OBJECT_PORT} 100
+    swift-ring-builder /etc/swift/container.builder add ${DEVICE/\%PORT\%/$CONTAINER_PORT} 100
+    swift-ring-builder /etc/swift/account.builder add ${DEVICE/\%PORT\%/$ACCOUNT_PORT} 100
 done
 
 swift-ring-builder /etc/swift/object.builder rebalance 999
