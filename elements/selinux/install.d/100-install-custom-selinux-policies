@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# Copies the custom policies in selinux/custom-policies to
+# /opt/stack/selinux-policies. An o-r-c configure.d script
+# will compile and load the policy during boot.
+#
+set -eux
+set -o pipefail
+
+install-packages checkpolicy
+mkdir -p /opt/stack/selinux-policy
+
+for file in $(ls $(dirname $0)/../custom-policies/*.te); do
+    cp $file /opt/stack/selinux-policy
+done
