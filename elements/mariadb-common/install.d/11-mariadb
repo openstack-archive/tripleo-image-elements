@@ -16,8 +16,12 @@ fi
 if [ -e /etc/init/mysql.conf ]; then
     sed -i -e 's,/var/lib/mysql/,/mnt/state/var/lib/mysql/,g' /etc/init/mysql.conf
 fi
+
 # Fedora/RHEL install /etc/my.cnf but we do not want any unmanaged configs
-rm -f /etc/my.cnf
+# mariadb elements install using packages, so we don't want to just delete this
+# file, so symlink it to the config we actually use.
+ln -f -s /etc/mysql/my.cnf /etc/my.cnf
+
 # On openSUSE /var/lib/mysql is not part of the mariadb packages.
 [ -d /var/lib/mysql ] || install -d -o mysql -g root -m 0700 /var/lib/mysql
 register-state-path /var/lib/mysql
