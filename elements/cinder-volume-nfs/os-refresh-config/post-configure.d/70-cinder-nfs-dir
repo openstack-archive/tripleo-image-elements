@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eux
+set -o pipefail
+
+[ -d /mnt/state/var/lib/cinder/nfs ] || install -D -m 0775 -o cinder -g cinder -d /mnt/state/var/lib/cinder/nfs

@@ -1,0 +1,1 @@
+Provision an image with NFS client binaries.

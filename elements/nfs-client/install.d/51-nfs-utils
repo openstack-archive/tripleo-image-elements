@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eux
+set -o pipefail
+
+install-packages -m nfs-client nfs_utils_package
