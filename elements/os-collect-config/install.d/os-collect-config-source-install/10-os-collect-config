@@ -63,13 +63,11 @@ Restart=on-failure
 WantedBy=multi-user.target
 eof
 
-# Enable the service
-systemctl enable os-collect-config.service
-
 else
     echo Only systems with systemd or upstart are supported.
     exit 1
 fi
+os-svc-enable -n os-collect-config
 
 set +u
 deactivate

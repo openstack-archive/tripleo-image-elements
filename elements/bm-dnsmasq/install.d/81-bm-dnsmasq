@@ -54,13 +54,11 @@ WantedBy=multi-user.target
 Alias=nova-bm-dnsmasq.service
 eof
 
-# Enable the service
-systemctl enable nova-bm-dnsmasq.service
-
 }
 
-if [ "$DIB_INIT_SYSTEM" == "upstart" ]; then
+if [ "$DIB_INIT_SYSTEM" = "upstart" ]; then
     install_dnsmasq_upstart
-elif [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
+elif [ "$DIB_INIT_SYSTEM" = "systemd" ]; then
     install_dnsmasq_systemd
 fi
+os-svc-enable -n nova-bm-dnsmasq

@@ -60,8 +60,8 @@ function enable_systemd_service() {
 
 # TODO: SysV init fallback support
 DIB_INIT_SYSTEM=$(dib-init-system)
-if [ "$DIB_INIT_SYSTEM" == "upstart" ]; then
+if [ "$DIB_INIT_SYSTEM" = "upstart" ]; then
     enable_upstart_service $SERVICENAME
-elif [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
+elif [ "$DIB_INIT_SYSTEM" = "systemd" ]; then
     enable_systemd_service $SERVICENAME
 fi

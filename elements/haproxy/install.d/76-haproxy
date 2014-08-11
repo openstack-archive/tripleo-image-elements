@@ -6,9 +6,7 @@ install-packages haproxy
 
 [ -d /var/lib/haproxy ] || install -d -D -m 0755 -o root -g root /var/lib/haproxy
 
-if [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
-    systemctl enable haproxy.service
-fi
+os-svc-enable -n haproxy
 
 # haproxy service has to be explicitly enabled in /etc/default/haproxy on ubuntu/debian systems
 if [ -f /etc/default/haproxy ]; then

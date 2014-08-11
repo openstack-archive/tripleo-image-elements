@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-if [ "$DIB_INIT_SYSTEM" == "upstart" ] ; then
+if [ "$DIB_INIT_SYSTEM" = "upstart" ] ; then
     cat > /etc/init/tripleo-cd.conf <<eof
 start on runlevel [2345]
 stop on runlevel [016]
@@ -9,7 +9,7 @@ respawn
 exec tripleo-cd.sh
 eof
 
-elif [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
+elif [ "$DIB_INIT_SYSTEM" = "systemd" ] ; then
     cat > /lib/systemd/system/tripleo-cd.service <<eof
 [Unit]
 Description=Deploy an overcloud forever.
@@ -24,13 +24,11 @@ Restart=on-failure
 WantedBy=multi-user.target
 eof
 
-    # Enable the service
-    systemctl enable tripleo-cd.service
-
 else
     echo Only systems with systemd or upstart are supported.
     exit 1
 fi
+os-svc-enable -n tripleo-cd
 
 mkdir -p ~root/.cache/image-create
 ln -s /var/cache/pypi-mirror/pypi ~root/.cache/image-create

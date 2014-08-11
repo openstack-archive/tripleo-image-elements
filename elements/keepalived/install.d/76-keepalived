@@ -3,7 +3,4 @@
 set -eux
 
 install-packages keepalived
-
-if [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
-    systemctl enable keepalived.service
-fi
+os-svc-enable -n keepalived
