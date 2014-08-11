@@ -1,5 +1,11 @@
 #!/bin/bash
 set -eux
+# If NEUTRON_VENV_DIR is set, then need to fix up the dhcp.filters rootwrap file to allow dhcp-agent to
+# kill processes when networks are deleted.
+if [ -n "${NEUTRON_VENV_DIR}" ]
+then
+    sed -i "s, /usr/bin/python, ${NEUTRON_VENV_DIR}/bin/python," /etc/neutron/rootwrap.d/dhcp.filters
+fi
 
 install-packages dnsmasq dnsmasq-utils
 
