@@ -19,7 +19,7 @@ if [ -d /etc/apache2 ]; then
     install -m 0644 -o root -g root $(dirname $0)/../files/horizon.conf $TEMPLATE_ROOT/etc/apache2/sites-available
     install -m 0644 -o root -g root $(dirname $0)/../files/ports.conf $TEMPLATE_ROOT/etc/apache2/ports.conf
     ln -s /etc/apache2/sites-available/horizon.conf /etc/apache2/sites-enabled/horizon.conf
-    ln -s /var/log/apache2 /var/log/httpd
+    [ ! -d /var/log/httpd ] && ln -s /var/log/apache2 /var/log/httpd
     rm -f /etc/apache2/sites-enabled/{000-default.conf,default.conf,default-ssl.conf}
     sed -e "s|HORIZON_VENV_DIR|$HORIZON_VENV_DIR|g" -i $TEMPLATE_ROOT/etc/apache2/sites-available/horizon.conf
 fi
