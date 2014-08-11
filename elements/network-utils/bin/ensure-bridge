@@ -72,6 +72,7 @@ function configure_bridge_interface_dhcp_netscripts() {
     local interface=$2
     local bridge_ip_addr=${3:-''}
     local bridge_netmask=${4:-''}
+    local interface_mac=${5}
     local tmp_bridge_config=$(mktemp)
     local tmp_interface_config=$(mktemp)
     local bridge_config="/etc/sysconfig/network-scripts/ifcfg-$bridge"
@@ -97,6 +98,7 @@ DEVICETYPE=ovs
 TYPE=OVSBridge
 OVSBOOTPROTO="dhcp"
 OVSDHCPINTERFACES=$interface
+OVS_EXTRA="set bridge $bridge other-config:hwaddr=$interface_mac"
 HOTPLUG=no
 EOF_CAT
     else
@@ -105,6 +107,7 @@ DEVICE=$bridge
 ONBOOT=yes
 DEVICETYPE=ovs
 TYPE=OVSBridge
+OVS_EXTRA="set bridge $bridge other-config:hwaddr=$interface_mac"
 BOOTPROTO=static
 IPADDR=$bridge_ip_addr
 NETMASK=$bridge_netmask
@@ -138,6 +141,7 @@ function configure_bridge_interface_dhcp_eni() {
     local interface=$2
     local bridge_ip_addr=${3:-''}
     local bridge_netmask=${4:-''}
+    local interface_mac=${5}
     local tmp_config=$(mktemp)
     local config="/etc/network/interfaces"
 
@@ -154,6 +158,7 @@ allow-ovs $bridge
  pre-up ip addr flush dev $interface
  ovs_type OVSBridge
  ovs_ports $interface
+ ovs_extra set bridge $bridge other-config:hwaddr=$interface_mac
 
 EOF_CAT
     else
@@ -165,6 +170,7 @@ iface $bridge inet static
  address $bridge_ip_addr
  netmask $bridge_netmask
  ovs_type OVSBridge
+ ovs_extra set bridge $bridge other-config:hwaddr=$interface_mac
 
 EOF_CAT
     fi
@@ -202,10 +208,12 @@ else
     NETMASK=''
 fi
 
+interface_mac=$(ip link show dev "$PHYSICAL_INTERFACE" | awk '/ether/ {print $2}')
+
 if [ -d "/etc/sysconfig/network-scripts/" ]; then
-    configure_bridge_interface_dhcp_netscripts $EXTERNAL_BRIDGE $PHYSICAL_INTERFACE $IP $NETMASK
+    configure_bridge_interface_dhcp_netscripts $EXTERNAL_BRIDGE $PHYSICAL_INTERFACE "$IP" "$NETMASK" $interface_mac
 elif [ -d "/etc/network" ]; then
-    configure_bridge_interface_dhcp_eni $EXTERNAL_BRIDGE $PHYSICAL_INTERFACE $IP $NETMASK
+    configure_bridge_interface_dhcp_eni $EXTERNAL_BRIDGE $PHYSICAL_INTERFACE "$IP" "$NETMASK" $interface_mac
 else
     echo "Unsupported network configuration type!"
     exit 1
