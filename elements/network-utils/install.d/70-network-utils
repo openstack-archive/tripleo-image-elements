@@ -4,7 +4,7 @@ set -eux
 install-packages openvswitch-switch python-netaddr
 
 if [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
-    systemctl enable openvswitch.service
+    os-svc-enable -n openvswitch-switch
 fi
 
 if [ "$DIB_INIT_SYSTEM" == "upstart" ] ; then
