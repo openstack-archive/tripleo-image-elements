@@ -18,7 +18,6 @@ else
     /opt/stack/venvs/os-apply-config/bin/pip install -U 'setuptools>=1.0'
     # bug #1293812 : Avoid easy_install triggering on pbr.
     /opt/stack/venvs/os-apply-config/bin/pip install -U 'pbr>=0.6,<1.0'
-    /opt/stack/venvs/os-apply-config/bin/pip install -U 'argparse'
     /opt/stack/venvs/os-apply-config/bin/pip install --pre -U os-apply-config
 fi
 
