@@ -18,19 +18,28 @@
 set -eux
 set -o pipefail
 
-if [ ! -e "/var/lib/use-ephemeral/stateful-paths" ]; then
-    exit 0
-fi
+backup="/var/lib/use-ephemeral"
+paths="${backup}/stateful-paths"
+state="/mnt/state"
 
-while read -r; do
-    state_path="/mnt/state$REPLY"
-    state_dir=$(dirname "$state_path")
-    reference_path="/var/lib/use-ephemeral$REPLY"
-    mkdir -p "$state_dir"
-    if [ -e "$reference_path" -a ! -L "$state_path" -a ! -e "$state_path" ]; then
-        if [ -d "$reference_path" ] ; then
-            reference_path="${reference_path}/"
-        fi
-        rsync -av "${reference_path}" "$state_path"
+[ -e "${paths}" ] || exit 0
+
+done="$(mktemp)"
+while read -r line; do
+    dst="${state}${line}"
+    dst_dir=$(dirname "${dst}")
+
+    # stateful_paths may contain duplicates, don't copy any path twice
+    src="${backup}${line}"
+    [ -L "${src}" ] || src="$(readlink -f "${src}")"
+    grep -qFx "${src}" "${done}" && continue
+    echo "${src}" >> "${done}"
+
+    mkdir -p "${dst_dir}"
+    if [ -e "${src}" ]; then
+        # If src is a symlink and we append /, it gets read-through
+        [ -d "${src}" -a ! -L "${src}" ] && src="${src}/"
+        rsync -av "${src}" "${dst}"
     fi
-done < "/var/lib/use-ephemeral/stateful-paths"
+done < "${paths}"
+rm -f "${done}"
