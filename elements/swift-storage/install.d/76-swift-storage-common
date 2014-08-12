@@ -8,6 +8,7 @@ cat > /etc/cron.d/swift-recon <<EOF
 # Cronjob to track async pending on the object server.
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=""
 */5 * * * * swift swift-recon-cron /etc/swift/object-server.conf
 EOF
 
