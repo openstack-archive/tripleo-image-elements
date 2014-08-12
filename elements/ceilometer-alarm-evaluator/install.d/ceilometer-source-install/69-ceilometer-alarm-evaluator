@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eux
+
+os-svc-daemon -i "$CEILOMETER_VENV_DIR" ceilometer-alarm-evaluator ceilometer ceilometer-alarm-evaluator --config-dir /etc/ceilometer
