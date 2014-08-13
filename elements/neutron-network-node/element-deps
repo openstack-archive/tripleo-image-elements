@@ -1,6 +1,4 @@
 neutron
 neutron-dhcp-agent
 neutron-openvswitch-agent
-os-is-bootstrap-host
 os-refresh-config
-pacemaker

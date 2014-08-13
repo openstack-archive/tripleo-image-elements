@@ -1,36 +1,8 @@
 #!/bin/bash
 set -eux
 
-# get resource class (systemd, upstart, lsb). It should be possible
-# to use 'service' class which is a wrapper for others but this doesn't work
-# as expected on Fedora - lrmd process segfaults if 'service' resource class
-# is used: https://bugzilla.redhat.com/show_bug.cgi?id=1117151
-CLASS=$(dib-init-system)
-if [ "$CLASS" = "sysv" ]; then
-    CLASS=lsb
-fi
+os-svc-enable -n neutron-metadata-agent
+os-svc-enable -n neutron-l3-agent
 
-if os-is-bootstrap-host; then
-    SERVICE_METADATA=$(map-services neutron-metadata-agent)
-    SERVICE_AGENT=$(map-services neutron-l3-agent)
-
-    if ! cibadmin --query --xpath "//primitive[@id=\"$SERVICE_METADATA\"]"; then
-        /usr/sbin/cibadmin -o resources -C -X "
-<primitive class=\"$CLASS\" id=\"$SERVICE_METADATA\" type=\"$SERVICE_METADATA\">
-  <instance_attributes id=\"$SERVICE_METADATA-instance_attributes\"/>
-  <operations>
-    <op id=\"$SERVICE_METADATA-monitor-start-delay-10s\" interval=\"30s\" name=\"monitor\" start-delay=\"10s\"/>
-  </operations>
-</primitive>"
-    fi
-
-    if ! cibadmin --query --xpath "//primitive[@id=\"$SERVICE_AGENT\"]"; then
-        /usr/sbin/cibadmin -o resources -C -X "
-<primitive class=\"$CLASS\" id=\"$SERVICE_AGENT\" type=\"$SERVICE_AGENT\">
-  <instance_attributes id=\"$SERVICE_AGENT-instance_attributes\"/>
-  <operations>
-    <op id=\"$SERVICE_AGENT-monitor-start-delay-10s\" interval=\"30s\" name=\"monitor\" start-delay=\"10s\"/>
-  </operations>
-</primitive>"
-    fi
-fi
+os-svc-restart -n neutron-metadata-agent
+os-svc-restart -n neutron-l3-agent
