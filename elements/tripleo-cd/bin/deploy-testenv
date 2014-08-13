@@ -44,4 +44,5 @@ heat stack-$HEAT_OP \
     -P CPUPerEnv=$TE_CPUPERENV \
     -P DiskPerEnv=$TE_DISKPERENV \
     -P MemPerEnv=$TE_MEMPERENV \
+    -P NtpServer=$TE_NTPSERVER \
     testenv
