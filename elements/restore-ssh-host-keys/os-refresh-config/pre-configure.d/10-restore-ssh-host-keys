@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -eux
+set -o pipefail
+
+CLOUD_DIR="/var/lib/cloud"
+KEYS_DIR="/mnt/state/_ssh_host_keys"
+if [ -d "$KEYS_DIR" ]; then
+    # Block this element from proceeding forward until cloud-init has written
+    # out new SSH keys in order to prevent the restored keys from being
+    # overwritten.
+    while [[ ! -f "$CLOUD_DIR/instances/$(cat $CLOUD_DIR/data/instance-id)/sem/config_ssh" ]]; do
+      echo "Waiting until cloud-init has completed SSH configuration."
+      sleep 1
+    done
+    mv -f ${KEYS_DIR}/ssh_host_*" /etc/ssh/ && rm -rf "$KEYS_DIR"
+    grep -q -F 'VersionAddendum TRIPLEO_HK_RESTORED' /etc/ssh/sshd_config || echo 'VersionAddendum TRIPLEO_HK_RESTORED' >> /etc/ssh/sshd_config
+    os-svc-restart -n ssh
+fi
