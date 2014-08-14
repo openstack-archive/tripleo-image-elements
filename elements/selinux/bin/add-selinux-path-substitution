@@ -47,7 +47,7 @@ fi
 
 # Add the path if it doesn't already exist
 if [ "`semanage fcontext -l | grep $TARGET_PATH`" == "" ]; then
-    semanage fcontext -a -e $SOURCE_PATH $TARGET_PATH
+    semanage fcontext -N -a -e $SOURCE_PATH $TARGET_PATH
 fi
 
 restorecon -Rv $TARGET_PATH
