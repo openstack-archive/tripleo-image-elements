@@ -1,0 +1,10 @@
+{
+  "family": {
+    "redhat": {
+      "openvswitch-switch_package": "openvswitch"
+    }
+  },
+  "default": {
+    "openvswitch-switch_package": "openvswitch-switch"
+  }
+}
