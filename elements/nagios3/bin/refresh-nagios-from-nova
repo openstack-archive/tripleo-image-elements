@@ -87,4 +87,4 @@ if errors:
 
 if reload_nagios:
     sys.stderr.write("INFO: reloading nagios.")
-    subprocess.call(["service","nagios3","reload"])
+    subprocess.call(["service", "nagios3", "reload"])

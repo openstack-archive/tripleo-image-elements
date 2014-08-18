@@ -12,10 +12,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from tests import base
+import tests.base
 
 
-class TestOsSvcDaemon(base.ScriptTestBase):
+class TestOsSvcDaemon(tests.base.ScriptTestBase):
     def setUp(self):
         super(TestOsSvcDaemon, self).setUp()
         self._stub_script('map-services', 'echo $1')
