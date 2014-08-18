@@ -4,4 +4,9 @@ set -eux
 
 install-packages openstack-neutron-openvswitch
 
+# Use the tripleo ml2 config, openvswitch-agent as installed by package starts with
+# --config-file /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
+rm -f /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
+ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
+
 os-svc-daemon -n neutron-openvswitch-agent -u neutron
