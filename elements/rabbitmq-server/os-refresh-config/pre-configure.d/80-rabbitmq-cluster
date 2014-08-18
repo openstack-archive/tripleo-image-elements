@@ -1,4 +1,0 @@
-#!/bin/bash
-set -eux
-
-install -m 600 -o rabbitmq -g rabbitmq /dev/null /var/lib/rabbitmq/.erlang.cookie
