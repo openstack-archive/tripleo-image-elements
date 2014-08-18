@@ -20,7 +20,7 @@ write_entries() {
             f=1
             }f &&!/^# HEAT_HOSTS_END$/{next}/^# HEAT_HOSTS_END$/{f=0}!f' "$file" > "$temp"
             echo "INFO: Updating hosts file $file, check below for changes"
-            diff "$file" "$temp"
+            diff "$file" "$temp" || true
             cat "$temp" > "$file"
     else
         echo -ne "\n# HEAT_HOSTS_START - Do not edit manually within this section!\n" >> "$file"
