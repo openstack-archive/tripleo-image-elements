@@ -5,3 +5,4 @@ os-refresh-config
 os-svc-install
 sysctl
 use-ephemeral
+ntp
