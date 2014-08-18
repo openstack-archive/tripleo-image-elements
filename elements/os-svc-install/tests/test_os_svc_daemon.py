@@ -47,6 +47,7 @@ Description=Create /var/run/bar
 
 [Service]
 ExecStartPre=/bin/mkdir -p /var/run/bar
+ExecStartPre=/usr/local/bin/restore-selinux-file-context /var/run/bar
 ExecStart=/bin/chown -R bar:bar /var/run/bar
 
 [Install]
@@ -99,6 +100,7 @@ Description=Create /var/run/bar
 
 [Service]
 ExecStartPre=/bin/mkdir -p /var/run/bar
+ExecStartPre=/usr/local/bin/restore-selinux-file-context /var/run/bar
 ExecStart=/bin/chown -R bar:bar /var/run/bar
 
 [Install]
