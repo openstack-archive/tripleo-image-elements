@@ -2,5 +2,5 @@
 set -eux
 
 if os-is-bootstrap-host ; then
-    nova-manage db sync
+    sudo -u nova -- nova-manage db sync
 fi

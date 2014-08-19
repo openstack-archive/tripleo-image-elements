@@ -2,5 +2,5 @@
 set -eux
 
 if os-is-bootstrap-host ; then
-    ironic-dbsync --config-file /etc/ironic/ironic.conf
+    sudo -u ironic -- ironic-dbsync --config-file /etc/ironic/ironic.conf
 fi

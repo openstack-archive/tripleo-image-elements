@@ -2,5 +2,5 @@
 set -eux
 
 if os-is-bootstrap-host ; then
-    cinder-manage db sync
+    sudo -u cinder -- cinder-manage db sync
 fi

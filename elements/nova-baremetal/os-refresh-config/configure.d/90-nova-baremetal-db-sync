@@ -2,5 +2,5 @@
 set -eux
 
 if os-is-bootstrap-host ; then
-    nova-baremetal-manage db sync
+    sudo -u nova -- nova-baremetal-manage db sync
 fi
