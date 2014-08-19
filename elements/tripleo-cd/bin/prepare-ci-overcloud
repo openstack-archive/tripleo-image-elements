@@ -99,3 +99,14 @@ if [ -z "FLOATING_IP" ]; then
     FLOATING_IP=$(nova $NP_CREDS floating-ip-create | awk '$8=="ext-net" {print $2}')
     nova $NP_CREDS add-floating-ip te-broker $FLOATING_IP
 fi
+
+# Ensure the default tripleo security group has ICMP and SSH inbound access
+
+if ! neutron $NP_CREDS security-group-rule-list | grep -q 'default.*icmp' ; then
+    neutron $NP_CREDS security-group-rule-create default --protocol icmp \
+        --direction ingress --port-range-min 8
+fi
+if ! neutron $NP_CREDS security-group-rule-list | grep -q 'default.*tcp' ; then
+    neutron $NP_CREDS security-group-rule-create default --protocol tcp \
+        --direction ingress --port-range-min 22 --port-range-max 22
+fi
