@@ -3,4 +3,4 @@ set -eu
 
 os-svc-enable -n ironic-api
 
-service ironic-api restart
+os-svc-restart -n ironic-api
