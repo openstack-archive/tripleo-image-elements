@@ -2,3 +2,5 @@ ironic-api
 ironic-conductor
 nova-compute
 os-refresh-config
+package-installs
+pkg-map
