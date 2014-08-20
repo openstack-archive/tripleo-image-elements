@@ -22,7 +22,7 @@ If public\_interface and physical\_bridge are not set, no bridges will be
 connected directly. This is normal for neutron hosting virtual machines
 when using an overlay network (e.g. GRE tunnelling) with no provider networks.
 Some of the other fields will be ignored in this case. Most of them map 1:1
-with their counterparts in the OVS section of ovs\_neutron\_plugin.ini.
+with their counterparts in ml2\_conf.ini.
 
 Public\_interface\_ip is used to add an *additional* ip address to the machine.
 This is set on the bridge device. Our current scripts write a static
