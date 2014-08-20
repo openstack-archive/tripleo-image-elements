@@ -49,7 +49,7 @@ CACHES = {
         {{#horizon.caches.memcached}}
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': [{{#nodes}}'{{.}}',{{/nodes}}]
-        {{/horizon.caches.memcached}}
+        {{/horizon.caches.memcached}} # flake8: noqa
         {{^horizon.caches.memcached}}
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
         {{/horizon.caches.memcached}}

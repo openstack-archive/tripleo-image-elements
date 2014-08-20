@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #
 # Assert users that came from metadata config
 #
@@ -18,26 +18,32 @@
 # under the License.
 #
 
-import subprocess
-import MySQLdb
-import logging
+from __future__ import print_function
+
 import argparse
-import os
+import base64
 import json
-from base64 import b64encode
+import logging
+import os
+import subprocess
+
+import MySQLdb
 
 logging.basicConfig()
 logger = logging.getLogger('mysql-users')
 
-# Try to connect with no password, ~/.my.cnf and /mnt/state/root/metadata.my.cnf
+# Try to connect with no password, ~/.my.cnf and
+# /mnt/state/root/metadata.my.cnf
 # in that order. This should cover os-refresh-config post install and re-image
 try:
     conn = MySQLdb.Connect()
 except Exception as e:
     try:
-        conn = MySQLdb.Connect(read_default_file=os.path.expanduser('~/.my.cnf'))
+        conn = MySQLdb.Connect(
+            read_default_file=os.path.expanduser('~/.my.cnf'))
     except Exception as e:
-        conn = MySQLdb.Connect(read_default_file='/mnt/state/root/metadata.my.cnf')
+        conn = MySQLdb.Connect(
+            read_default_file='/mnt/state/root/metadata.my.cnf')
 cursor = conn.cursor()
 rows = cursor.execute("SELECT DISTINCT User FROM mysql.user WHERE user != ''")
 existing = set([x[0] for x in cursor.fetchmany(size=rows)])
@@ -75,25 +81,25 @@ for createuser in to_create:
     if 'password' in dbvalue:
         password = dbvalue['password']
     else:
-        password = b64encode(os.urandom(30))
+        password = base64.b64encode(os.urandom(30))
 
     cmd = "GRANT ALL PRIVILEGES ON `%s`.* TO `%s`@'%%' IDENTIFIED BY '%s'" % (
         dbvalue['database'], dbvalue['username'], password)
     if opts.noop:
-        print "%s" % (cmd)
+        print("%s" % (cmd))
     else:
         cursor = conn.cursor()
         cursor.execute(cmd)
         cursor.close()
 
     if 'userhandle' in dbvalue:
-      # Inform Heat of new password for this user
-      cmd = ['/opt/aws/bin/cfn-signal', '-i', dbvalue['username'],
-             '-s', 'true', '--data', password, dbvalue['userhandle']]
-      if opts.noop:
-          print cmd
-      else:
-          subprocess.check_call(cmd)
+        # Inform Heat of new password for this user
+        cmd = ['/opt/aws/bin/cfn-signal', '-i', dbvalue['username'],
+               '-s', 'true', '--data', password, dbvalue['userhandle']]
+        if opts.noop:
+            print(cmd)
+        else:
+            subprocess.check_call(cmd)
 
 if to_delete:
     logger.warn('The following users are not accounted for: %s' % to_delete)
