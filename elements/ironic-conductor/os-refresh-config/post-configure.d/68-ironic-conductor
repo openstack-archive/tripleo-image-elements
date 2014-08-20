@@ -12,7 +12,7 @@ done
 
 os-svc-enable -n ironic-conductor
 
-service ironic-conductor restart
+os-svc-restart -n ironic-conductor
 
 # ssh really wants these permissions
 chmod 600 /mnt/state/var/lib/ironic/virtual-power-key
