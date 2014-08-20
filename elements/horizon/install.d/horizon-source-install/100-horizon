@@ -3,30 +3,35 @@ set -eux
 
 install-packages libapache2-mod-wsgi libssl-dev libffi-dev
 
-TEMPLATE_ROOT=$(os-apply-config --print-templates)
+TEMPLATE_ROOT="$(os-apply-config --print-templates)"
+FILES="$(dirname $0)/../files/"
+HORIZON_CONF=/etc/httpd/conf.d/horizon.conf
+PORTS_CONF=/etc/httpd/conf.d/ports.conf
 
 if [ -d /etc/httpd ]; then
     # This is required to allow different ports configuration
     # e.g haproxy or apache listening on 80
     sed -i '/Listen/s/^/#/g' /etc/httpd/conf/httpd.conf
-    mkdir -p $TEMPLATE_ROOT/etc/httpd/conf.d/
-    install -m 0644 -o root -g root $(dirname $0)/../files/* $TEMPLATE_ROOT/etc/httpd/conf.d/
-    sed -e "s|HORIZON_VENV_DIR|$HORIZON_VENV_DIR|g" -i $TEMPLATE_ROOT/etc/httpd/conf.d/horizon.conf
+    mkdir -p "${TEMPLATE_ROOT}/etc/httpd/conf.d/"
+    for FILE in "${HORIZON_CONF}" "${PORTS_CONF}"; do
+        install -m 0644 -o root -g root "${FILES}${FILE}" "${TEMPLATE_ROOT}${FILE}"
+    done
+    sed -e "s|HORIZON_VENV_DIR|${HORIZON_VENV_DIR}|g" -i "${TEMPLATE_ROOT}/etc/httpd/conf.d/horizon.conf"
 fi
 
 if [ -d /etc/apache2 ]; then
-    mkdir -p $TEMPLATE_ROOT/etc/apache2/sites-available
-    install -m 0644 -o root -g root $(dirname $0)/../files/horizon.conf $TEMPLATE_ROOT/etc/apache2/sites-available
-    install -m 0644 -o root -g root $(dirname $0)/../files/ports.conf $TEMPLATE_ROOT/etc/apache2/ports.conf
+    mkdir -p "${TEMPLATE_ROOT}/etc/apache2/sites-available"
+    install -m 0644 -o root -g root "${FILES}${HORIZON_CONF}" "${TEMPLATE_ROOT}/etc/apache2/sites-available/"
+    install -m 0644 -o root -g root "${FILES}${PORTS_CONF}" "${TEMPLATE_ROOT}/etc/apache2/ports.conf"
     ln -s /etc/apache2/sites-available/horizon.conf /etc/apache2/sites-enabled/horizon.conf
     [ ! -d /var/log/httpd ] && ln -s /var/log/apache2 /var/log/httpd
     rm -f /etc/apache2/sites-enabled/{000-default.conf,default.conf,default-ssl.conf}
-    sed -e "s|HORIZON_VENV_DIR|$HORIZON_VENV_DIR|g" -i $TEMPLATE_ROOT/etc/apache2/sites-available/horizon.conf
+    sed -e "s|HORIZON_VENV_DIR|${HORIZON_VENV_DIR}|g" -i "${TEMPLATE_ROOT}/etc/apache2/sites-available/horizon.conf"
 fi
 
-os-svc-install $HORIZON_EXTRA_INSTALL_OPTS -i "$HORIZON_VENV_DIR" -u horizon -r /opt/stack/horizon
+os-svc-install ${HORIZON_EXTRA_INSTALL_OPTS} -i "${HORIZON_VENV_DIR}" -u horizon -r /opt/stack/horizon
 set +u
-source $HORIZON_VENV_DIR/bin/activate
+source "${HORIZON_VENV_DIR}/bin/activate"
 set -u
 pip install python-memcached
 write-pip-manifest horizon
