@@ -18,10 +18,8 @@
 #
 # If a physical bridge is defined then ensure-bridge is called to set it up.
 #
-# Note that no persistent config file is written to the OS : ovs-vsctl modifies
-# a persistent database so the bridge device will persist across reboots, but
-# [on Ubuntu at least] early boot does not bring up ovs-vswitch early enough,
-# and metadata access will fail.
+# If there is configuration (tag + IP) for an access port, one is created on
+# top of the bridge, again by ensure-bridge.
 
 set -eux
 
@@ -32,25 +30,26 @@ PHYSICAL_INTERFACE=$(os-apply-config --key neutron.ovs.public_interface --type r
 PHYSICAL_INTERFACE_IP=$(os-apply-config --key bootstack.public_interface_ip --type netaddress  --key-default '')
 PHYSICAL_INTERFACE_RAW_DEVICE=$(os-apply-config --key neutron.ovs.public_interface_raw_device --type raw --key-default '')
 PUBLIC_INTERFACE_ROUTE=$(os-apply-config --key neutron.ovs.public_interface_route --type netaddress --key-default '')
+# TAG is type raw because we can't do an absent key as a default in Heat, and '' is not an int.
+PUBLIC_INTERFACE_TAG=$(os-apply-config --key neutron.ovs.public_interface_tag --type raw --key-default '')
+PUBLIC_INTERFACE_TAG_IP=$(os-apply-config --key neutron.ovs.public_interface_tag_ip --type netaddress --key-default '')
+PHYSICAL_ROUTE_PREFIX=$(os-apply-config --key neutron.ovs.physical_bridge_route.prefix --type netaddress --key-default '')
+PHYSICAL_ROUTE_VIA=$(os-apply-config --key neutron.ovs.physical_bridge_route.via --type netaddress --key-default '')
+
+
+if [ -n "$PHYSICAL_INTERFACE_RAW_DEVICE" -a -n "$PUBLIC_INTERFACE_TAG" ]; then
+    echo "ERROR: cannot specify a raw device and a tagged access port at the same time." >&2
+    exit 1
+fi
 
 if [ -n "$PHYSICAL_INTERFACE_RAW_DEVICE" ]; then
+    echo "DEPRECATED: please use neutron.ovs.public_interface_ip_tag instead." >&2
     if ! (ip link show dev $PHYSICAL_INTERFACE) ; then
         VLAN_ID=$(echo $PHYSICAL_INTERFACE | sed s/vlan//)
         vconfig set_name_type VLAN_PLUS_VID_NO_PAD
         vconfig add $PHYSICAL_INTERFACE_RAW_DEVICE $VLAN_ID
     fi
     ip link set $PHYSICAL_INTERFACE up
-fi
-
-# NOTE: ensure-bridge actually takes care of this now but it
-# as been requested that we leave this in so as to not break
-# anything. AFAIK there is no use case in TripleO right now
-# where we don't actually call ensure-bridge when using
-# init-neutron-ovs so this code should be mute.
-if [ -n "$PHYSICAL_INTERFACE_IP" -a -n "$PHYSICAL_INTERFACE" ] ; then
-    if ! (ip addr show | grep -q $PHYSICAL_INTERFACE_IP) ; then
-        ip addr add $PHYSICAL_INTERFACE_IP dev $PHYSICAL_INTERFACE
-    fi
 fi
 
 # Hacky: ensure the switch is running : we should instead arrange for this
@@ -64,5 +63,7 @@ if [ -z "$EXTERNAL_BRIDGE" ] ; then
     exit 0
 fi
 
-ensure-bridge "$EXTERNAL_BRIDGE" "$PHYSICAL_INTERFACE" "$PHYSICAL_INTERFACE_IP" "$PUBLIC_INTERFACE_ROUTE"
-
+ensure-bridge "$EXTERNAL_BRIDGE" "$PHYSICAL_INTERFACE" "$PHYSICAL_INTERFACE_IP" \
+    "$PUBLIC_INTERFACE_ROUTE" --public-tag "$PUBLIC_INTERFACE_TAG" \
+    --public-tag-ip "$PUBLIC_INTERFACE_TAG_IP" \
+    ${PHYSICAL_ROUTE_PREFIX:+--bridge-route "${PHYSICAL_ROUTE_PREFIX} ${PHYSICAL_ROUTE_VIA}"}
