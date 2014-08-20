@@ -4,3 +4,6 @@ set -eux
 
 # lvm2 is needed by the 72-cinder-resize-volume-groups os-refresh-config script
 install-packages openstack-cinder lvm2
+
+rm -rf /etc/cinder/volumes
+ln -s /var/lib/cinder/volumes /etc/cinder/volumes
