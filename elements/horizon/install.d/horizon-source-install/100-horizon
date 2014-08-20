@@ -48,5 +48,6 @@ chown horizon:horizon /etc/horizon/.secret_key_store
 sed -i "s#'../..'#os.path.realpath('../..')#" "$HORIZON_VENV_DIR"/lib/python2.7/site-packages/openstack_dashboard/wsgi/django.wsgi
 
 # We need to splice this into local_settings.py at configuration time
-mkdir -p /opt/stack/os-config-refresh/environment.d/
-echo "export HORIZON_VENV_DIR='$HORIZON_VENV_DIR'" > /opt/stack/os-config-refresh/environment.d/10-horizon-venv-dir.bash
+ENVDIR="$(os-refresh-config --print-base)/environment.d"
+mkdir -p "${ENVDIR}"
+echo "export HORIZON_VENV_DIR='${HORIZON_VENV_DIR}'" > "${ENVDIR}/10-horizon-venv-dir.bash"
