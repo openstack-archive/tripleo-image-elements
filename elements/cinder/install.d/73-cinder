@@ -1,7 +1,6 @@
 #!/bin/bash
-
 set -eux
+set -o pipefail
 
 install -d -o root -g cinder -m 0770 /var/lib/cinder/volumes
-install -d -o root -g cinder -m 0770 /var/lib/cinder/nfs
 register-state-path /var/lib/cinder
