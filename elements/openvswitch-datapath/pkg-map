@@ -5,6 +5,9 @@
     },
     "suse": {
        "openvswitch-switch-dkms_package": "openvswitch-kmp"
+    },
+    "redhat": {
+       "openvswitch-datapath-dkms_package": ""
     }
   }
 }
