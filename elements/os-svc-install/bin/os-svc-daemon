@@ -128,7 +128,10 @@ respawn
 # not hit the default of 10 times in 5 seconds. Make it 2 times in 5s.
 respawn limit 2 5
 
-exec start-stop-daemon --start -c $user --exec $install_dir/bin/$cmd -- $args
+# We're logging to syslog
+console none
+
+exec start-stop-daemon --start -c $user --exec $install_dir/bin/$cmd -- $args 2>&1 | logger -t $name
 
 post-start $POSTSTART
 EOF
