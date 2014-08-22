@@ -95,7 +95,7 @@ fi
 # Assign a floting IP to the broker
 TE_ID=$(nova $NP_CREDS show te-broker | awk '$2=="id" { print $4 }')
 FLOATING_IP=$(nova $NP_CREDS floating-ip-list | awk '$4=="'$TE_ID'" {print $2}')
-if [ -z "FLOATING_IP" ]; then
+if [ -z "$FLOATING_IP" ]; then
     FLOATING_IP=$(nova $NP_CREDS floating-ip-create | awk '$8=="ext-net" {print $2}')
     nova $NP_CREDS add-floating-ip te-broker $FLOATING_IP
 fi
