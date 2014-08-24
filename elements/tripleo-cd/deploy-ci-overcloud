@@ -16,25 +16,63 @@
 # under the License.
 
 set -eux
+set -o pipefail
+
+function show_options() {
+    echo "Usage: $SCRIPT_NAME REGION_CODE CONFIG_BASE"
+    echo
+    echo "Deploy the CI overcloud for a region."
+    echo
+    echo "Options:"
+    echo "    REGION_CODE: short name for the region. Required."
+    echo "    CONFIG_BASE: directory containing the config data for the region."
+    echo "                 defaults to \$PWD/configs"
+    echo
+    echo "    These two values will be combined to find the configs. For"
+    echo "    instance, given '$SCRIPT_NAME hp2 myconfig', networking data"
+    echo "    will be searched for in myconfig/hp2_networks.json"
+}
+
+if [ -z "$1"]; then
+    echo "REGION_CODE is required"
+    echo
+    show_options
+    exit 1
+fi
+
+REGION_CODE="${1}"
+CONFIG_DIR="${2:-$PWD/configs}"
+FILE_PREFIX=$CONFIG_DIR/$REGION_CODE
+
+CI_ENV_FILE=${FILE_PREFIX}_ci_env.json
+NETWORKS_FILE=${FILE_PREFIX}_networks.json
+OC_ENV_FILE=${FILE_PREFIX}_oc_env.json
+
+if [[ ! -e $CI_ENV_FILE || ! -e $NETWORKS_FILE || ! -e $OC_ENV_FILE ]]; then
+    echo "Missing config file. Couldn't find one of:"
+    echo "${CI_ENV_FILE}, ${NETWORKS_FILE}, or ${OC_ENV_FILE}".
+    echo "Please ensure all three are present then re-run this script"
+    exit 2
+fi
 
 cd /
 
 # We want to map the DC network into the VMs:
-export OVERCLOUD_HYPERVISOR_PUBLIC_INTERFACE=eth2
+export OVERCLOUD_HYPERVISOR_PUBLIC_INTERFACE=$(jq -r .OvercloudHypervisorPublicInterface $OC_ENV_FILE)
 
 # API endpoint for host file injection
-export OVERCLOUD_NAME=ci-overcloud.hp1.tripleo.org
+export OVERCLOUD_NAME=$(jq -r .OvercloudName $OC_ENV_FILE)
 
-# How many machines (46 machines in theory)
-export OVERCLOUD_CONTROLSCALE=3
-export OVERCLOUD_COMPUTESCALE=16
-# testenv count = 25, 3:2 memory ratio between testenv needs and CI slaves.
+# How many machines
+export OVERCLOUD_CONTROLSCALE=$(jq -r .OvercloudControlscale $OC_ENV_FILE)
+export OVERCLOUD_COMPUTESCALE=$(jq -r .OvercloudComputescale $OC_ENV_FILE)
+# Experience shows a 3:2 memory ratio between testenvs and CI slaves is about right
 
 # And a unique name for the thing we're deploying.
 export STACKNAME=ci-overcloud
 
 #export OVERCLOUD_DIB_EXTRA_ARGS="pypi"
-export NODE_ARCH=amd64
+export NODE_ARCH=$(jq -r .OvercloudNodeArch $OC_ENV_FILE)
 # We need to inject a static mapping to the API endpoint.
 export DIB_COMMON_ELEMENTS="stackuser hosts use-ephemeral"
 #export DIB_COMMON_ELEMENTS="pypi-openstack pip-cache stackuser hosts"
@@ -42,15 +80,18 @@ export DIB_COMMON_ELEMENTS="stackuser hosts use-ephemeral"
 #source /opt/stack/tripleo-incubator/scripts/devtest_variables.sh
 #source /root/stackrc
 
-export OVERCLOUD_NTP_SERVER=10.10.16.134
+export OVERCLOUD_PUBLIC_VLAN_START=$(jq -r .overcloud.public_vlan.start $NETWORKS_FILE)
+export OVERCLOUD_PUBLIC_VLAN_FINISH=$(jq -r .overcloud.public_vlan.finish $NETWORKS_FILE)
+export OVERCLOUD_PUBLIC_VLAN_CIDR=$(jq -r .overcloud.public_vlan.cidr $NETWORKS_FILE)
+export OVERCLOUD_NTP_SERVER=$(jq -r .NtpServer $CI_ENV_FILE)
+export OVERCLOUD_NAME=$(jq -r .OvercloudName $OC_ENV_FILE)
 set +e
 OVERCLOUD_LIBVIRT_TYPE="kvm" \
-    devtest_overcloud.sh eth2 "" "" "" 138.35.77.13 \
-    138.35.77.126 138.35.77.0/25 \
-    $TRIPLEO_ROOT/tripleo-incubator/tripleo-cloud/tripleo-cd-admins \
-    $TRIPLEO_ROOT/tripleo-incubator/tripleo-cloud/tripleo-cd-users \
-    $STACKNAME /home/shared/ssl/ci-overcloud.hp1.tripleo.org \
-    ci-overcloud.hp1.tripleo.org
+    devtest_overcloud.sh eth2 "" "" "" "${OVERCLOUD_PUBLIC_VLAN_START}" \
+    "${OVERCLOUD_PUBLIC_VLAN_FINISH}" "${OVERCLOUD_PUBLIC_VLAN_CIDR}" \
+    "${TRIPLEO_ROOT}/tripleo-incubator/tripleo-cloud/tripleo-cd-admins" \
+    "${TRIPLEO_ROOT}/tripleo-incubator/tripleo-cloud/tripleo-cd-users" \
+    "${STACKNAME}" "/home/shared/ssl/${OVERCLOUD_NAME}" "${OVERCLOUD_NAME}"
 RESULT=$?
 set -e
 MSG=$(echo "************** $STACKNAME complete status=$RESULT ************")
