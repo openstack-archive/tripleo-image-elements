@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -eux
+set -o pipefail
+
+[ -x /usr/sbin/semanage ] || exit 0
+
+# https://bugs.launchpad.net/tripleo/+bug/1361630
+# https://bugzilla.redhat.com/show_bug.cgi?id=1133904
+setsebool -P httpd_can_network_connect 1
