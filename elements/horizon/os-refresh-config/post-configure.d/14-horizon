@@ -14,3 +14,6 @@ if [ -n "${HORIZON_VENV_DIR:-}" ] ; then
     source $HORIZON_VENV_DIR/bin/activate
     DJANGO_SETTINGS_MODULE=openstack_dashboard.settings django-admin.py compress
 fi
+
+os-svc-enable -n apache2
+os-svc-restart -n apache2
