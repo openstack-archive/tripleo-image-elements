@@ -9,7 +9,10 @@ Heat Metadata can be used to configure os-collect-config:
     os-collect-config:
       command: os-refresh-config
       cachedir: /var/run/os-collect-config
-      collectors: heat_local,ec2,cfn
+      collectors:
+        - heat_local
+        - ec2
+        - cfn
       polling_interval: 300
       cfn:
         metadata_url: http://foo:8000/v1
