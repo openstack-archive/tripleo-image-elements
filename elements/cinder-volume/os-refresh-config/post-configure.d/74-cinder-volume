@@ -1,5 +1,16 @@
 #!/bin/bash
 set -eu
 
+IS_NFS=$(os-apply-config --key cinder.include_nfs_backend --type raw --key-default 'false')
+
 os-svc-enable -n cinder-volume
-os-svc-restart -n cinder-volume
+
+if [ "$IS_NFS" != "false" ] ; then
+    # If *shared* NFS backend is used then running multiple instances
+    # of cinder-volume may cause data inconsistency as
+    # described here: https://bugs.launchpad.net/cinder/+bug/1322190.
+    # As a workaround we run cinder-volume in a/p mode using pacemaker.
+    pcmk-service-create -n cinder-volume
+else
+    os-svc-restart -n cinder-volume
+fi
