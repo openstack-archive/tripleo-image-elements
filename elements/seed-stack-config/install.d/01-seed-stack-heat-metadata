@@ -11,11 +11,3 @@ else
     CONFIG_FILE="$CONFIG_DIR/config.json"
 fi
 install -D -m 0755 -o root -g root "$CONFIG_FILE" /var/lib/heat-cfntools/cfn-init-data
-
-# Run only the heat_local collector when first booting
-cat > /etc/os-collect-config.conf <<EOF
-[default]
-command=os-refresh-config
-collectors=heat_local
-
-EOF

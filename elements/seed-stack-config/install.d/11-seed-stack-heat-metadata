@@ -1,0 +1,10 @@
+#!/bin/bash
+set -eux
+
+# Run only the heat_local collector when first booting
+cat > /etc/os-collect-config.conf <<EOF
+[DEFAULT]
+command=os-refresh-config
+collectors=heat_local
+
+EOF
