@@ -3,3 +3,10 @@
 set -eux
 
 install-packages openstack-dashboard
+
+# Make sure apache doesn't listen to the Controller virtual IP
+TEMPLATE_ROOT=$(os-apply-config --print-templates)
+
+sed -i '/Listen/s/^/#/' /etc/httpd/conf/httpd.conf
+mkdir -p "${TEMPLATE_ROOT}/etc/httpd/conf.d/"
+install -m 0644 -o root -g root "$(dirname $0)/../files/etc/httpd/conf.d/ports.conf" "${TEMPLATE_ROOT}/etc/httpd/conf.d/"
