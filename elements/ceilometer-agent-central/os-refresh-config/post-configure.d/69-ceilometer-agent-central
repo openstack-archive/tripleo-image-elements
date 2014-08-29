@@ -1,23 +1,5 @@
 #!/bin/bash
 set -eux
 
-# get resource class (systemd, upstart, lsb). It should be possible
-# to use 'service' class which is a wrapper for others but this doesn't work
-# as expected on Fedora - lrmd process segfaults if 'service' resource class
-# is used: https://bugzilla.redhat.com/show_bug.cgi?id=1117151
-CLASS=$(dib-init-system)
-if [ "$CLASS" = "sysv" ]; then
-    CLASS=lsb
-fi
-
-SERVICE=$(map-services ceilometer-agent-central)
-
-if os-is-bootstrap-host && ! cibadmin --query --xpath "//primitive[@id=\"$SERVICE\"]"; then
-    /usr/sbin/cibadmin -o resources -C -X "
-<primitive class=\"$CLASS\" id=\"$SERVICE\" type=\"$SERVICE\">
-  <instance_attributes id=\"$SERVICE-instance_attributes\"/>
-  <operations>
-    <op id=\"$SERVICE-monitor-start-delay-10s\" interval=\"30s\" name=\"monitor\" start-delay=\"10s\"/>
-  </operations>
-</primitive>"
-fi
+os-svc-enable -n ceilometer-agent-central
+pcmk-service-create -n ceilometer-agent-central
