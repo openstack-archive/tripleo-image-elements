@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -eu
 
 os-svc-enable -n heat-engine
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eu
 install-packages python-setuptools python-eventlet python-greenlet \
     python-httplib2 python-iso8601 python-lxml python-sqlalchemy \
     python-paste python-routes python-webob python-yaml libffi-dev

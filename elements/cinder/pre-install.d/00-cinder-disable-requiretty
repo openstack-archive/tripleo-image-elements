@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eu
 
 if [ -d /etc/sudoers.d ]; then
     echo "Defaults:cinder !requiretty" > /etc/sudoers.d/cinder-notty

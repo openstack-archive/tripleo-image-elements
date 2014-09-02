@@ -7,7 +7,7 @@
 # not use this file except in compliance with the License. You may obtain
 # a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
@@ -37,14 +37,14 @@ so the regular expression should account for that.
 
 For example, the following scenario:
 
-  run all the smoke tests and scenario tests,
-  but exclude the api.volume tests.
+    run all the smoke tests and scenario tests,
+    but exclude the api.volume tests.
 
 is implemented as:
 
-  +.*smoke
-  +tempest\.scenario
-  -tempest\.api\.volume.*
+    +.*smoke
+    +tempest\.scenario
+    -tempest\.api\.volume.*
 """
 
 whitelist = []

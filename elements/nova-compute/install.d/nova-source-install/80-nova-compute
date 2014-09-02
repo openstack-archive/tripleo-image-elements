@@ -10,7 +10,7 @@ CONFIG_PARAMETERS="--config-dir /etc/nova"
 TEMPLATE_ROOT=$(dirname $0)/../os-apply-config
 
 if [ -d ${TEMPLATE_ROOT}/etc/nova/compute ]; then
-  CONFIG_PARAMETERS="${CONFIG_PARAMETERS} --config-dir /etc/nova/compute"
+    CONFIG_PARAMETERS="${CONFIG_PARAMETERS} --config-dir /etc/nova/compute"
 fi
 
 os-svc-daemon -i "$NOVA_VENV_DIR" -e "LIBVIRT_DEFAULT_URI=qemu:///system" nova-compute  nova nova-compute "${CONFIG_PARAMETERS}"
