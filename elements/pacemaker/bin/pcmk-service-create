@@ -1,0 +1,93 @@
+#!/bin/bash
+#
+# Copyright 2014 Red Hat, Inc.
+# All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+set -eu
+
+usage() {
+    echo "Usage: pcmk-resource-create [-c] -n SERVICENAME"
+    echo ""
+    echo "  -h             Show help and exit"
+    echo "  -n SERVICENAME Name of job/service file."
+    echo "  -c             Clone this service (service is active on multiple nodes)."
+    echo ""
+    exit $1
+}
+
+SERVICENAME=${SERVICENAME:-""}
+CLONE=0
+
+nshift=0
+while getopts "chn:" opt; do
+    case "$opt" in
+        n) SERVICENAME=$OPTARG;;
+        c) CLONE=1;;
+        h) usage 0;;
+        \?) usage 1;;
+        :) usage 1;;
+    esac
+done
+
+shift $(($OPTIND-1))
+if [ -z "$SERVICENAME" ] ; then
+    usage 1
+fi
+
+MAPPED_SERVICE=$(map-services $SERVICENAME)
+
+# get resource class (systemd, upstart, lsb). It should be possible
+# to use 'service' class which is a wrapper for others but this doesn't work
+# as expected on Fedora - lrmd process segfaults if 'service' resource class
+# is used: https://bugzilla.redhat.com/show_bug.cgi?id=1117151
+CLASS=$(dib-init-system)
+if [ "$CLASS" = "sysv" ]; then
+    CLASS=lsb
+fi
+
+if [ "$CLASS" = "upstart" ]; then
+    # unfortunately, os-svc-enable means two things on Upstart
+    # a) it means start automatically
+    # b) it means allow to start at all - w/o it the job will refuse to start
+    # On other init systems it just means (a)
+    # This is recorded as https://bugs.launchpad.net/tripleo/+bug/1356579
+    override_file=/etc/init/${MAPPED_SERVICE}.override
+    if ! ([ -e $override_file ] && grep -q manual $override_file) ; then
+        echo manual >> $override_file
+    fi
+fi
+
+XML=$(cat <<EOT
+<primitive class="$CLASS" id="$MAPPED_SERVICE" type="$MAPPED_SERVICE">
+  <instance_attributes id="$MAPPED_SERVICE-instance_attributes"/>
+  <operations>
+    <op id="$MAPPED_SERVICE-monitor-start-delay-10s" interval="30s" name="monitor" start-delay="10s"/>
+  </operations>
+</primitive>
+EOT)
+
+if [ "$CLONE" = 1 ] ; then
+  XML=$(cat <<EOT
+<clone id="$MAPPED_SERVICE-clone">
+  $XML
+  <meta_attributes id="$MAPPED_SERVICE-clone-meta"/>
+</clone>
+EOT)
+fi
+
+
+if ! cibadmin --query --xpath "//primitive[@id=\"$MAPPED_SERVICE\"]"; then
+    /usr/sbin/cibadmin -o resources -C -X "$XML"
+fi
