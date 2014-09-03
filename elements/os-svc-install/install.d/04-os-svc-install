@@ -8,6 +8,7 @@ install -m 0755 -o root -g root $(dirname $0)/../bin/os-svc-enable  /usr/local/b
 if [ "$(dib-init-system)" = "upstart" ] ; then
     install -m 0755 -o root -g root $(dirname $0)/../bin/os-svc-enable-upstart /usr/local/bin/os-svc-enable-upstart
     install -m 0644 -o root -g root $(dirname $0)/../upstart/os-svc-enable.conf /etc/init/os-svc-enable.conf
+    install -m 0644 -o root -g root $(dirname $0)/../rsyslog.d/25-tripleo-apps.conf /etc/rsyslog.d/25-tripleo-apps.conf
 fi
 
 install -m 0755 -o root -g root -d /opt/stack/venvs
