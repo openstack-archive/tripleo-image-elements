@@ -2,7 +2,7 @@
 
 set -eux
 
-install-packages openstack-keystone
+install-packages openstack-keystone python-ldap
 
 KEYSTONE_USER=keystone
 if [ "opensuse" = "$DISTRO_NAME" ]; then
