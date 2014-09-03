@@ -18,3 +18,5 @@ if [ ! -e ${MYSQL_INITIALIZED} ]; then
         exit 1
     fi
 fi
+
+os-svc-enable -n mysql

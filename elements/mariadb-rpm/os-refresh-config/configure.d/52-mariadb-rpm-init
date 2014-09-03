@@ -33,3 +33,5 @@ if [ ! -e ${MYSQL_INITIALIZED} ]; then
     # We did db initialization by hand so reset-db doesnt need to interfere
     touch ${MYSQL_INITIALIZED}
 fi
+
+os-svc-enable -n mariadb
