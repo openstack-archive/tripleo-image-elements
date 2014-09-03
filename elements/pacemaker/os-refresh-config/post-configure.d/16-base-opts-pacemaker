@@ -3,7 +3,7 @@
 set -eu
 
 if os-is-bootstrap-host; then
-  QUORUM_POLICY=$(os-apply-config --key pacemaker.quorum_policy --type raw --key-default ignore)
+  QUORUM_POLICY=$(os-apply-config --key pacemaker.quorum_policy --type raw --key-default stop)
   RECHECK_INTERVAL=$(os-apply-config --key pacemaker.recheck_interval --type raw --key-default 5)
   STONITH_ENABLED=$(os-apply-config --key pacemaker.stonith_enabled --type raw --key-default false)
 
