@@ -1,0 +1,14 @@
+#! /bin/bash
+
+set -eux
+
+# This is to avoid an issue with version mismatch between the version of cffi installed
+# and the version of cffi for which xattr has pre-built support.  This mismatch will
+# prevent the object-server from running.  To fix this problem this module executes the
+# simple python command below at install-time to force a build of the correct cffi
+# library in the xattr module.  By executing at install-time the python command will run
+# with the correct permissions to allow the build. See Openstack Bug #1340776
+
+(set +u
+source "${SWIFT_VENV_DIR}/bin/activate"
+python -c "from xattr import getxattr, setxattr")
