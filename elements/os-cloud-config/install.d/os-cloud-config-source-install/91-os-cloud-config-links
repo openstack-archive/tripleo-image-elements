@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eux
+
+ln -s ${OS_CLOUD_CONFIG_VENV_DIR}/bin/init-keystone /usr/local/bin/init-keystone
+ln -s ${OS_CLOUD_CONFIG_VENV_DIR}/bin/generate-keystone-pki /usr/local/bin/generate-keystone-pki
+ln -s ${OS_CLOUD_CONFIG_VENV_DIR}/bin/register-nodes /usr/local/bin/register-nodes
