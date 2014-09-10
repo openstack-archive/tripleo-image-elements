@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eux
 
-install-packages git build-essential python-dev libssl-dev
-
 install -m 0755 -o root -g root -d /opt/stack/boot-stack
 
 # tools

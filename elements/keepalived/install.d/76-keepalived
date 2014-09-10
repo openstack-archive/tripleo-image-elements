@@ -2,8 +2,6 @@
 
 set -eux
 
-install-packages keepalived psmisc
-
 [ -d /var/log/keepalived ] || install -d -o root -g root -m 0775 /var/log/keepalived
 register-state-path --leave-symlink /var/log/keepalived
 

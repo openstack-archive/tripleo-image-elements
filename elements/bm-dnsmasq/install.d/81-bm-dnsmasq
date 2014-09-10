@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eux
 
-install-packages dnsmasq dnsmasq-utils
-
 function install_dnsmasq_upstart() {
     cat > /etc/init/nova-bm-dnsmasq.conf << eof
 start on runlevel [2345]

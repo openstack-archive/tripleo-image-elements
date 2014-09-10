@@ -2,8 +2,6 @@
 
 set -eux
 
-install-packages rsync
-
 cat > /etc/cron.d/swift-recon <<EOF
 # Cronjob to track async pending on the object server.
 SHELL=/bin/sh

@@ -2,7 +2,5 @@
 
 set -eux
 
-install-packages tgt
-
 mkdir -p /etc/tgt/conf.d
 echo 'include /mnt/state/var/lib/cinder/volumes/*' > /etc/tgt/conf.d/cinder.conf

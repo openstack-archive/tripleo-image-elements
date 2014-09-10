@@ -1,9 +1,6 @@
 #!/bin/bash
 set -eux
 
-# for libvirt clouds only
-install-packages libvirt-bin python-libvirt kvm pm-utils kpartx
-
 # Fedora don't always have the libvirtd group created
 if ! grep ^libvirtd /etc/group > /dev/null 2>&1; then
     groupadd -f libvirtd

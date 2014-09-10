@@ -2,8 +2,6 @@
 
 set -eux
 
-install-packages openstack-neutron openstack-neutron-ml2
-
 if [[ "rhel rhel7 centos7 fedora" =~ "$DISTRO_NAME" ]]; then
     ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
 

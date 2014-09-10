@@ -1,7 +1,6 @@
 #!/bin/bash
 set -eux
 
-install-packages libffi-dev libssl-dev
 os-svc-install $CEILOMETER_EXTRA_INSTALL_OPTS -i "$CEILOMETER_VENV_DIR" -u ceilometer -r /opt/stack/ceilometer
 
 
