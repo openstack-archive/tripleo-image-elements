@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -eux
+
+# bug#1367742 Stop a confused keepalived from erroneously bringing up a VIP
+# This is an incredibly clunky approach.
+install -m 0640 -o root -g root $(dirname $0)/../files/keepalived.crontab /etc/cron.d/keepalived

@@ -1,0 +1,1 @@
+*/5 * * * * root [ -s /var/run/keepalived.pid ] && kill -HUP $(cat /var/run/keepalived.pid)
