@@ -1,4 +1,4 @@
 #!/bin/bash
 set -eux
 
-install-packages arping
+install-packages -m neutron-network-node arping_package
