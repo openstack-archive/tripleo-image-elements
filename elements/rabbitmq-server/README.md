@@ -11,6 +11,7 @@ this in Heat:
     Metadata:
       rabbit:
         users:
+          clean_users: True
           guest:
             username: guest
             tags: administrator
