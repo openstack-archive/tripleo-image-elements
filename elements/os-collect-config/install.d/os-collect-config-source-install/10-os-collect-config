@@ -19,9 +19,6 @@ else
     # bug #1293812 : Avoid easy_install triggering on pbr.
     /opt/stack/venvs/os-collect-config/bin/pip install -U 'pbr>=0.6,<1.0'
     /opt/stack/venvs/os-collect-config/bin/pip install --pre -U os-collect-config
-
-    # Workaround for https://github.com/kennethreitz/requests/issues/2192
-    /opt/stack/venvs/os-collect-config/bin/pip install -U 'requests<2.4.0'
 fi
 
 # Write the manifest of what was installed
