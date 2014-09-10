@@ -16,21 +16,27 @@ fi
 
 get_bind_port () {
     # first argument is the config file path
-    # second argument is a default port number if it is not found
-    # in the config file
     bind_string=$(grep bind_port $1)
     if [ "$bind_string" != "" ]; then
         equals_index=$(expr index "$bind_string" "=")
         port_number=${bind_string:$equals_index}
         echo ${port_number/ /}
     else
-        echo $2
+        echo ""
     fi
 }
 
-OBJECT_PORT=$(get_bind_port /etc/swift/object-server.conf 6000)
-CONTAINER_PORT=$(get_bind_port /etc/swift/container-server.conf 6001)
-ACCOUNT_PORT=$(get_bind_port /etc/swift/account-server.conf 6002)
+OBJECT_PORT=$(get_bind_port /etc/swift/object-server.conf)
+CONTAINER_PORT=$(get_bind_port /etc/swift/container-server.conf)
+ACCOUNT_PORT=$(get_bind_port /etc/swift/account-server.conf)
+
+if [ -z "$OBJECT_PORT" -o -z "$CONTAINER_PORT" -o -z "$ACCOUNT_PORT" ] ; then
+    echo "Not all swift bind_ports are specified:"
+    echo "/etc/swift/object-server.conf ($OBJECT_PORT)"
+    echo "/etc/swift/container-server.conf ($CONTAINER_PORT)"
+    echo "/etc/swift/account-server.conf ($ACCOUNT_PORT)"
+    exit 1
+fi
 
 if [ -z "$DEVICES" ] ; then
     echo "No swift devices to configure"
