@@ -1,3 +1,5 @@
 baremetal
 fedora
-fedora-rdo-icehouse-repository
+enable-packages-install
+rdo-icehouse
+rdo-release
