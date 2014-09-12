@@ -4,7 +4,8 @@
       "openvswitch-datapath-dkms_package": "openvswitch-datapath-dkms"
     },
     "suse": {
-       "openvswitch-switch-dkms_package": "openvswitch-kmp"
+       "openvswitch-switch-dkms_package": "openvswitch-kmp-default",
+       "openvswitch-datapath-dkms_package": "openvswitch-kmp-default"
     },
     "redhat": {
        "openvswitch-datapath-dkms_package": ""
