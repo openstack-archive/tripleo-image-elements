@@ -2,4 +2,5 @@ neutron
 neutron-dhcp-agent
 neutron-openvswitch-agent
 os-refresh-config
+pacemaker
 pkg-map
