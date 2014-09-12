@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eu
+set -o pipefail
+
+os-svc-enable -n apache2
+os-svc-restart -n apache2
