@@ -7,6 +7,7 @@ PARTPOWER=$(os-apply-config --key swift.part-power --key-default 10)
 REPLICAS=$(os-apply-config --key swift.replicas --key-default 1)
 DEVICES=$(os-apply-config --key swift.devices --key-default "" --type raw)
 ZONES=$(os-apply-config --key swift.zones --key-default 1)
+MIN_PART_HOURS=$(os-apply-config --key swift.min-part-hours --key-default 1)
 BUILD_RINGS=$(os-apply-config --key swift.ring-build --key-default "True" | tr '[:upper:]' '[:lower:]')
 
 if [ "$BUILD_RINGS" == "false" ] || [ "$BUILD_RINGS" == "f" ]; then
@@ -43,9 +44,9 @@ if [ -z "$DEVICES" ] ; then
     exit 1
 fi
 
-swift-ring-builder /etc/swift/object.builder create $PARTPOWER $REPLICAS 1
-swift-ring-builder /etc/swift/container.builder create $PARTPOWER $REPLICAS 1
-swift-ring-builder /etc/swift/account.builder create $PARTPOWER $REPLICAS 1
+swift-ring-builder /etc/swift/object.builder create $PARTPOWER $REPLICAS $MIN_PART_HOURS
+swift-ring-builder /etc/swift/container.builder create $PARTPOWER $REPLICAS $MIN_PART_HOURS
+swift-ring-builder /etc/swift/account.builder create $PARTPOWER $REPLICAS $MIN_PART_HOURS
 
 # Function to place server in its zone.  Zone is calculated by
 # server number in heat template modulo the number of zones + 1.
