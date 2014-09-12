@@ -3,3 +3,5 @@ os-is-bootstrap-host
 os-refresh-config
 os-svc-install
 pacemaker
+package-installs
+pkg-map

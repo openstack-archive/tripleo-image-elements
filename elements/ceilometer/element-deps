@@ -1,4 +1,6 @@
 os-apply-config
 os-svc-install
+package-installs
+pkg-map
 selinux
 source-repositories

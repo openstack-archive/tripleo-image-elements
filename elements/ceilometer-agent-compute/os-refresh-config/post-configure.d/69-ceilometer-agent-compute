@@ -3,4 +3,4 @@ set -eux
 
 os-svc-enable -n ceilometer-agent-compute
 
-service ceilometer-agent-compute restart
+os-svc-restart -n ceilometer-agent-compute

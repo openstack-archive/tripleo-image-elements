@@ -2,5 +2,4 @@
 set -eux
 
 os-svc-enable -n ceilometer-collector
-
-service ceilometer-collector restart
+os-svc-restart -n ceilometer-collector

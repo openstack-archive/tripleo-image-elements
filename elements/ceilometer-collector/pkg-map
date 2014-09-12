@@ -1,0 +1,5 @@
+{
+  "default": {
+    "ceilometer_collector_package": "openstack-ceilometer-collector"
+  }
+}

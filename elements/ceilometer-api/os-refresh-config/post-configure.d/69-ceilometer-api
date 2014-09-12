@@ -6,4 +6,4 @@ os-svc-enable -n ceilometer-api
 [ -d /mnt/state/var/lib/ceilometer ] || install -d -D -m 0770 -o ceilometer -g ceilometer /mnt/state/var/lib/ceilometer
 [ -d /mnt/state/var/lib/ceilometer/keystone-signing ] || install -d -D -m 0770 -o ceilometer -g ceilometer /mnt/state/var/lib/ceilometer/keystone-signing
 
-service ceilometer-api restart
+os-svc-restart -n ceilometer-api
