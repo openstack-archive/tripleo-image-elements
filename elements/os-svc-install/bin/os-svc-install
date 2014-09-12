@@ -41,12 +41,6 @@ function python_install() {
         pip install -U 'pbr>=0.5.21,<1.0'
 
         if [ -n "$reqs" ] ; then
-            # Wwe have patched eventlet to solve issues there.
-            # Carry it locally until we get it merged upstream.
-            if grep -qw "^eventlet" $reqs ; then
-                pip install /opt/stack/eventlet
-            fi
-
             pip install -r $reqs
             # FIXME: pip requires doesn't include MySQL-python
             pip install MySQL-python
