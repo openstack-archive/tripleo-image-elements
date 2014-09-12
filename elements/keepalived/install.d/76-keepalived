@@ -3,4 +3,3 @@
 set -eux
 
 install-packages keepalived
-os-svc-enable -n keepalived
