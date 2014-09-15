@@ -1,4 +1,8 @@
 #!/bin/bash
 set -eux
+
+# The l2 agent now requires ipset since enable_ipset=True enabled by default
+install-packages ipset
+
 os-svc-daemon -i "$NEUTRON_VENV_DIR" neutron-openvswitch-agent neutron neutron-openvswitch-agent \
     "--config-file /etc/neutron/neutron.conf  --config-file /etc/neutron/plugins/ml2/ml2_conf.ini --config-dir /etc/neutron"
