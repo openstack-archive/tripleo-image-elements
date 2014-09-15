@@ -10,6 +10,7 @@ usage() {
     echo "environment as well. Command line arguments will override"
     echo "environment variables."
     echo ""
+    echo "  -a             Use alternate svc-map instead of map-services"
     echo "  -h             Show help and exit"
     echo "  -p             Print the job file instead of writing to disk"
     echo "  -d [NAME]      Specify the name of the runtime directory, which will be"
@@ -34,6 +35,7 @@ ENV=${ENV:-""}
 CREATE_DIR_NAME=${CREATE_DIR_NAME:-""}
 # The default helps avoid race with daemon listening. http://pad.lv/1179766
 POSTSTART=${POSTSTART:-$DEFAULT_POSTSTART}
+MAPPING_COMMAND=map-services
 
 print_only() {
     cat
@@ -51,7 +53,7 @@ OUTPUT=print_to_file
 APPEND=append_to_file
 
 nshift=0
-while getopts "phd:s:n:i:u:c:e:" opt; do
+while getopts "aphd:s:n:i:u:c:e:" opt; do
     case "$opt" in
         n) SERVICENAME=$OPTARG;;
         i) INSTALLDIR=$OPTARG;;
@@ -59,6 +61,7 @@ while getopts "phd:s:n:i:u:c:e:" opt; do
         c) RUNCMD=$OPTARG;;
         s) POSTSTART=$OPTARG;;
         e) ENV=$OPTARG;;
+        a) MAPPING_COMMAND=svc-map;;
         p) OUTPUT=print_only; APPEND=print_only;;
         d) CREATE_DIR_NAME=$OPTARG;;
         h) usage; exit 0;;
@@ -172,7 +175,7 @@ EOF
 }
 
 function install_create_dir_systemd {
-    local name=$(map-services $1)
+    local name="$($MAPPING_COMMAND "$1")"
     local user=$2
     local dirname=${3:-$user}
 
