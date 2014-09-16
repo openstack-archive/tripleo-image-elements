@@ -1,0 +1,5 @@
+{
+  "default": {
+    "ironic_conductor_package": "openstack-ironic-conductor"
+  }
+}
