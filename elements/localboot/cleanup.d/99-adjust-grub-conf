@@ -33,7 +33,7 @@ if [ -f $BOOTDIR/grub/grub.conf ] ; then
     for parm in $kernel_parms ; do
         case $parm in
             root=*)
-                sed -i "s,${parm#root=},LABEL=cloudimg-rootfs,g" $BOOTDIR/grub/grub.conf
+                sed -i "s,${parm#root=},LABEL=${DIB_ROOT_LABEL},g" $BOOTDIR/grub/grub.conf
                 ;;
             /boot/vmlinuz-*)
                 KERNEL_VERSION=${KERNEL#vmlinuz-}
