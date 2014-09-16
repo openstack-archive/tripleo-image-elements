@@ -4,6 +4,10 @@ set -eux
 
 install-packages rabbitmq-server
 
+# Ensure we leave symlinks in place for RabbitMQ state paths
+register-state-path --leave-symlink /var/lib/rabbitmq
+register-state-path --leave-symlink /var/log/rabbitmq
+
 # Note(jang): the rabbitmq-server service is installed, but not started, since
 # the first run of os-collect-config is required to configure it properly.
 
