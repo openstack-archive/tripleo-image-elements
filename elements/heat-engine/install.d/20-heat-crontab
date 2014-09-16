@@ -4,5 +4,7 @@ set -ue
 # If https://bugs.launchpad.net/heat/+bug/1239377 is ever fixed we can
 # configure heat to purge automatically and remove this.
 cat <<EOF > /etc/cron.d/heat
-30 * * * * heat heat-manage purge_deleted 1
+PATH=/usr/local/bin:/usr/bin:/sbin:/bin:/usr/sbin
+MAILTO=""
+30 * * * * heat heat-manage purge_deleted 1 2>&1 | /usr/bin/logger -t heat-purge-deleted-cron
 EOF
