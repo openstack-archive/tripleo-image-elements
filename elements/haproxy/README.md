@@ -19,6 +19,18 @@ The following properties are supported for configuring haproxy
 * haproxy.service_maxconn: A limit on the number of the number of concurrent
   connections that are allowed to each proxied service. This is a default value
   that can be overridden in an individual haproxy.service section.
+* haproxy.timeout.http-request: Set the maximum default allowed time to wait
+  for a complete HTTP request.
+* haproxy.timeout.queue: Set the maximum default time to wait in the queue for
+  a connection slot to be free.
+* haproxy.timeout.connect: Set the maximum default time to wait for a
+  connection attempt to a server to succeed.
+* haproxy.timeout.client: Set the maximum default inactivity time on the client
+  side.
+* haproxy.timeout.server: Set the maximum default inactivity time on the server
+  side.
+* haproxy.timeout.check: Set additional check timeout, but only after a
+  connection has been already established.
 
 Each haproxy.services can define the following sub-properties
 
