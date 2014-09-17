@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -eux
+set -o pipefail
+
+install-packages -m swift-ring libffi_dev_package
+
+os-svc-install $SWIFT_EXTRA_INSTALL_OPTS -i "$SWIFT_VENV_DIR" -u swift -r /opt/stack/swift
+
+ln -s "$SWIFT_VENV_DIR/bin/swift-ring-builder" /usr/local/bin/swift-ring-builder
