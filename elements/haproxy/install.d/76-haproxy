@@ -6,8 +6,6 @@ install-packages haproxy
 
 [ -d /var/lib/haproxy ] || install -d -D -m 0755 -o root -g root /var/lib/haproxy
 
-os-svc-enable -n haproxy
-
 # haproxy service has to be explicitly enabled in /etc/default/haproxy on ubuntu/debian systems
 if [ -f /etc/default/haproxy ]; then
     sed -i -e 's/ENABLED=0/ENABLED=1/' /etc/default/haproxy
