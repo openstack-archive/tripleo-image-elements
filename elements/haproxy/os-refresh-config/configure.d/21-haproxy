@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eux
 
+os-svc-enable -n haproxy
+
 if service haproxy status; then
     service haproxy reload
 else
