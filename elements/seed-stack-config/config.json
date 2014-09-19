@@ -61,11 +61,6 @@
     "bootstrap_nodeid": "seed",
     "nodeid": "seed"
   },
-  "cinder": {
-    "db": "mysql://cinder:unset@localhost/cinder",
-    "volume_size_mb": "5000",
-    "service-password": "unset"
-  },
   "neutron": {
     "host": "127.0.0.1",
     "ovs_db": "mysql://neutron:unset@localhost/ovs_neutron?charset=utf8",
