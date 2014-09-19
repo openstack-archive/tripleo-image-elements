@@ -20,3 +20,5 @@ elif [ -f /etc/xinetd.d/rsync ] ; then
     sed -i "s/disable[[:space:]]*=[[:space:]]*yes/disable = no/" /etc/xinetd.d/rsync
 fi
 
+# rsync is configured to log under /mnt/state/var/log/rsyncd.log
+register-state-path /var/log/rsyncd.log
