@@ -20,11 +20,7 @@ install -m 0755 -o root -g root $(dirname $0)/../cleanup-keystone-tokens.sh /usr
 install -m 0640 -o root -g root $(dirname $0)/../keystone.crontab /etc/cron.d/keystone
 
 # LDAP backend support
-if which dpkg; then
-    install-packages libldap2-dev libsasl2-dev libssl-dev
-else
-    install-packages openldap-devel
-fi
+install-packages -m keystone ldap_devel_package sasl_devel_package ssl_devel_package
 $KEYSTONE_VENV_DIR/bin/pip install -U python-ldap ldappool
 
 # percona-tookit is NOT supported on Fedora (retrieved 25-06-2013)

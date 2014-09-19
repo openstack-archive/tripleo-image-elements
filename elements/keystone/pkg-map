@@ -1,0 +1,19 @@
+{
+  "family": {
+    "redhat": {
+      "ldap_devel_package": "openldap-devel",
+      "sasl_devel_package": "cyrus-sasl-devel",
+      "ssl_devel_package": "openssl-devel"
+    },
+    "debian": {
+      "ldap_devel_package": "libldap2-dev",
+      "sasl_devel_package": "libsasl2-dev",
+      "ssl_devel_package": "libssl-dev"
+    },
+    "suse": {
+      "ldap_devel_package": "openldap2-devel",
+      "sasl_devel_package": "cyrus-sasl-devel",
+      "ssl_devel_package": "libopenssl-devel"
+    }
+  }
+}
