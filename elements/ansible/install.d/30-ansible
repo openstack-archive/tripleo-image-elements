@@ -19,6 +19,8 @@
 set -eux
 set -o pipefail
 
+install-packages build-essential libssl-dev libyaml-dev python-dev libxml2-dev libxslt-dev
+
 VENV=/opt/stack/venvs/ansible
 virtualenv $VENV
 
