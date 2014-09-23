@@ -76,7 +76,8 @@ XML=$(cat <<EOT
     <op id="$MAPPED_SERVICE-monitor-start-delay-10s" interval="30s" name="monitor" start-delay="10s"/>
   </operations>
 </primitive>
-EOT)
+EOT
+)
 
 if [ "$CLONE" = 1 ] ; then
   XML=$(cat <<EOT
@@ -84,7 +85,8 @@ if [ "$CLONE" = 1 ] ; then
   $XML
   <meta_attributes id="$MAPPED_SERVICE-clone-meta"/>
 </clone>
-EOT)
+EOT
+)
 fi
 
 
