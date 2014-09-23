@@ -1,8 +1,8 @@
 #!/bin/bash
 set -eux
 
-os-svc-restart -n neutron-metadata-agent
-os-svc-restart -n neutron-l3-agent
+os-svc-enable -n neutron-metadata-agent
+os-svc-enable -n neutron-l3-agent
 
 # this ensures that neutron-l3-agent and neutron-metadata-agent services
 # will be monitored by pacemaker on all nodes.
