@@ -26,7 +26,9 @@ if ! neutron net-show tripleo-bm-test ; then
 fi
 TESTNETID=$(neutron net-show tripleo-bm-test | awk '$2=="id" {print $4}')
 if [ $(neutron net-show tripleo-bm-test | awk '$2=="subnets" {print $4}') == "|" ] ; then
-    neutron subnet-create --ip_version 4 --tenant-id $NODEPOOL_TENANT_ID --allocation-pool start=192.168.1.1,end=192.168.1.234 --no-gateway $TESTNETID 192.168.1.0/24 --dns-nameservers list=true 8.8.8.8
+    neutron subnet-create --ip_version 4 --tenant-id $NODEPOOL_TENANT_ID \
+        --allocation-pool start=172.16.0.1,end=172.16.3.234 --no-gateway \
+        $TESTNETID 172.16.0.0/22 --dns-nameservers list=true 8.8.8.8
 fi
 
 # update subnet of default-net with some dns
@@ -77,7 +79,10 @@ if ! nova $NP_CREDS keypair-list | grep -q " default "; then
     chmod 0600 ~/.ssh/tripleo-ci
 fi
 if ! nova $NP_CREDS show te-broker ; then
-    nova $NP_CREDS boot --image "te-broker" --flavor $TE_BROKER_FLAVOR --nic net-id=$DEFAULT_NET --nic net-id=$TESTNETID,v4-fixed-ip=192.168.1.254 --key-name default te-broker
+    nova $NP_CREDS boot --image "te-broker" --flavor $TE_BROKER_FLAVOR \
+        --nic net-id=$DEFAULT_NET \
+        --nic net-id=$TESTNETID,v4-fixed-ip=172.16.3.254 --key-name default \
+        te-broker
 fi
 
 # Create and boot squid broker
@@ -93,7 +98,10 @@ fi
 glance image-create --name squid --disk-format qcow2 --container-format bare --is-public 1 --file $SQUID_IMG --progress
 
 if ! nova $NP_CREDS show squid ; then
-    nova $NP_CREDS boot --image "squid" --flavor $TE_BROKER_FLAVOR --nic net-id=$DEFAULT_NET --nic net-id=$TESTNETID,v4-fixed-ip=192.168.1.253 --key-name default squid
+    nova $NP_CREDS boot --image "squid" --flavor $TE_BROKER_FLAVOR \
+        --nic net-id=$DEFAULT_NET \
+        --nic net-id=$TESTNETID,v4-fixed-ip=172.16.3.253 --key-name default \
+        squid
 fi
 
 # Assign a floting IP to the broker
