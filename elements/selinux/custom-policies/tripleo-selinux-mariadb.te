@@ -1,0 +1,92 @@
+
+module tripleo_selinux_mariadb 1.0;
+
+require {
+	type haproxy_t;
+	type init_t;
+	type auditd_t;
+	type mysqld_t;
+	type syslogd_t;
+	type initrc_t;
+	type system_dbusd_t;
+	type system_dbusd_var_run_t;
+	type memcached_t;
+	type rpcbind_var_run_t;
+	type systemd_hostnamed_t;
+	type dhcpc_t;
+	type openvswitch_var_run_t;
+	type openvswitch_t;
+	type udev_var_run_t;
+	type kernel_t;
+	type lvm_t;
+	type rsync_exec_t;
+	type sshd_t;
+	type udev_t;
+	type systemd_logind_t;
+	type kerberos_port_t;
+	type init_var_run_t;
+	type mysqld_safe_t;
+	type mysqld_safe_exec_t;
+	type crond_t;
+	type getty_t;
+	type keepalived_t;
+	class sock_file getattr;
+	class tcp_socket name_bind;
+	class lnk_file { read getattr };
+	class dir { getattr read open search };
+	class file { execute read execute_no_trans getattr open };
+}
+
+#============= mysqld_t ==============
+# https://bugs.launchpad.net/tripleo/+bug/1373150
+# https://bugzilla.redhat.com/show_bug.cgi?id=1145619
+allow mysqld_t auditd_t:dir { getattr search };
+allow mysqld_t auditd_t:file { read open };
+allow mysqld_t crond_t:dir { getattr search };
+allow mysqld_t crond_t:file { read open };
+allow mysqld_t dhcpc_t:dir { getattr search };
+allow mysqld_t dhcpc_t:file { read open };
+allow mysqld_t getty_t:dir { getattr search };
+allow mysqld_t getty_t:file { read open };
+allow mysqld_t haproxy_t:dir { getattr search };
+allow mysqld_t haproxy_t:file { read open };
+allow mysqld_t init_t:dir read;
+allow mysqld_t init_t:file { read getattr open };
+allow mysqld_t init_t:lnk_file { read getattr };
+allow mysqld_t init_var_run_t:sock_file getattr;
+allow mysqld_t initrc_t:dir { getattr search };
+allow mysqld_t initrc_t:file { read open };
+allow mysqld_t keepalived_t:dir { getattr search };
+allow mysqld_t keepalived_t:file { read open };
+allow mysqld_t kerberos_port_t:tcp_socket name_bind;
+allow mysqld_t kernel_t:dir { getattr search };
+allow mysqld_t kernel_t:file { read open };
+allow mysqld_t lvm_t:dir { getattr search };
+allow mysqld_t lvm_t:file { read open };
+allow mysqld_t memcached_t:dir { getattr search };
+allow mysqld_t memcached_t:file { read open };
+allow mysqld_t mysqld_safe_exec_t:file getattr;
+allow mysqld_t mysqld_safe_t:dir { read getattr open search };
+allow mysqld_t mysqld_safe_t:file { read getattr open };
+allow mysqld_t mysqld_safe_t:lnk_file { read getattr };
+allow mysqld_t openvswitch_t:dir { getattr search };
+allow mysqld_t openvswitch_t:file { read open };
+allow mysqld_t openvswitch_var_run_t:dir search;
+allow mysqld_t openvswitch_var_run_t:sock_file getattr;
+allow mysqld_t rpcbind_var_run_t:sock_file getattr;
+allow mysqld_t rsync_exec_t:file { read getattr open execute execute_no_trans };
+allow mysqld_t sshd_t:dir { getattr search };
+allow mysqld_t sshd_t:file { read open };
+allow mysqld_t syslogd_t:dir { getattr search };
+allow mysqld_t syslogd_t:file { read open };
+allow mysqld_t system_dbusd_t:dir { getattr search };
+allow mysqld_t system_dbusd_t:file { read open };
+allow mysqld_t system_dbusd_var_run_t:dir search;
+allow mysqld_t system_dbusd_var_run_t:sock_file getattr;
+allow mysqld_t systemd_hostnamed_t:dir { getattr search };
+allow mysqld_t systemd_hostnamed_t:file { read open };
+allow mysqld_t systemd_logind_t:dir { getattr search };
+allow mysqld_t systemd_logind_t:file { read open };
+allow mysqld_t udev_t:dir { getattr search };
+allow mysqld_t udev_t:file { read open };
+allow mysqld_t udev_var_run_t:sock_file getattr;
