@@ -1,0 +1,12 @@
+
+module tripleo_selinux_rabbitmq 1.0;
+
+require {
+	type rabbitmq_var_lib_t;
+	type rabbitmq_beam_t;
+	class lnk_file read;
+}
+
+#============= rabbitmq_beam_t ==============
+# https://bugs.launchpad.net/tripleo/+bug/1373145
+allow rabbitmq_beam_t rabbitmq_var_lib_t:lnk_file read;
