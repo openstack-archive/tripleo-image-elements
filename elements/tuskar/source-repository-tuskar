@@ -1,2 +1,1 @@
 tuskar git /opt/stack/tuskar https://git.openstack.org/openstack/tuskar
-tuskar-templates git /opt/stack/tuskar/etc/tuskar/tripleo-heat-templates https://git.openstack.org/openstack/tripleo-heat-templates
