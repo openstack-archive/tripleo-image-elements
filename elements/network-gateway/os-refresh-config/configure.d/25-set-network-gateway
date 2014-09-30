@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# This script must run after init-neutron-ovs, otherwise the default route may
+# be overwritten.
+
+set -eux
+set -o pipefail
+
+new_gatewaydev=$(os-apply-config --key network-config.gateway-dev --type raw --key-default '')
+
+if [ -z "$new_gatewaydev" ]; then
+    echo "\$new_gatewaydev not set"
+    exit 0
+fi
+
+if grep -e "^\s*GATEWAYDEV=" /etc/sysconfig/network; then
+    sed -i "s/GATEWAYDEV=.*/GATEWAYDEV=$new_gatewaydev/" /etc/sysconfig/network
+else
+    echo "GATEWAYDEV=$new_gatewaydev" >> /etc/sysconfig/network
+fi
+
+# Restart the device to pick up the change immediately.
+ifdown $new_gatewaydev
+ifup $new_gatewaydev
