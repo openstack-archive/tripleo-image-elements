@@ -1,18 +1,37 @@
 #!/usr/bin/env bash
 
-set -ex
+set -eux
+set -o pipefail
 
 install-packages augeas-tools
 
 os-svc-install $TEMPEST_EXTRA_INSTALL_OPTS -i "$TEMPEST_VENV_DIR" -u tempest -r /opt/stack/tempest
 
+set +u
 source $TEMPEST_VENV_DIR/bin/activate
+set -u
+
 cd /opt/stack/tempest
 # bug #1293812 : Avoid easy_install triggering on pbr.
 pip install -U 'pbr>=0.5.21,<1.0'
 
 pip install -r test-requirements.txt
+
+# Fix for creating and using a pip manifest correctly
+name=$(basename $TEMPEST_VENV_DIR)
+svc_manifest=$(get-pip-manifest $name)
+if [ -n "$svc_manifest" ]; then
+    use-pip-manifest $svc_manifest
+else
+    write-pip-manifest $name
+fi
+
 testr init
+
+# Deactivate the virtualenv after use
+set +u
+deactivate
+set -u
 
 # soft link testr into PATH so we can use it directly in run-tempest
 ln -sf $TEMPEST_VENV_DIR/bin/testr /usr/local/bin/testr
