@@ -1,0 +1,9 @@
+#!/bin/bash
+set -eux
+set -o pipefail
+
+# Allow swift access to ephemeral ports
+# https://bugs.launchpad.net/tripleo/+bug/1375526
+if [[ -x /usr/sbin/semanage ]]; then
+    setsebool -P swift_can_network 1
+fi
