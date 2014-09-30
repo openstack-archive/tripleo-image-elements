@@ -1,0 +1,5 @@
+{
+  "default": {
+    "tripleo_heat_templates_package": "openstack-tripleo-heat-templates"
+  }
+}
