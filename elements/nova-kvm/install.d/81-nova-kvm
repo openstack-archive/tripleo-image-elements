@@ -19,3 +19,8 @@ else
     echo "Unsupported libvirtd/libvirt-bin configuration."
     exit 1
 fi
+
+if [ "$DISTRO_NAME" = "rhel7" ]; then
+    # Without seabios-bin Nova instances fail to start
+    install-packages seabios-bin
+fi
