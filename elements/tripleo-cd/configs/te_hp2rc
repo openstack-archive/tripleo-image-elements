@@ -1,0 +1,17 @@
+#!/bin/bash
+# dib-lint: disable=sete
+
+export TRIPLEO_ROOT="$(readlink -f $(dirname $0)/../../../..)"
+source $(dirname ${BASH_SOURCE})/te_commonrc
+
+export TE_OVERCLOUDIP=XXX
+export TE_OVERCLOUDDNS=ci-overcloud.hp2.tripleo.org
+export TE_AUTHURL=http://$TE_OVERCLOUDIP:5000/v2.0
+export TE_PUBLICINTERFACE=XXX
+export TE_COUNT=23
+#export TE_EXTRA_ELEMENTS="stable-interface-names"
+# (No local pypi mirror yet...)
+#export DIB_DISTRIBUTION_MIRROR=http://10.10.16.169/ubuntu
+#export PYPI_MIRROR_URL=http://10.10.16.169/pypi/simple
+#export DIB_NO_PYPI_PIP=1
+export TE_NP_RAM_QUOTA=900000

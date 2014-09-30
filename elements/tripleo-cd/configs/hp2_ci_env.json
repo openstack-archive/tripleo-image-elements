@@ -1,0 +1,10 @@
+{
+  "parameters": {
+    "NeutronPublicInterface": "eth2",
+    "HypervisorNeutronPublicInterface": "eth2",
+    "NtpServer": "15.126.48.2",
+    "PublicVirtualFixedIPs": "[{\"ip_address\": \"15.126.48.6\"}]",
+    "PublicVirtualInterface": "int_public",
+    "PublicVirtualNetwork": "public"
+  }
+}
