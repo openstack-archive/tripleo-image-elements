@@ -39,6 +39,11 @@ set +u
 deactivate
 set -u
 
+if [ ! -d /var/www/horizon/static ]; then
+    mkdir -p /var/www/horizon/static
+    chown -R horizon:horizon /var/www/horizon
+fi
+
 # Django won't start otherwise:
 touch /etc/horizon/.secret_key_store
 chmod 600 /etc/horizon/.secret_key_store

@@ -9,9 +9,11 @@ if [ -n "${HORIZON_VENV_DIR:-}" ] ; then
     chmod 600 /etc/horizon/.secret_key_store
     chown horizon:horizon /etc/horizon/.secret_key_store
 
-    # Precompile the Horizon assets. Can't do it in install.d because it depends on
-    # the local_settings.py config file.
+    # Collect static artifacts. The following steps are required to be run here
+    # rather than in install.d due to requiring the local_settings.py config
+    # file.
     source $HORIZON_VENV_DIR/bin/activate
+    DJANGO_SETTINGS_MODULE=openstack_dashboard.settings django-admin.py collectstatic --noinput
     DJANGO_SETTINGS_MODULE=openstack_dashboard.settings django-admin.py compress
 fi
 

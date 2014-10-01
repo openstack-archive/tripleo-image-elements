@@ -20,7 +20,7 @@ TEMPLATE_DEBUG = DEBUG
 COMPRESS_OFFLINE = True
 
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = os.path.abspath(os.path.join(ROOT_PATH, '..', 'static'))
+STATIC_ROOT = '/var/www/horizon/static'
 
 ALLOWED_HOSTS = ['*']
 
