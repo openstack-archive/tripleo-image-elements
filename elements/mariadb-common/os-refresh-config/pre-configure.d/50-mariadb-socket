@@ -6,5 +6,5 @@ set -eu
 #
 # mysql server is started from 51-init-openstack (reset-db script) - we need to
 # create symlink to make sure reset-db will not fail
-[ -d /var/lib/mysql ] || mkdir -p /var/lib/mysql
+[ -d /var/lib/mysql ] || install -d -m 0755 -o mysql -g mysql /var/lib/mysql
 ln -sf /var/run/mysqld/mysqld.sock /var/lib/mysql/mysql.sock
