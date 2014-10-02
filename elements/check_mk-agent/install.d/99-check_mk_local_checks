@@ -6,7 +6,7 @@ set -eux
 set -o pipefail
 
 
-if [[ "rhel rhel7 centos fedora" =~ "$DISTRO_NAME" ]]; then
+if [[ "rhel rhel7 centos7 fedora" =~ "$DISTRO_NAME" ]]; then
     # we're running a RHEL-based distro, so we need to install to
     # /usr/share/check-mk-agent/local
     LOCAL_CHECK_ROOT=/usr/share/check-mk-agent/local

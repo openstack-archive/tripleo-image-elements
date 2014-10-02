@@ -35,7 +35,7 @@ function add_apt_repo() {
     apt-get update
 }
 
-if [[ "rhel rhel7 centos fedora" =~ "$DISTRO_NAME" ]]; then
+if [[ "rhel rhel7 centos7 fedora" =~ "$DISTRO_NAME" ]]; then
     add_yum_repo
 elif [[ "ubuntu debian" =~ "$DISTRO_NAME" ]]; then
     add_apt_repo

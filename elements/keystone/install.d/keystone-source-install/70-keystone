@@ -25,7 +25,7 @@ $KEYSTONE_VENV_DIR/bin/pip install -U python-ldap ldappool
 
 # percona-tookit is NOT supported on Fedora (retrieved 25-06-2013)
 # http://www.percona.com/mysql-support/policies/percona-toolkit-supported-platforms-and-versions
-if [[ "ubuntu rhel rhel7 centos" =~ "$DISTRO_NAME" ]]; then
+if [[ "ubuntu rhel rhel7 centos7" =~ "$DISTRO_NAME" ]]; then
     if [[ "$DISTRO_NAME" =~ "rhel" && "$RELEASE" =~ "7." ]]; then
         exit 0
     fi
