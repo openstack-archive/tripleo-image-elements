@@ -13,6 +13,12 @@ The following properties are supported for configuring haproxy
 * haproxy.stats.disabled: Set to true to disable the stats service
 * haproxy.stats.port: Port for the stats service. Defaults to 1993.
 * haproxy.stats.uri: URI for the stats service. Defaults to /.
+* haproxy.global_maxconn: A limit on the total number of concurrent connections
+  that will be handled by a haproxy instance. haproxy will stop accepting
+  connections above this limit.
+* haproxy.service_maxconn: A limit on the number of the number of concurrent
+  connections that are allowed to each proxied service. This is a default value
+  that can be overridden in an individual haproxy.service section.
 
 Each haproxy.services can define the following sub-properties
 
@@ -31,6 +37,8 @@ Each haproxy.services can define the following sub-properties
 * proxy_ip: *DEPRECATED* IP address for a service to bind to. Defaults to all
   IP's (0.0.0.0).
 * proxy_port: *DEPRECATED* Port for a service to bind to.
+* service_maxconn: A limit on the number of concurrent connections allowed to
+  this service.
 
 Each haproxy.nodes can define the following sub-properties
 
