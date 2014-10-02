@@ -11,6 +11,10 @@ Configuration
       # enable/disable autofailback on higher
       # priority ip being available
       preempt: false
+      # Detailed Logging
+      log_detail: false
+      # Dumps the configuration to the logs on startup
+      dump_conf: false
 
     virtual_ips:
       # you can define one or more virtual IPs including IPv6:
