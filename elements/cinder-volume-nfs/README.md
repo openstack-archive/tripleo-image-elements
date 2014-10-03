@@ -10,5 +10,5 @@ Configuration
         # a list of nfs shares, each item in the list should be an nfs
         # share address. (e.g 192.0.2.5:/mnt/state/var/lib/nfs_share)
 
-**NOTE:** make sure to use the 'nfs-client' element when building the
-compute nodes too.
+**NOTE:** if backing Cinder with NFS remember to use the 'nfs-client'
+element on the compute nodes as they will have to mount the NFS share too.

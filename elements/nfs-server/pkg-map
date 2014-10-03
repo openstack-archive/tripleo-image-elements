@@ -1,0 +1,16 @@
+{
+  "family": {
+    "redhat": {
+      "nfs_server_package": "nfs-utils"
+    },
+    "debian": {
+      "nfs_server_package": "nfs-server"
+    },
+    "suse": {
+      "nfs_server_package": "nfs-kernel-server"
+    }
+  },
+  "default": {
+    "nfs_server_package": "nfs-utils"
+  }
+}
