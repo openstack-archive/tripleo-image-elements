@@ -7,6 +7,7 @@ if os-is-bootstrap-host ; then
     sudo -u tuskar -- tuskar-dbsync --config-file /etc/tuskar/tuskar.conf
     sudo -u tuskar -- tuskar-load-roles --config-file /etc/tuskar/tuskar.conf \
         --master-seed $TUSKAR_ROLE_DIRECTORY/overcloud.yaml \
+        --resource-registry $TUSKAR_ROLE_DIRECTORY/overcloud-resource-registry.yaml \
         -r $TUSKAR_ROLE_DIRECTORY/compute.yaml \
         -r $TUSKAR_ROLE_DIRECTORY/controller.yaml
 fi
