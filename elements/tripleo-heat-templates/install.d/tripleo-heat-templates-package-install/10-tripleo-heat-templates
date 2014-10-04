@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eux
+set -o pipefail
+
+install-packages -m tripleo-heat-templates tripleo_heat_templates_package
