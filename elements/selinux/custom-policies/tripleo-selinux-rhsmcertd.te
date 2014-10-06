@@ -1,0 +1,19 @@
+
+module tripleo-selinux-rhsmcertd 1.0;
+
+require {
+	type rhsmcertd_t;
+	type user_home_t;
+	type rpm_var_lib_t;
+	class capability dac_override;
+	class file create;
+	class dir { write getattr add_name };
+}
+
+#============= rhsmcertd_t ==============
+# https://bugzilla.redhat.com/show_bug.cgi?id=1144165
+# https://bugs.launchpad.net/tripleo/+bug/1375532
+allow rhsmcertd_t rpm_var_lib_t:dir { write add_name };
+allow rhsmcertd_t rpm_var_lib_t:file create;
+allow rhsmcertd_t self:capability dac_override;
+allow rhsmcertd_t user_home_t:dir getattr;
