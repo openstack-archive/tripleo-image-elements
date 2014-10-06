@@ -1,0 +1,15 @@
+
+module tripleo-selinux-keystone 1.0;
+
+require {
+	type var_run_t;
+	type keystone_t;
+	class dir { write add_name };
+	class file { write getattr setattr read create open };
+}
+
+#============= keystone_t ==============
+# https://bugzilla.redhat.com/show_bug.cgi?id=1144158
+# https://bugs.launchpad.net/tripleo/+bug/1376038
+allow keystone_t var_run_t:dir { write add_name };
+allow keystone_t var_run_t:file { write getattr setattr read create open };
