@@ -10,7 +10,8 @@
     "db": "mysql://keystone:unset@localhost/keystone"
   },
   "mysql": {
-    "root-password" : "unset"
+    "root-password" : "unset",
+    "bind_address" : "127.0.0.1"
   },
   "rabbit": {
     "host": "127.0.0.1",
