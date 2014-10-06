@@ -1,0 +1,13 @@
+
+module tripleo-selinux-neutron 1.0;
+
+require {
+	type neutron_t;
+	type init_t;
+	class unix_stream_socket connectto;
+}
+
+#============= neutron_t ==============
+# https://bugs.launchpad.net/tripleo/+bug/1375534
+# https://bugzilla.redhat.com/show_bug.cgi?id=1147104
+allow neutron_t init_t:unix_stream_socket connectto;
