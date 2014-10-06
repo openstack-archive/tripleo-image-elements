@@ -20,6 +20,7 @@ set -eu
 usage() {
     echo "Usage: os-svc-enable -n SERVICENAME"
     echo ""
+    echo "  -a             Use alternate svc-map instead of map-services"
     echo "  -h             Show help and exit"
     echo "  -n SERVICENAME Name of job/service file."
     echo ""
@@ -27,12 +28,14 @@ usage() {
 }
 
 SERVICENAME=${SERVICENAME:-""}
+MAPPING_COMMAND=map-services
 
 nshift=0
-while getopts "hn:" opt; do
+while getopts "ahn:" opt; do
     case "$opt" in
         n) SERVICENAME=$OPTARG;;
         h) usage 0;;
+        a) MAPPING_COMMAND=svc-map;;
         \?) usage 1;;
         :) usage 1;;
     esac
@@ -44,24 +47,24 @@ if [ -z "$SERVICENAME" ] ; then
 fi
 
 function enable_upstart_service() {
-    local name=$1
-    os-svc-enable-upstart $name enable
+    local name="$1"
+    os-svc-enable-upstart "$name" enable
 }
 
 function enable_systemd_service() {
-    local name=$1
-    local service_name=$(map-services $name)
-    systemctl enable $service_name.service
+    local name="$1"
+    local service_name="$($MAPPING_COMMAND "$name")"
+    systemctl enable "$service_name.service"
     # Also enable the create-dir service if it exists
-    if [ -f /usr/lib/systemd/system/$service_name-create-dir.service ]; then
-        systemctl enable $service_name-create-dir.service
+    if [ -f "/usr/lib/systemd/system/$service_name-create-dir.service" ]; then
+        systemctl enable "$service_name-create-dir.service"
     fi
 }
 
 # TODO: SysV init fallback support
 DIB_INIT_SYSTEM=$(dib-init-system)
 if [ "$DIB_INIT_SYSTEM" = "upstart" ]; then
-    enable_upstart_service $SERVICENAME
+    enable_upstart_service "$SERVICENAME"
 elif [ "$DIB_INIT_SYSTEM" = "systemd" ]; then
-    enable_systemd_service $SERVICENAME
+    enable_systemd_service "$SERVICENAME"
 fi

@@ -20,6 +20,7 @@ set -eu
 usage() {
     echo "Usage: os-svc-restart -n SERVICENAME"
     echo ""
+    echo "  -a             Use alternate svc-map instead of map-services"
     echo "  -h             Show help and exit"
     echo "  -n SERVICENAME Name of job/service file."
     echo ""
@@ -27,12 +28,14 @@ usage() {
 }
 
 SERVICENAME=${SERVICENAME:-""}
+MAPPING_COMMAND=map-services
 
 nshift=0
 while getopts "hn:" opt; do
     case "$opt" in
         n) SERVICENAME=$OPTARG;;
         h) usage 0;;
+        a) MAPPING_COMMAND=svc-map;;
         \?) usage 0;;
         :) usage 1;;
     esac
@@ -44,19 +47,19 @@ if [ -z "$SERVICENAME" ] ; then
 fi
 
 function restart_upstart_service {
-    local name=$1
-    service $name restart
+    local name="$1"
+    service "$name" restart
 }
 
 function restart_systemd_service {
-    local name=$1
-    systemctl restart $(map-services $name).service
+    local name="$1"
+    systemctl restart "$($MAPPING_COMMAND "$name").service"
 }
 
 # TODO: SysV init fallback support
 DIB_INIT_SYSTEM=$(dib-init-system)
 if [ "$DIB_INIT_SYSTEM" == "upstart" ]; then
-    restart_upstart_service $SERVICENAME
+    restart_upstart_service "$SERVICENAME"
 elif [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
-    restart_systemd_service $SERVICENAME
+    restart_systemd_service "$SERVICENAME"
 fi
