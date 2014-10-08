@@ -20,6 +20,7 @@ tuskar --tuskar-api-version 2 plan-patch -A compute-1::Image=$COMPUTE_IMAGE_ID $
 tuskar --tuskar-api-version 2 plan-patch -A controller-1::Image=$CONTROL_IMAGE_ID $PLAN_ID
 
 echo "UNDERCLOUD_ADMIN_PASSWORD = \"${OS_PASSWORD}\"" >> $HORIZON_VENV_DIR/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py
+echo "IRONIC_DISCOVERD_URL = \"http://127.0.0.1:5050\"" >> $HORIZON_VENV_DIR/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py
 
 DEPLOYMENT_MODE=$(os-apply-config --key deployment-mode --key-default=poc)
 echo "DEPLOYMENT_MODE = \"${DEPLOYMENT_MODE}\"" >> $HORIZON_VENV_DIR/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py
