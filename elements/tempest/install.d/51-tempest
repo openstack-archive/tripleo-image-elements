@@ -1,9 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 set -eux
 set -o pipefail
 
-install-packages augeas-tools
+install-packages augeas-tools libffi_dev_package ssl_dev_package
 
 os-svc-install $TEMPEST_EXTRA_INSTALL_OPTS -i "$TEMPEST_VENV_DIR" -u tempest -r /opt/stack/tempest
 
