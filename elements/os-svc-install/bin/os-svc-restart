@@ -31,7 +31,7 @@ SERVICENAME=${SERVICENAME:-""}
 MAPPING_COMMAND=map-services
 
 nshift=0
-while getopts "hn:" opt; do
+while getopts "ahn:" opt; do
     case "$opt" in
         n) SERVICENAME=$OPTARG;;
         h) usage 0;;
