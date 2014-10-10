@@ -6,6 +6,7 @@ export DIB_INSTALLTYPE_glance=package
 export DIB_INSTALLTYPE_swift=package
 export DIB_INSTALLTYPE_cinder=package
 export DIB_INSTALLTYPE_horizon=package
+export DIB_INSTALLTYPE_ironic=package
 
 export DIB_INSTALLTYPE_python_cinderclient=package
 export DIB_INSTALLTYPE_python_glanceclient=package
