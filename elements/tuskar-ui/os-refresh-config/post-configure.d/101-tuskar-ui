@@ -18,13 +18,17 @@ tuskar --tuskar-api-version 2 plan-add-role -r $COMPUTE_ROLE_ID $PLAN_ID
 tuskar --tuskar-api-version 2 plan-add-role -r $CONTROL_ROLE_ID $PLAN_ID
 
 if [ -n "$(tuskar --tuskar-api-version 2 role-list | grep cinder-storage)" ]; then
+    BLOCK_STORAGE_IMAGE_ID=$(glance image-show overcloud-cinder-volume | grep id | awk '$2=="id" {print $4}' )
     BLOCK_STORAGE_ROLE_ID=$(tuskar --tuskar-api-version 2 role-list | awk '$4=="cinder-storage" {print $2}')
     tuskar --tuskar-api-version 2 plan-add-role -r $BLOCK_STORAGE_ROLE_ID $PLAN_ID
+    tuskar --tuskar-api-version 2 plan-patch -A cinder-storage-1::Image=$BLOCK_STORAGE_IMAGE_ID $PLAN_ID
 fi
 
 if [ -n "$(tuskar --tuskar-api-version 2 role-list | grep swift-storage)" ]; then
+    OBJECT_STORAGE_IMAGE_ID=$(glance image-show overcloud-swift-storage | grep id | awk '$2=="id" {print $4}' )
     OBJECT_STORAGE_ROLE_ID=$(tuskar --tuskar-api-version 2 role-list | awk '$4=="swift-storage" {print $2}')
     tuskar --tuskar-api-version 2 plan-add-role -r $OBJECT_STORAGE_ROLE_ID $PLAN_ID
+    tuskar --tuskar-api-version 2 plan-patch -A swift-storage-1::Image=$OBJECT_STORAGE_IMAGE_ID $PLAN_ID
 fi
 
 tuskar --tuskar-api-version 2 plan-patch -A compute-1::Image=$COMPUTE_IMAGE_ID $PLAN_ID
