@@ -16,6 +16,17 @@ PLAN_ID=$( tuskar --tuskar-api-version 2 plan-create overcloud | awk '$2=="uuid"
 
 tuskar --tuskar-api-version 2 plan-add-role -r $COMPUTE_ROLE_ID $PLAN_ID
 tuskar --tuskar-api-version 2 plan-add-role -r $CONTROL_ROLE_ID $PLAN_ID
+
+if [ -n "$(tuskar --tuskar-api-version 2 role-list | grep cinder-storage)" ]; then
+    BLOCK_STORAGE_ROLE_ID=$(tuskar --tuskar-api-version 2 role-list | awk '$4=="cinder-storage" {print $2}')
+    tuskar --tuskar-api-version 2 plan-add-role -r $BLOCK_STORAGE_ROLE_ID $PLAN_ID
+fi
+
+if [ -n "$(tuskar --tuskar-api-version 2 role-list | grep swift-storage)" ]; then
+    OBJECT_STORAGE_ROLE_ID=$(tuskar --tuskar-api-version 2 role-list | awk '$4=="swift-storage" {print $2}')
+    tuskar --tuskar-api-version 2 plan-add-role -r $OBJECT_STORAGE_ROLE_ID $PLAN_ID
+fi
+
 tuskar --tuskar-api-version 2 plan-patch -A compute-1::Image=$COMPUTE_IMAGE_ID $PLAN_ID
 tuskar --tuskar-api-version 2 plan-patch -A controller-1::Image=$CONTROL_IMAGE_ID $PLAN_ID
 

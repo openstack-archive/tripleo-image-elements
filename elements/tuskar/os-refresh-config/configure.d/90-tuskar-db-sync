@@ -5,9 +5,22 @@ TUSKAR_ROLE_DIRECTORY=${TUSKAR_ROLE_DIRECTORY:-"/opt/stack/tripleo-heat-template
 
 if os-is-bootstrap-host ; then
     sudo -u tuskar -- tuskar-dbsync --config-file /etc/tuskar/tuskar.conf
+
+    BLOCK_STORAGE_ROLE="$TUSKAR_ROLE_DIRECTORY/cinder-storage.yaml"
+    OBJECT_STORAGE_ROLE="$TUSKAR_ROLE_DIRECTORY/swift-storage.yaml"
+
+    EXTRA_ROLES=""
+    if [ -e "$BLOCK_STORAGE_ROLE" ]; then
+        EXTRA_ROLES="$EXTRA_ROLES -r $BLOCK_STORAGE_ROLE"
+    fi
+    if [ -e "$OBJECT_STORAGE_ROLE" ]; then
+        EXTRA_ROLES="$EXTRA_ROLES -r $OBJECT_STORAGE_ROLE"
+    fi
+
     sudo -u tuskar -- tuskar-load-roles --config-file /etc/tuskar/tuskar.conf \
-        --master-seed $TUSKAR_ROLE_DIRECTORY/overcloud.yaml \
+        --master-seed $TUSKAR_ROLE_DIRECTORY/overcloud-without-mergepy.yaml \
         --resource-registry $TUSKAR_ROLE_DIRECTORY/overcloud-resource-registry.yaml \
+        $EXTRA_ROLES \
         -r $TUSKAR_ROLE_DIRECTORY/compute.yaml \
         -r $TUSKAR_ROLE_DIRECTORY/controller.yaml
 fi
