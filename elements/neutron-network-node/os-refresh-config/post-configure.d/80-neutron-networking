@@ -1,9 +1,6 @@
 #!/bin/bash
 set -eux
 
-os-svc-enable -n neutron-metadata-agent
-os-svc-enable -n neutron-l3-agent
-
 # this ensures that neutron-l3-agent and neutron-metadata-agent services
 # will be monitored by pacemaker on all nodes.
 # Because allow_automatic_l3agent_failover is enabled, we want
