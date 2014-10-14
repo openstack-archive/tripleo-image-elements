@@ -11,23 +11,34 @@
 # add-rule FORWARD -d 192.0.2.0/24 -j ACCEPT
 
 set -eu
+set -o pipefail
 
 RULE="$@"
 
 DISTRO=`lsb_release -si` || true
+
+IPT_FILE=
 
 if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
 
     # Check if the iptables service is active
     if systemctl is-active iptables.service ; then
         IPT_FILE=/etc/sysconfig/iptables
-        if [ -f $IPT_FILE ]; then
-            iptables-restore < $IPT_FILE
-        fi
-
-        iptables -C $RULE || iptables -I $RULE
-
-        iptables-save > $IPT_FILE
     fi
 
+elif [[ "Debian Ubuntu" =~ "$DISTRO" ]]; then
+
+    IPT_FILE=/etc/iptables/iptables
+fi
+
+if [ -f "$IPT_FILE" ]; then
+
+    iptables-restore < $IPT_FILE
+fi
+
+if [ -n "$IPT_FILE" ]; then
+
+    iptables -C $RULE || iptables -I $RULE
+
+    iptables-save > $IPT_FILE
 fi

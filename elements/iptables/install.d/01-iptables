@@ -1,0 +1,11 @@
+#!/bin/bash
+set -eux
+set -o pipefail
+
+install-packages iptables
+
+DISTRO=`lsb_release -si` || true
+
+if [[ "Debian Ubuntu" =~ $DISTRO ]]; then
+    mkdir -p /etc/iptables
+fi
