@@ -1,0 +1,23 @@
+{
+  "ceilometer": {
+    "debug": true
+  },
+  "cinder": {
+    "debug": true
+  },
+  "glance": {
+    "debug": true
+  },
+  "heat": {
+    "debug": true
+  },
+  "ironic": {
+    "debug": true
+  },
+  "neutron": {
+    "debug": true
+  },
+  "nova": {
+    "debug": true
+  }
+}
