@@ -1,0 +1,14 @@
+
+module tripleo-selinux-swift 1.0;
+
+require {
+	type init_var_lib_t;
+	type swift_t;
+	class dir search;
+}
+
+#============= swift_t ==============
+# swift services denied /var/lib/swift/.local
+# https://bugs.launchpad.net/tripleo/+bug/1379081
+# https://bugzilla.redhat.com/show_bug.cgi?id=1150798
+allow swift_t init_var_lib_t:dir search;
