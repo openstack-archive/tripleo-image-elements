@@ -3,3 +3,12 @@
 set -eux
 
 install-packages keepalived psmisc
+
+[ -d /var/log/keepalived ] || install -d -o root -g root -m 0775 /var/log/keepalived
+register-state-path --leave-symlink /var/log/keepalived
+
+cat > /etc/rsyslog.d/keepalived.conf<<'EOF'
+#Send keepalived messages to a dedicated logfile
+if $programname startswith 'Keepalived' then /var/log/keepalived/keepalived.log
+& ~
+EOF
