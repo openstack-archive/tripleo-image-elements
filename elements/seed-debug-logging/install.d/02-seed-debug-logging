@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eux
+set -o pipefail
+
+install -D -m 0755 -o root -g root "$(dirname $0)/../debug.json" /var/lib/os-collect-config/local-data/debug.json
