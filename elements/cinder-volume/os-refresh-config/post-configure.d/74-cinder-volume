@@ -3,7 +3,7 @@ set -eu
 
 IS_NFS=$(os-apply-config --key cinder.include_nfs_backend --type raw --key-default 'false')
 
-os-svc-enable -n cinder-volume
+os-svc-enable -an cinder-volume
 
 if [ "$IS_NFS" != "false" ] ; then
     # If *shared* NFS backend is used then running multiple instances
@@ -12,5 +12,5 @@ if [ "$IS_NFS" != "false" ] ; then
     # As a workaround we run cinder-volume in a/p mode using pacemaker.
     pcmk-service-create -n cinder-volume
 else
-    os-svc-restart -n cinder-volume
+    os-svc-restart -an cinder-volume
 fi
