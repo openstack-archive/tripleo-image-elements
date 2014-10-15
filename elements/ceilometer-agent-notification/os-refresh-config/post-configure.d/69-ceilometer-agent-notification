@@ -1,5 +1,6 @@
 #!/bin/bash
 set -eux
+set -o pipefail
 
-os-svc-enable -n ceilometer-agent-notification
-os-svc-restart -n ceilometer-agent-notification
+os-svc-enable -an ceilometer-agent-notification
+os-svc-restart -an ceilometer-agent-notification

@@ -1,0 +1,3 @@
+ceilometer-api:
+  default: ceilometer-api
+  redhat: openstack-ceilometer-api

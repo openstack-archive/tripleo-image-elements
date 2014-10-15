@@ -1,5 +1,6 @@
 #!/bin/bash
 set -eux
+set -o pipefail
 
-os-svc-enable -n ceilometer-agent-central
+os-svc-enable -an ceilometer-agent-central
 pcmk-service-create -n ceilometer-agent-central

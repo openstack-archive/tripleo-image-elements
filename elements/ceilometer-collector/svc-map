@@ -1,0 +1,3 @@
+ceilometer-collector:
+  default: ceilometer-collector
+  redhat: openstack-ceilometer-collector
