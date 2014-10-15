@@ -47,7 +47,6 @@ In a running OpenStack there are several categories of config.
 We have five places we can do configuration in TripleO:
  - image build time
  - in-instance heat-driven (ORC scripts)
- - in-instance first-boot scripts [deprecated]
  - from outside via APIs
  - orchestrated by Heat
 
@@ -64,7 +63,6 @@ step:
    script on the rabbit server - triggered by Heat - and applying the config is
    done on the compute node by the local node script - again triggered by Heat.
  - application state changes should be done from outside via APIs
- - first-boot scripts should not be used.
 
 
 Copyright

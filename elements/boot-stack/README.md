@@ -19,19 +19,6 @@ See this doc for basic usage instructions:
   http://docs.openstack.org/developer/tripleo-incubator/devtest.html
 
 
-First Boot
-----------
-
-Upon first boot, scripts will be automatically run to perform the following:
-- database initialization
-- service restarts
-- default keystone accounts
-
-The output of the first-boot scripts can be viewed in
-`/var/log/first-boot.d.log`.  The file `/opt/stack/boot-stack/boot-stack.ok`
-will be touched upon the scripts' completion.
-
-
 Credentials
 -----------
 
