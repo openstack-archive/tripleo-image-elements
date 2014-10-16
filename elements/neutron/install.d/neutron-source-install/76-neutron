@@ -7,7 +7,7 @@ echo "qpid-python" | tee -a /opt/stack/neutron/requirements.txt
 os-svc-install $NEUTRON_EXTRA_INSTALL_OPTS -i "$NEUTRON_VENV_DIR" -u neutron -r /opt/stack/neutron
 
 ln -sf $NEUTRON_VENV_DIR/bin/neutron-rootwrap /usr/bin/neutron-rootwrap
-ln -sf $NEUTRON_VENV_DIR/etc/neutron/rootwrap.d /etc/neutron/rootwrap.d
+ln -sft /etc/neutron $NEUTRON_VENV_DIR/etc/neutron/rootwrap.d
 
 cp /opt/stack/neutron/etc/api-paste.ini /etc/neutron/api-paste.ini
 cp /opt/stack/neutron/etc/policy.json /etc/neutron/policy.json
