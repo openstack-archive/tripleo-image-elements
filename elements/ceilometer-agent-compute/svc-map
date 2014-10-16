@@ -1,0 +1,3 @@
+ceilometer-agent-compute:
+  default: ceilometer-agent-compute
+  redhat: openstack-ceilometer-compute

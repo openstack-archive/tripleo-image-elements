@@ -1,6 +1,7 @@
 #!/bin/bash
 set -eux
+set -o pipefail
 
-os-svc-enable -n ceilometer-agent-compute
+os-svc-enable -an ceilometer-agent-compute
 
-os-svc-restart -n ceilometer-agent-compute
+os-svc-restart -an ceilometer-agent-compute

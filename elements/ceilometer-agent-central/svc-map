@@ -1,0 +1,3 @@
+ceilometer-agent-central:
+  default: ceilometer-agent-central
+  redhat: openstack-ceilometer-central
