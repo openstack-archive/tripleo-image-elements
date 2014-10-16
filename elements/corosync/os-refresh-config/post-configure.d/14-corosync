@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eux
 
-os-svc-enable -n corosync
+os-svc-enable -an corosync
 
-os-svc-restart -n corosync
+os-svc-restart -an corosync

@@ -1,0 +1,2 @@
+corosync:
+  default: corosync
