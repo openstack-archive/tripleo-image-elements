@@ -241,7 +241,6 @@ function configure_bridge_interface_dhcp_eni() {
     if [ -z "$public_ip_addr" ]; then
         # DHCP for the bridge itself.
         cat >> $tmp_config <<EOF_CAT
-auto $bridge
 allow-ovs $bridge
 iface $bridge inet dhcp
  pre-up ip addr flush dev $interface
@@ -253,13 +252,13 @@ iface $bridge inet dhcp
 EOF_CAT
     else
         cat >> $tmp_config <<EOF_CAT
-auto $bridge
 allow-ovs $bridge
 iface $bridge inet static
  pre-up ip addr flush dev $interface
  address $public_ip_addr
  netmask $public_ip_netmask
  ovs_type OVSBridge
+ ovs_ports $ovs_ports
  ovs_extra set bridge $bridge other-config:hwaddr=$interface_mac
  $route_line
 
@@ -281,7 +280,6 @@ EOF_CAT
 
     #interface config
     cat >> $tmp_config <<EOF_CAT
-auto $interface
 allow-$bridge $interface
 iface $interface inet manual
  ovs_bridge $bridge
