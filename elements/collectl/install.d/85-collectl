@@ -4,7 +4,7 @@ set -o pipefail
 
 install-packages collectl
 
-os-svc-enable -n collectl
+os-svc-enable -an collectl
 
 # The default configuration has been changed to examine cpu, disk, memory,
 # network and process stats only and only record eth and bond stats for the
