@@ -1,0 +1,2 @@
+xinetd:
+  default: xinetd
