@@ -2,5 +2,6 @@ os-apply-config
 os-is-bootstrap-host
 os-refresh-config
 os-svc-install
+package-installs
 source-repositories
 tripleo-heat-templates
