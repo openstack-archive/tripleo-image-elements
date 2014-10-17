@@ -156,7 +156,7 @@ function install_systemd {
 Environment=}
     fi
 
-    $OUTPUT /usr/lib/systemd/system/$name.service <<EOF
+    $OUTPUT /lib/systemd/system/$name.service <<EOF
 [Unit]
 Description=$name Service
 After=os-refresh-config.service
@@ -179,7 +179,7 @@ function install_create_dir_systemd {
     local user=$2
     local dirname=${3:-$user}
 
-    $OUTPUT /usr/lib/systemd/system/$name-create-dir.service <<EOF
+    $OUTPUT /lib/systemd/system/$name-create-dir.service <<EOF
 [Unit]
 Description=Create /var/run/$dirname
 
