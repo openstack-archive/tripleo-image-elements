@@ -80,7 +80,8 @@ OPENSTACK_HYPERVISOR_FEATURES = {
     'can_encrypt_volumes': False
 }
 
-OPENSTACK_QUANTUM_NETWORK = {
+
+OPENSTACK_NEUTRON_NETWORK = {
     'enable_lb': False
 }
 
