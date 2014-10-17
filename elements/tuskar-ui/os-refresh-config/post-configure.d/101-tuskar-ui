@@ -2,10 +2,19 @@
 set -eu
 set -o pipefail
 
-set +u
-source $HORIZON_VENV_DIR/bin/activate
+if [ -n "${HORIZON_VENV_DIR:-}" ]; then
+    set +u
+    source $HORIZON_VENV_DIR/bin/activate
+    set -u
+    LOCAL_SETTINGS_FILE=$HORIZON_VENV_DIR/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py
+    DJANGO_ADMIN=django-admin.py
+else
+    export PYTHONPATH=/usr/share/openstack-dashboard
+    LOCAL_SETTINGS_FILE=/etc/horizon/local_settings.py
+    DJANGO_ADMIN=django-admin
+fi
+
 source /root/stackrc
-set -u
 
 COMPUTE_IMAGE_ID=$( glance image-show overcloud-compute | grep id | awk '$2=="id" {print $4}' )
 CONTROL_IMAGE_ID=$( glance image-show overcloud-control | grep id | awk '$2=="id" {print $4}' )
@@ -34,18 +43,20 @@ fi
 tuskar --tuskar-api-version 2 plan-patch -A compute-1::Image=$COMPUTE_IMAGE_ID $PLAN_ID
 tuskar --tuskar-api-version 2 plan-patch -A controller-1::Image=$CONTROL_IMAGE_ID $PLAN_ID
 
-echo "UNDERCLOUD_ADMIN_PASSWORD = \"${OS_PASSWORD}\"" >> $HORIZON_VENV_DIR/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py
-echo "IRONIC_DISCOVERD_URL = \"http://127.0.0.1:5050\"" >> $HORIZON_VENV_DIR/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py
+echo "UNDERCLOUD_ADMIN_PASSWORD = \"${OS_PASSWORD}\"" >> $LOCAL_SETTINGS_FILE
+echo "IRONIC_DISCOVERD_URL = \"http://127.0.0.1:5050\"" >> $LOCAL_SETTINGS_FILE
 
 DEPLOYMENT_MODE=$(os-apply-config --key deployment-mode --key-default=scale)
-echo "DEPLOYMENT_MODE = \"${DEPLOYMENT_MODE}\"" >> $HORIZON_VENV_DIR/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py
+echo "DEPLOYMENT_MODE = \"${DEPLOYMENT_MODE}\"" >> $LOCAL_SETTINGS_FILE
 
-DJANGO_SETTINGS_MODULE=openstack_dashboard.settings django-admin.py collectstatic --noinput
-DJANGO_SETTINGS_MODULE=openstack_dashboard.settings django-admin.py compress --force
+DJANGO_SETTINGS_MODULE=openstack_dashboard.settings $DJANGO_ADMIN collectstatic --noinput
+DJANGO_SETTINGS_MODULE=openstack_dashboard.settings $DJANGO_ADMIN compress --force
 
-set +u
-deactivate
-set -u
+if [ -n "${HORIZON_VENV_DIR:-}" ]; then
+    set +u
+    deactivate
+    set -u
+fi
 
 os-svc-enable -n apache2
 os-svc-restart -n apache2
