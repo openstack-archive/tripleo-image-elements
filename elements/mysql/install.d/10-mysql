@@ -4,24 +4,24 @@
 
 set -eu
 set -o xtrace
+set -o pipefail
 
-install-packages libaio1 pv rsync lsof
-percona_pkgdir=Percona-XtraDB-Cluster
+DISTRO=`lsb_release -si` || true
 
-# Adapted from mysql ref manual
-# http://dev.mysql.com/doc/refman/5.6/en/binary-installation.html
-groupadd mysql
-useradd -r -g mysql mysql
-cd /usr/local
-ln -s /usr/local/$percona_pkgdir mysql
-cd mysql
-chown -R mysql:mysql .
-install -o root -g root -m 0755 support-files/mysql.server /etc/init.d/mysql
-install -o root -g root -m 0755 bin/mysql /usr/local/bin
-install -o root -g root -m 0755 bin/mysqld /usr/local/bin
-sed -i -e 's,^#\!/bin/sh$,#\!/bin/bash,' /etc/init.d/mysql
-sed -i -e 's,^basedir=$,basedir=/usr/local/mysql,' /etc/init.d/mysql
+if [[ "Ubuntu Debian" =~ "$DISTRO" ]]; then
+    install-packages percona-xtrabackup \
+        percona-xtradb-cluster-common-5.5 percona-xtradb-cluster-server-5.5 \
+        percona-xtradb-cluster-client-5.5 percona-xtradb-cluster-galera-2.x
+elif [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
+    echo "Please use mariadb on RedHat, CentOS or Fedora systems"
+    exit 1
+else
+    echo "05-mysql should have failed before this"
+    exit 1
+fi
+
 sed -i -e 's,^datadir=$,datadir=/mnt/state/var/lib/mysql,' /etc/init.d/mysql
+sed -i -e 's,mysql_data_dir="/var/lib/mysql",mysql_data_dir="/mnt/state/var/lib/mysql",' /etc/init.d/mysql
 
 # The following line are due to a bug found in the Percona supplied init
 # script where the start sequence does not capture and return an error
@@ -40,26 +40,27 @@ fi
 # difficult not to use this as the directory for configs.
 rm -rf /etc/mysql
 ln -s /mnt/state/etc/mysql /etc/mysql
+
 if [ -e /etc/apparmor.d/usr.sbin.mysqld ] ; then
     sed -i -e 's,/var/lib/mysql/,/mnt/state/var/lib/mysql/,g' /etc/apparmor.d/usr.sbin.mysqld
     sed -i -e 's,/var/log/mysql/,/mnt/state/var/log/mysql/,g' /etc/apparmor.d/usr.sbin.mysqld
     sed -i -e 's,/etc/mysql/,/mnt/state/etc/mysql/,g' /etc/apparmor.d/usr.sbin.mysqld
 fi
+
 if [ -e /etc/init/mysql.conf ]; then
     sed -i -e 's,/var/lib/mysql/,/mnt/state/var/lib/mysql/,g' /etc/init/mysql.conf
 fi
-# Fedora/RHEL install /etc/my.cnf but we do not want any unmanaged configs
-rm -f /etc/my.cnf
-# On openSUSE /var/lib/mysql is not part of the mariadb packages.
-[ -d /var/lib/mysql ] || install -d -o mysql -g root -m 0700 /var/lib/mysql
-register-state-path /var/lib/mysql
+
+# The packages create a initial db which we don't want or need
+rm -fr /var/lib/mysql
+
 # We need to setup the directory with appropriate permissions and then
 # the first time we boot a particular state partition we rsync this in.
 [ -d /var/log/mysql ] || install -d -o root -g mysql -m 0775 /var/log/mysql
 register-state-path --leave-symlink /var/log/mysql
 
-if [[ "rhel rhel7 centos7 fedora" =~ "$DISTRO_NAME" ]]; then
-    # mysql clients on redhat expect the socket at /var/lib/mysql/mysql.sock
-    mkdir -p /var/lib/mysql
-    ln -s /var/run/mysqld/mysqld.sock /var/lib/mysql/mysql.sock
-fi
+# galera lib path is set in mysql config file, creating symlink
+# /usr/local/mysql/lib/libgalera_smm.so allows us to use same path
+# for mysql and mariadb and for i386/amd64
+[ -e /usr/local/mysql/lib ] || install -m 0755 -o root -g root -d /usr/local/mysql/lib
+ln -sf /usr/lib/libgalera_smm.so /usr/local/mysql/lib/libgalera_smm.so

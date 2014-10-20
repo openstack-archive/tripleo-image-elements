@@ -8,14 +8,16 @@ mkdir -p $(dirname $pid_path)
 chown mysql:root $(dirname $pid_path)
 
 if [ ! -e ${MYSQL_INITIALIZED} ]; then
+    [ -d /mnt/state/var/lib/mysql ] || install -m 0700 -o mysql -g mysql -d /mnt/state/var/lib/mysql
     if os-is-bootstrap-host; then
         # Needed to setup initial tables. This command is idempotent.
-        /usr/local/mysql/scripts/mysql_install_db --user=mysql --basedir=/usr/local/mysql --datadir=/mnt/state/var/lib/mysql --no-defaults --pid-file=$pid_path  --wsrep-new-cluster
+        /usr/bin/mysql_install_db --user=mysql --datadir=/mnt/state/var/lib/mysql --no-defaults --pid-file=$pid_path  --wsrep-new-cluster
 
-        # We install this init script so we can trust this path exists.
-        # Use of restart-bootstrap vs bootstrap-pxc ensures that, even if
-        # MySQL is running, the bootstrap will succeed.
-        /etc/init.d/mysql restart-bootstrap
+        # Shutdown MySql if running to pick up the new configuration
+        # These two lines can be replaced by /etc/init.d/mysql restart-bootstrap
+        # when available in later versions of the Percona packages.
+        /etc/init.d/mysql stop
+        /etc/init.d/mysql bootstrap-pxc
     elif [ $? -eq 1 ]; then
         if grep -qE '^wsrep_cluster_address[[:space:]]*=[[:space:]]*gcomm://[[:space:]]*$' /etc/mysql/conf.d/cluster.cnf; then
             echo "We are configured as joiner and have no nodes configured for the cluster. Refusing to proceed until cluster nodes are known."
@@ -37,7 +39,7 @@ if [ ! -e ${MYSQL_INITIALIZED} ]; then
 
     # Finally, perform a MySQL "ping". This will succeed even when MySQL returns
     # an "Access Denied" packet, avoiding the need to provide valid credentials.
-    /usr/local/mysql/bin/mysqladmin ping
+    /usr/bin/mysqladmin ping
 
     touch ${MYSQL_INITIALIZED}
 else
@@ -47,7 +49,11 @@ else
     LOCAL_IP=$(os-apply-config --key local-ipv4 --type netaddress --key-default '')
     if os-is-bootstrap-host && grep -Eq "^wsrep_cluster_address=gcomm://$LOCAL_IP,?\$" /etc/mysql/conf.d/cluster.cnf; then
         if ! /etc/init.d/mysql status; then
-            /etc/init.d/mysql restart-bootstrap
+            # Shutdown MySql if running to pick up the new configuration
+            # These two lines can be replaced by /etc/init.d/mysql restart-bootstrap
+            # when available later versions of the Percona packages.
+            /etc/init.d/mysql stop
+            /etc/init.d/mysql bootstrap-pxc
         fi
     fi
 fi
