@@ -1,0 +1,17 @@
+{
+  "family": {
+    "redhat": {
+      "libffi_dev_package": "libffi-devel",
+      "ssl_dev_package": "openssl-devel"
+    },
+    "debian": {
+      "libffi_dev_package": "libffi-dev",
+      "ssl_dev_package": "libssl-dev"
+    },
+    "suse": {
+      "libffi_dev_package": "libffi-devel",
+      "ssl_dev_package": "libopenssl-devel"
+    }
+  }
+}
+
