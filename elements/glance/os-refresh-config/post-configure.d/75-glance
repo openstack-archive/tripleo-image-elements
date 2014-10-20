@@ -1,8 +1,8 @@
 #!/bin/bash
 set -eu
 
-os-svc-enable -n glance-api
-os-svc-enable -n glance-reg
+os-svc-enable -an glance-api
+os-svc-enable -an glance-reg
 
-os-svc-restart -n glance-api
-os-svc-restart -n glance-reg
+os-svc-restart -an glance-api
+os-svc-restart -an glance-reg
