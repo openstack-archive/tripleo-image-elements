@@ -24,23 +24,17 @@ state="/mnt/state"
 
 [ -e "${paths}" ] || exit 0
 
-done="$(mktemp)"
 while read -r line; do
     path="${line%;*}"
-    dst="${state}${path}"
-    dst_dir=$(dirname "${dst}")
 
-    # stateful_paths may contain duplicates, don't copy any path twice
-    src="${backup}${path}"
-    [ -L "${src}" ] || src="$(readlink -f "${src}")"
-    grep -qFx "${src}" "${done}" && continue
-    echo "${src}" >> "${done}"
+    if [ -e "${path}" ]; then
+        backup_dir="${backup}$(dirname "${path}")"
+        mkdir -p "${backup_dir}"
+        mv "${path}" "${backup_dir}"
+    fi
 
-    mkdir -p "${dst_dir}"
-    if [ -e "${src}" ]; then
-        # If src is a symlink and we append /, it gets read-through
-        [ -d "${src}" -a ! -L "${src}" ] && src="${src}/"
-        rsync -av "${src}" "${dst}"
+    if [ -n "${line##*;}" ]; then
+        ln -s "${state}${path}" "${path}"
     fi
 done < "${paths}"
-rm -f "${done}"
+
