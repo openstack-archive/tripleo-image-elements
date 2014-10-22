@@ -1,4 +1,4 @@
 #!/bin/bash
 set -eux
 
-os-svc-enable -n apache2
+os-svc-enable -an apache2
