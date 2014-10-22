@@ -223,7 +223,7 @@ function configure_bridge_interface_dhcp_eni() {
 
     cp $config $tmp_config
     sed -e "/auto $interface\$/,/^$/d" -i $tmp_config
-    sed -e "/auto $bridge\$/,/^$/d" -i $tmp_config
+    sed -e "/allow-ovs $bridge\$/,/^$/d" -i $tmp_config
     sed -e "/auto int_public\$/,/^$/d" -i $tmp_config
 
     if [ -n "$bridge_route_prefix" ]; then
