@@ -3,6 +3,13 @@
 # Idempotent script to apply heat configuration to the running network
 # environment.
 #
+# NOTE: this script uses Heat parameters to define the physical
+# network setup for TripleO. If 'os_net_config' metadata is detected
+# it is assumed that Heat metadata is modeling the configuration directly
+# and this script does nothing. This is meant to provide an easy way
+# to select between the two configuration methods via Heat (parameters vs
+# os-net-config modeling).
+#
 # If a public_interface_raw_device is defined in metadata and public_interface
 # does not exist, the public_interface is used to derived a vlan id and a vlan
 # interface is configured.
@@ -35,7 +42,12 @@ PUBLIC_INTERFACE_TAG=$(os-apply-config --key neutron.ovs.public_interface_tag --
 PUBLIC_INTERFACE_TAG_IP=$(os-apply-config --key neutron.ovs.public_interface_tag_ip --type netaddress --key-default '')
 PHYSICAL_ROUTE_PREFIX=$(os-apply-config --key neutron.ovs.physical_bridge_route.prefix --type netaddress --key-default '')
 PHYSICAL_ROUTE_VIA=$(os-apply-config --key neutron.ovs.physical_bridge_route.via --type netaddress --key-default '')
+NET_CONFIG=$(os-apply-config --key os_net_config --type raw --key-default '')
 
+if [ -n "$NET_CONFIG" ]; then
+    echo "Skipping init-neutron-ovs because os-net-config data detected."
+    exit 0
+fi
 
 if [ -n "$PHYSICAL_INTERFACE_RAW_DEVICE" -a -n "$PUBLIC_INTERFACE_TAG" ]; then
     echo "ERROR: cannot specify a raw device and a tagged access port at the same time." >&2
