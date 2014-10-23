@@ -7,5 +7,7 @@ install-packages iptables
 DISTRO=`lsb_release -si` || true
 
 if [[ "Debian Ubuntu" =~ $DISTRO ]]; then
-    mkdir -p /etc/iptables
+    # Note in later versions will
+    # need netfilter-persistent package
+    install-packages iptables-persistent
 fi
