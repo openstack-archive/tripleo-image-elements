@@ -1,3 +1,4 @@
 os-apply-config
 os-refresh-config
 pip-manifest
+openvswitch
