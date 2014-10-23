@@ -22,7 +22,7 @@ else
     /opt/stack/venvs/os-refresh-config/bin/pip install -U 'setuptools>=1.0'
     # bug #1293812 : Avoid easy_install triggering on pbr.
     /opt/stack/venvs/os-refresh-config/bin/pip install -U 'pbr>=0.5.21,<1.0'
-    /opt/stack/venvs/os-refresh-config/bin/pip install --pre -U os-refresh-config
+    /opt/stack/venvs/os-refresh-config/bin/pip install -U os-refresh-config
 fi
 
 # Write the manifest of what was installed

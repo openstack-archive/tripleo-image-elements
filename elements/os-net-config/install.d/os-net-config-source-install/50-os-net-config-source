@@ -18,7 +18,7 @@ else
     $OS_NET_CONFIG_VENV_DIR/bin/pip install -U 'setuptools>=1.0'
     # bug #1293812 : Avoid easy_install triggering on pbr.
     $OS_NET_CONFIG_VENV_DIR/bin/pip install -U 'pbr>=0.6,<1.0'
-    $OS_NET_CONFIG_VENV_DIR/bin/pip install --pre -U os-net-config
+    $OS_NET_CONFIG_VENV_DIR/bin/pip install -U os-net-config
 fi
 
 # Write the manifest of what was installed
