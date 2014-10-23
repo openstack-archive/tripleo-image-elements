@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -eux
+
+install-openstack-client $OPENSTACKCLIENT_EXTRA_INSTALL_OPTS -c openstack -i $OPENSTACKCLIENT_VENV_DIR
+
+add-selinux-path-substitution /usr/bin $OPENSTACKCLIENT_VENV_DIR/bin

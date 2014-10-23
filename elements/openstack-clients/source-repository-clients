@@ -7,3 +7,4 @@ python-keystoneclient git /opt/stack/python-keystoneclient https://git.openstack
 python-neutronclient git /opt/stack/python-neutronclient https://git.openstack.org/openstack/python-neutronclient.git
 python-novaclient git /opt/stack/python-novaclient https://git.openstack.org/openstack/python-novaclient.git
 python-swiftclient git /opt/stack/python-swiftclient https://git.openstack.org/openstack/python-swiftclient.git
+python-openstackclient git /opt/stack/python-openstackclient https://git.openstack.org/openstack/python-openstackclient.git
