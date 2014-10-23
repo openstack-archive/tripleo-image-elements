@@ -6,15 +6,15 @@ set -eux
 set -o pipefail
 
 if [ -x /usr/sbin/semanage ]; then
+    cd /tmp
     for file in $(ls /opt/stack/selinux-policy/*.te); do
         filename=$(basename $file)
         filename_no_ext=${filename%.*}
         # compile policy
-        checkmodule -M -m -o "/tmp/$filename_no_ext.mod" \
-           "/opt/stack/selinux-policy/$filename"
-        semodule_package -o "/tmp/$filename_no_ext.pp" \
-            -m "/tmp/$filename_no_ext.mod"
+        cp $file /tmp
+        make -f /usr/share/selinux/devel/Makefile $filename_no_ext.pp
         # install policy
-        semodule -i "/tmp/$filename_no_ext.pp"
+        semodule -i /tmp/$filename_no_ext.pp
+        rm /tmp/$filename_no_ext.*
     done
 fi
