@@ -13,10 +13,14 @@ os-svc-enable -n nova-conductor
 os-svc-enable -n nova-api
 os-svc-enable -n nova-cert
 os-svc-enable -n nova-scheduler
-os-svc-enable -n nova-consoleauth
 
 os-svc-restart -n nova-conductor
 os-svc-restart -n nova-api
 os-svc-restart -n nova-cert
 os-svc-restart -n nova-scheduler
-os-svc-restart -n nova-consoleauth
+
+# Allow for non-ha Nova components.
+if os-is-bootstrap-host; then
+    os-svc-enable -n nova-consoleauth
+    os-svc-restart -n nova-consoleauth
+fi
