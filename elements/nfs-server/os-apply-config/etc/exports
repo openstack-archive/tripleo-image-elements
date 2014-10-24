@@ -1,3 +1,3 @@
 {{#nfs_server.shares}}
-/mnt/state/var/lib/nfs {{.}}(rw,async,no_root_squash)
+/mnt/state/var/lib/nfs/{{name}}{{#clients}} {{machine}}({{#options}}{{.}}{{/options}}{{^options}}rw,async,no_root_squash{{/options}}){{/clients}}
 {{/nfs_server.shares}}

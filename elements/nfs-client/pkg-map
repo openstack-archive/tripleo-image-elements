@@ -1,16 +1,16 @@
 {
   "family": {
     "redhat": {
-      "nfs_utils_package": "nfs-utils"
+      "nfs_client_package": "nfs-utils"
     },
     "debian": {
-      "nfs_utils_package": "nfs-common"
+      "nfs_client_package": "nfs-client"
     },
     "suse": {
-      "nfs_utils_package": "nfs-client"
+      "nfs_client_package": "nfs-client"
     }
   },
   "default": {
-    "nfs_utils_package": "nfs-utils"
+    "nfs_client_package": "nfs-utils"
   }
 }

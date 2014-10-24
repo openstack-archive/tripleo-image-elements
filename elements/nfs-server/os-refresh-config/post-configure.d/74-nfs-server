@@ -1,7 +1,27 @@
 #!/bin/bash
 set -eu
 
-[ -d /mnt/state/var/lib/nfs ] || install -d -m 0770 -o root -g root /mnt/state/var/lib/nfs
+# We want to create a dir for each export in /etc/exports and
+# allow valid POSIX paths only.
+for share in $(grep -oE '^/[a-zA-Z0-9._-/]+' /etc/exports); do
+    [ -d "$share" ] || install -d -m 0770 -o root -g root "$share"
+done
+
+# Yet exports(5) allows for # comments; unquoted paths without spaces;
+# unquoted paths with octal ascii sequences; double-quoted paths with spaces.
+# Parsing all formats correctly requires usage of some non trivial
+# code, which we decided to avoid for now.
+# Shall we decide to support that, the following code should do (thanks lxsli).
+#
+#CODE='import ast, os.path, re, sys
+#lines = sys.stdin.readlines()
+#matchers = [re.match("\"([^\"]+)\"|(\\S+)", line) for line in lines if not re.search("^\s*#", line)]
+#lines = [m.group(1) or m.group(2) for m in matchers]
+#paths = [ast.literal_eval("\"%s\"" % line) for line in lines]
+#paths = [path for path in paths if not os.path.isdir(path)]
+#print "\n".join(paths),'
+#cat /etc/exports | python -c "$CODE" | xargs -i install -d -m 0770 -o root -g root "{}
+
 os-svc-enable -n nfs-server
 os-svc-restart -n nfs-server
 exportfs -a -r -v
