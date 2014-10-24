@@ -12,42 +12,50 @@ else
     export PYTHONPATH=/usr/share/openstack-dashboard
     LOCAL_SETTINGS_FILE=/etc/horizon/local_settings.py
     DJANGO_ADMIN=django-admin
+    cp $LOCAL_SETTINGS_FILE /usr/share/openstack-dashboard/openstack_dashboard/local/local_settings.py
 fi
 
 source /root/stackrc
 
-COMPUTE_IMAGE_ID=$( glance image-show overcloud-compute | grep id | awk '$2=="id" {print $4}' )
-CONTROL_IMAGE_ID=$( glance image-show overcloud-control | grep id | awk '$2=="id" {print $4}' )
-COMPUTE_ROLE_ID=$( tuskar --tuskar-api-version 2 role-list | awk '$4=="compute" {print $2}' )
-CONTROL_ROLE_ID=$( tuskar --tuskar-api-version 2 role-list | awk '$4=="controller" {print $2}' )
+if [ -z "$(tuskar --tuskar-api-version 2 plan-list | grep overcloud)" ]; then
+    COMPUTE_IMAGE_ID=$( glance image-show overcloud-compute | grep id | awk '$2=="id" {print $4}' )
+    CONTROL_IMAGE_ID=$( glance image-show overcloud-control | grep id | awk '$2=="id" {print $4}' )
+    COMPUTE_ROLE_ID=$( tuskar --tuskar-api-version 2 role-list | awk '$4=="compute" {print $2}' )
+    CONTROL_ROLE_ID=$( tuskar --tuskar-api-version 2 role-list | awk '$4=="controller" {print $2}' )
 
-PLAN_ID=$( tuskar --tuskar-api-version 2 plan-create overcloud | awk '$2=="uuid" {print $4}' )
+    PLAN_ID=$( tuskar --tuskar-api-version 2 plan-create overcloud | awk '$2=="uuid" {print $4}' )
 
-tuskar --tuskar-api-version 2 plan-add-role -r $COMPUTE_ROLE_ID $PLAN_ID
-tuskar --tuskar-api-version 2 plan-add-role -r $CONTROL_ROLE_ID $PLAN_ID
+    tuskar --tuskar-api-version 2 plan-add-role -r $COMPUTE_ROLE_ID $PLAN_ID
+    tuskar --tuskar-api-version 2 plan-add-role -r $CONTROL_ROLE_ID $PLAN_ID
 
-if [ -n "$(tuskar --tuskar-api-version 2 role-list | grep cinder-storage)" ]; then
-    BLOCK_STORAGE_IMAGE_ID=$(glance image-show overcloud-cinder-volume | grep id | awk '$2=="id" {print $4}' )
-    BLOCK_STORAGE_ROLE_ID=$(tuskar --tuskar-api-version 2 role-list | awk '$4=="cinder-storage" {print $2}')
-    tuskar --tuskar-api-version 2 plan-add-role -r $BLOCK_STORAGE_ROLE_ID $PLAN_ID
-    tuskar --tuskar-api-version 2 plan-patch -A cinder-storage-1::Image=$BLOCK_STORAGE_IMAGE_ID $PLAN_ID
+    if [ -n "$(tuskar --tuskar-api-version 2 role-list | grep cinder-storage)" ]; then
+        BLOCK_STORAGE_IMAGE_ID=$(glance image-show overcloud-cinder-volume | grep id | awk '$2=="id" {print $4}' )
+        BLOCK_STORAGE_ROLE_ID=$(tuskar --tuskar-api-version 2 role-list | awk '$4=="cinder-storage" {print $2}')
+        tuskar --tuskar-api-version 2 plan-add-role -r $BLOCK_STORAGE_ROLE_ID $PLAN_ID
+        tuskar --tuskar-api-version 2 plan-patch -A cinder-storage-1::Image=$BLOCK_STORAGE_IMAGE_ID $PLAN_ID
+    fi
+
+    if [ -n "$(tuskar --tuskar-api-version 2 role-list | grep swift-storage)" ]; then
+        OBJECT_STORAGE_IMAGE_ID=$(glance image-show overcloud-swift-storage | grep id | awk '$2=="id" {print $4}' )
+        OBJECT_STORAGE_ROLE_ID=$(tuskar --tuskar-api-version 2 role-list | awk '$4=="swift-storage" {print $2}')
+        tuskar --tuskar-api-version 2 plan-add-role -r $OBJECT_STORAGE_ROLE_ID $PLAN_ID
+        tuskar --tuskar-api-version 2 plan-patch -A swift-storage-1::Image=$OBJECT_STORAGE_IMAGE_ID $PLAN_ID
+    fi
+
+    tuskar --tuskar-api-version 2 plan-patch -A compute-1::Image=$COMPUTE_IMAGE_ID $PLAN_ID
+    tuskar --tuskar-api-version 2 plan-patch -A controller-1::Image=$CONTROL_IMAGE_ID $PLAN_ID
 fi
 
-if [ -n "$(tuskar --tuskar-api-version 2 role-list | grep swift-storage)" ]; then
-    OBJECT_STORAGE_IMAGE_ID=$(glance image-show overcloud-swift-storage | grep id | awk '$2=="id" {print $4}' )
-    OBJECT_STORAGE_ROLE_ID=$(tuskar --tuskar-api-version 2 role-list | awk '$4=="swift-storage" {print $2}')
-    tuskar --tuskar-api-version 2 plan-add-role -r $OBJECT_STORAGE_ROLE_ID $PLAN_ID
-    tuskar --tuskar-api-version 2 plan-patch -A swift-storage-1::Image=$OBJECT_STORAGE_IMAGE_ID $PLAN_ID
+if [ -z "$(grep UNDERCLOUD_ADMIN_PASSWORD $LOCAL_SETTINGS_FILE)" ]; then
+    echo "UNDERCLOUD_ADMIN_PASSWORD = \"${OS_PASSWORD}\"" >> $LOCAL_SETTINGS_FILE
 fi
-
-tuskar --tuskar-api-version 2 plan-patch -A compute-1::Image=$COMPUTE_IMAGE_ID $PLAN_ID
-tuskar --tuskar-api-version 2 plan-patch -A controller-1::Image=$CONTROL_IMAGE_ID $PLAN_ID
-
-echo "UNDERCLOUD_ADMIN_PASSWORD = \"${OS_PASSWORD}\"" >> $LOCAL_SETTINGS_FILE
-echo "IRONIC_DISCOVERD_URL = \"http://127.0.0.1:5050\"" >> $LOCAL_SETTINGS_FILE
-
-DEPLOYMENT_MODE=$(os-apply-config --key deployment-mode --key-default=scale)
-echo "DEPLOYMENT_MODE = \"${DEPLOYMENT_MODE}\"" >> $LOCAL_SETTINGS_FILE
+if [ -z "$(grep IRONIC_DISCOVERD_URL $LOCAL_SETTINGS_FILE)" ]; then
+    echo "IRONIC_DISCOVERD_URL = \"http://127.0.0.1:5050\"" >> $LOCAL_SETTINGS_FILE
+fi
+if [ -z "$(grep DEPLOYMENT_MODE $LOCAL_SETTINGS_FILE)" ]; then
+    DEPLOYMENT_MODE=$(os-apply-config --key deployment-mode --key-default=scale)
+    echo "DEPLOYMENT_MODE = \"${DEPLOYMENT_MODE}\"" >> $LOCAL_SETTINGS_FILE
+fi
 
 DJANGO_SETTINGS_MODULE=openstack_dashboard.settings $DJANGO_ADMIN collectstatic --noinput
 DJANGO_SETTINGS_MODULE=openstack_dashboard.settings $DJANGO_ADMIN compress --force
@@ -56,6 +64,8 @@ if [ -n "${HORIZON_VENV_DIR:-}" ]; then
     set +u
     deactivate
     set -u
+else
+    cp $LOCAL_SETTINGS_FILE /usr/share/openstack-dashboard/openstack_dashboard/local/local_settings.py
 fi
 
 os-svc-enable -n apache2
