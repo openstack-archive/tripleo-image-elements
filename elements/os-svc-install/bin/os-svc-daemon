@@ -134,6 +134,9 @@ respawn limit 2 5
 # We're logging to syslog
 console none
 
+# The pipe to logger introduces a fork, so we need to tell upstart
+expect fork
+
 exec start-stop-daemon --start -c $user --exec $install_dir/bin/$cmd -- $args 2>&1 | logger -t $name
 
 post-start $POSTSTART
