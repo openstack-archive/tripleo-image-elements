@@ -17,6 +17,7 @@ This element will set the install types to package for the following elements:
     - python_neutronclient
     - python_novaclient
     - python_swiftclient
+    - python_tuskarclient
     - python_ceilometerclient
     - python_ironicclient
     - os_collect_config

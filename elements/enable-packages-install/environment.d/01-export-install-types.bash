@@ -15,6 +15,7 @@ export DIB_INSTALLTYPE_python_keystoneclient=package
 export DIB_INSTALLTYPE_python_neutronclient=package
 export DIB_INSTALLTYPE_python_novaclient=package
 export DIB_INSTALLTYPE_python_swiftclient=package
+export DIB_INSTALLTYPE_python_tuskarclient=package
 export DIB_INSTALLTYPE_python_ceilometerclient=package
 export DIB_INSTALLTYPE_python_ironicclient=package
 

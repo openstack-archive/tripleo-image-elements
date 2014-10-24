@@ -73,6 +73,14 @@ if [ -z "${SWIFTCLIENT_EXTRA_INSTALL_OPTS:-}" ]; then
     export SWIFTCLIENT_EXTRA_INSTALL_OPTS=${OPENSTACK_EXTRA_INSTALL_OPTS:-""}
 fi
 
+# tuskarclient
+if [ -z "${TUSKARCLIENT_VENV_DIR:-}" ]; then
+    export TUSKARCLIENT_VENV_DIR=${OPENSTACK_VENV_DIR:-"/opt/stack/venvs/python-tuskarclient"}
+fi
+if [ -z "${TUSKARCLIENT_EXTRA_INSTALL_OPTS:-}" ]; then
+    export TUSKARCLIENT_EXTRA_INSTALL_OPTS=${OPENSTACK_EXTRA_INSTALL_OPTS:-""}
+fi
+
 # openstackclient
 if [ -z "${OPENSTACKCLIENT_VENV_DIR:-}" ]; then
     export OPENSTACKCLIENT_VENV_DIR=${OPENSTACK_VENV_DIR:-"/opt/stack/venvs/python-openstackclient"}
