@@ -43,10 +43,10 @@ keystone user-role-add --role Member --user tripleo-ci --tenant openstack-nodepo
 nova flavor-show h1.ci || nova flavor-create h1.ci auto 8192 20 1
 
 # The the images that nodepool uses to creat templates
-F20_IMAGE_URL=http://cloud.fedoraproject.org/fedora-20.x84_64.qcow2
+FEDORA_IMAGE=$(wget -q http://dl.fedoraproject.org/pub/fedora/linux/updates/20/Images/x86_64/ -O - | grep -o -E 'href="([^"#]+qcow2)"' | cut -d'"' -f2)
 F20_IMAGE_FILE=$TRIPLEO_ROOT/fedora-20.x86_64.qcow2
 if [ ! -e $F20_IMAGE_FILE ] ; then
-    curl $F20_IMAGE_URL -o $F20_IMAGE_FILE
+    curl http://dl.fedoraproject.org/pub/fedora/linux/updates/20/Images/x86_64/$FEDORA_IMAGE > $F20_IMAGE_FILE
 fi
 PRECISE_IMAGE_FILE=$TRIPLEO_ROOT/precise-server-cloudimg-amd64-disk1.img
 PRECISE_IMAGE_URL=http://cloud-images.ubuntu.com/precise/current/precise-server-cloudimg-amd64-disk1.img
