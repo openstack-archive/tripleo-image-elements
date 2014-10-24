@@ -16,6 +16,7 @@ Grants snmp user password-less sudo access to lsof, so that the per process
 check works correctly.
 
 Options should be provided via heat. For example:
+
     snmpd:
         export_MIB: UCD-SNMP-MIB
         readonly_user_name: RoUser

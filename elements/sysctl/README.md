@@ -26,12 +26,13 @@ will take care of applying these settings during configuration time.
 
 Configuration example
 ---------------------
-sysctl:
-    net.ipv4.conf.all.arp_filter: 1
-    net.ipv4.conf.all.arp_ignore: 2
-    net.ipv4.conf.all.arp_announce: 2
-    net.ipv4.conf.default.arp_filter: 1
-    net.ipv4.conf.default.arp_ignore: 2
-    net.ipv4.conf.default.arp_announce: 2
+
+    sysctl:
+        net.ipv4.conf.all.arp_filter: 1
+        net.ipv4.conf.all.arp_ignore: 2
+        net.ipv4.conf.all.arp_announce: 2
+        net.ipv4.conf.default.arp_filter: 1
+        net.ipv4.conf.default.arp_ignore: 2
+        net.ipv4.conf.default.arp_announce: 2
 
 ** Any valid sysctl key/value may be specified in this configuration format.

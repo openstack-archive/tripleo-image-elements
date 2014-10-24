@@ -4,8 +4,8 @@ OpenStack services and other network clients authenticating SSL-secured connecti
 Configuration
 -------------
 
-ssl:
-  ca_certificate: certdata
+    ssl:
+      ca_certificate: certdata
 
 The CA certificate will be written to /etc/ssl/from-heat-ca.crt and installed using
 update-ca-certificates (apt-based distros) or update-ca-trusts (yum-based distros).

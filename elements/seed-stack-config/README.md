@@ -22,11 +22,11 @@ this is for backwards compatibility and will be removed in a future release.
 Configuration keys
 ------------------
 
-bootstack:
-  public\_interface\_ip: 192.0.2.1/24
-    - What IP address to place on the ovs public interface. Only intended for
-      use when the interface will not be otherwise configured.
-  masquerade\_networks: [192.0.2.0]
-    - What networks, if any, to masquerade. When set, all traffic being
-      output from each network to other networks is masqueraded. Traffic
-      to 192.168.122.1 is never masqueraded.
+    bootstack:
+      public\_interface\_ip: 192.0.2.1/24
+        - What IP address to place on the ovs public interface. Only intended for
+          use when the interface will not be otherwise configured.
+      masquerade\_networks: [192.0.2.0]
+        - What networks, if any, to masquerade. When set, all traffic being
+          output from each network to other networks is masqueraded. Traffic
+          to 192.168.122.1 is never masqueraded.
