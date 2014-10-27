@@ -1,6 +1,5 @@
 #!/bin/bash
 set -eux
 
-os-svc-enable -n tuskar-api
-
-service tuskar-api restart
+os-svc-enable -an tuskar-api
+os-svc-restart -an tuskar-api

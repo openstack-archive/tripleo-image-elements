@@ -1,0 +1,5 @@
+{
+  "default": {
+    "tuskar_package": "openstack-tuskar"
+  }
+}
