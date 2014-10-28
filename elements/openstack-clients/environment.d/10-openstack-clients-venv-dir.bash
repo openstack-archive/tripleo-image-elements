@@ -72,3 +72,11 @@ fi
 if [ -z "${SWIFTCLIENT_EXTRA_INSTALL_OPTS:-}" ]; then
     export SWIFTCLIENT_EXTRA_INSTALL_OPTS=${OPENSTACK_EXTRA_INSTALL_OPTS:-""}
 fi
+
+# openstackclient
+if [ -z "${OPENSTACKCLIENT_VENV_DIR:-}" ]; then
+    export OPENSTACKCLIENT_VENV_DIR=${OPENSTACK_VENV_DIR:-"/opt/stack/venvs/python-openstackclient"}
+fi
+if [ -z "${OPENSTACKCLIENT_EXTRA_INSTALL_OPTS:-}" ]; then
+    export OPENSTACKCLIENT_EXTRA_INSTALL_OPTS=${OPENSTACK_EXTRA_INSTALL_OPTS:-""}
+fi
