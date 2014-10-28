@@ -9,7 +9,6 @@ configured via Heat Metadata. For example:
     neutron:
       ovs:
         public_interface: vlan25
-        public_interface_raw_device: eth2
         public_interface_route: 12.34.56.78
         physical_bridge: br-ctlplane
         physical_network: ctlplane
