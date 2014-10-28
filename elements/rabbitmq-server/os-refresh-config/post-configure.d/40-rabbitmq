@@ -93,7 +93,7 @@ if [ -n "$NODES" ];then
     fi
 
     # wait until rabbitmq node is up
-    timeout 3 rabbitmqctl wait /var/run/rabbitmq/pid
+    timeout 60 rabbitmqctl wait /var/run/rabbitmq/pid
 
     # make sure that all queues (except those with auto-generated names) are
     # mirrored across all nodes in running:
