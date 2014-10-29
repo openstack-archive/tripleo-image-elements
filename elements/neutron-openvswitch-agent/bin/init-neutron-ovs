@@ -64,10 +64,6 @@ if [ -n "$PHYSICAL_INTERFACE_RAW_DEVICE" ]; then
     ip link set $PHYSICAL_INTERFACE up
 fi
 
-# Hacky: ensure the switch is running : we should instead arrange for this
-# script to not be run before it's started.
-service openvswitch-switch restart || service openvswitch restart
-
 if [ -z "$EXTERNAL_BRIDGE" ] ; then
     exit 0
 fi
