@@ -16,10 +16,10 @@
 # If no physical bridge is defined in metadata, the script will have no
 # further effect.
 #
-# If a physical bridge is defined then ensure-bridge is called to set it up.
+# If a physical bridge is defined then os-net-config is called to set it up.
 #
 # If there is configuration (tag + IP) for an access port, one is created on
-# top of the bridge, again by ensure-bridge.
+# top of the bridge, again by os-net-config.
 
 set -eux
 
@@ -56,14 +56,69 @@ fi
 # script to not be run before it's started.
 service openvswitch-switch restart || service openvswitch restart
 
-ovs-vsctl --no-wait -- --may-exist add-br br-int
-ovs-vsctl --no-wait br-set-external-id br-int bridge-id br-int
-
 if [ -z "$EXTERNAL_BRIDGE" ] ; then
     exit 0
 fi
 
-ensure-bridge "$EXTERNAL_BRIDGE" "$PHYSICAL_INTERFACE" "$PHYSICAL_INTERFACE_IP" \
-    "$PUBLIC_INTERFACE_ROUTE" --public-tag "$PUBLIC_INTERFACE_TAG" \
-    --public-tag-ip "$PUBLIC_INTERFACE_TAG_IP" \
-    ${PHYSICAL_ROUTE_PREFIX:+--bridge-route "${PHYSICAL_ROUTE_PREFIX} ${PHYSICAL_ROUTE_VIA}"}
+cat > /etc/os-net-config/neutron-openvswitch-agent.conf <<EOF_CAT
+network_config:
+  - type: ovs_bridge
+    name: br-int
+    ovs_extra:
+      - br-set-external-id br-int bridge-id br-int
+  - type: ovs_bridge
+    name: $EXTERNAL_BRIDGE
+    ovs_extra:
+      - br-set-external-id $EXTERNAL_BRIDGE bridge-id $EXTERNAL_BRIDGE
+    members:
+      - type: interface
+        name: $PHYSICAL_INTERFACE
+        # force the MAC address of the bridge to this interface
+        primary: true
+EOF_CAT
+
+function append_config {
+    echo "$1" >> /etc/os-net-config/neutron-openvswitch-agent.conf
+}
+
+if [ -n "$PHYSICAL_INTERFACE_IP" ]; then
+    append_config "    addresses:"
+    append_config "      - ip_netmask: $PHYSICAL_INTERFACE_IP"
+
+else
+    append_config "    use_dhcp: true"
+fi
+
+if [ -n "$PUBLIC_INTERFACE_TAG" -a -n "$PUBLIC_INTERFACE_TAG_IP" ]; then
+    # handle tagged (public VLAN) traffic to the bridge
+cat >> /etc/os-net-config/neutron-openvswitch-agent.conf <<EOF_CAT
+      - type: vlan
+        vlan_id: $PUBLIC_INTERFACE_TAG
+        addresses:
+          - ip_netmask: $PUBLIC_INTERFACE_TAG_IP
+EOF_CAT
+fi
+
+# begin routes for the EXTERNAL_BRIDGE
+append_config "    routes:"
+
+if [ -n "$PHYSICAL_ROUTE_PREFIX" -a -n "$PHYSICAL_ROUTE_VIA" ]; then
+    # Add a route to the bridge, e.g. to the IPMI network.
+    append_config "      - next_hop: $PHYSICAL_ROUTE_VIA"
+    append_config "        ip_netmask: $PHYSICAL_ROUTE_PREFIX"
+fi
+
+if [ -n "$PUBLIC_INTERFACE_ROUTE" ]; then
+    # A default route for the bridge
+    append_config "      - next_hop: $PUBLIC_INTERFACE_ROUTE"
+    append_config "        default: true"
+
+    METADATA_ROUTE_VIA=$(ip route show 169.254.169.254 | awk '{ print $3 }')
+    if [ -n $"METADATA_ROUTE_VIA" ]; then
+        # an explicit route for 169.254.169.254 (metadata server)
+        append_config "      - next_hop: $METADATA_ROUTE_VIA"
+        append_config "        ip_netmask: 169.254.169.254/32"
+    fi
+fi
+
+os-net-config -c /etc/os-net-config/neutron-openvswitch-agent.conf -d
