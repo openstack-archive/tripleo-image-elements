@@ -8,6 +8,13 @@ set -eux
 set -o pipefail
 
 install-packages checkpolicy
+
+DISTRO=`lsb_release -si` || true
+
+if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
+    install-packages selinux-policy-devel
+fi
+
 mkdir -p /opt/stack/selinux-policy
 
 for file in $(ls $(dirname $0)/../custom-policies/*.te); do
