@@ -1,0 +1,4 @@
+ceilometer
+ceilometer-alarm-evaluator
+os-refresh-config
+os-svc-install

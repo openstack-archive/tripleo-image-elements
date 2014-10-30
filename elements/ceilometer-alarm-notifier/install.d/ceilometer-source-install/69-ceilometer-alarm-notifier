@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eux
+
+os-svc-daemon -i "$CEILOMETER_VENV_DIR" ceilometer-alarm-notifier ceilometer ceilometer-alarm-notifier --config-dir /etc/ceilometer
