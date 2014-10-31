@@ -1,1 +1,1 @@
-Install tripleo-heat-templates from git.
+Install tripleo-heat-templates.

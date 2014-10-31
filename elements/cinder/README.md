@@ -1,4 +1,4 @@
-Install cinder service from git.
+Install and configure Cinder.
 
 An appropriate target element (such as cinder-tgt or cinder-lio) must be included
 in images that use cinder.

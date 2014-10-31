@@ -1,4 +1,4 @@
-Installs OpenStack Dashboard (Horizon) from git.
+Install and configure OpenStack Dashboard (Horizon).
 
 Horizon runs on port 80 behind Apache using mod_wsgi.
 
