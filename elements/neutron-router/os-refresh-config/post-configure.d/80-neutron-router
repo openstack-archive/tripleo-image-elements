@@ -1,0 +1,8 @@
+#!/bin/bash
+set -eux
+
+os-svc-enable -n neutron-metadata-agent
+os-svc-enable -n neutron-l3-agent
+
+os-svc-restart -n neutron-metadata-agent
+os-svc-restart -n neutron-l3-agent
