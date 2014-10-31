@@ -17,28 +17,30 @@ RULE="$@"
 
 DISTRO=`lsb_release -si` || true
 
-IPT_FILE=
 
 if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
-
+    IPT_FILE=
     # Check if the iptables service is active
     if systemctl is-active iptables.service ; then
         IPT_FILE=/etc/sysconfig/iptables
     fi
+    if [ -f "$IPT_FILE" ]; then
+
+        iptables-restore < $IPT_FILE
+    fi
+
+    if [ -n "$IPT_FILE" ]; then
+
+        iptables -C $RULE || iptables -I $RULE
+
+        iptables-save > $IPT_FILE
+    fi
 
 elif [[ "Debian Ubuntu" =~ "$DISTRO" ]]; then
-
-    IPT_FILE=/etc/iptables/iptables
-fi
-
-if [ -f "$IPT_FILE" ]; then
-
-    iptables-restore < $IPT_FILE
-fi
-
-if [ -n "$IPT_FILE" ]; then
+    service iptables-persistent reload
 
     iptables -C $RULE || iptables -I $RULE
 
-    iptables-save > $IPT_FILE
+    service iptables-persistent save
+
 fi
