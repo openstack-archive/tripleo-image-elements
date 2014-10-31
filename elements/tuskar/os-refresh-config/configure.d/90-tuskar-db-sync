@@ -1,7 +1,16 @@
 #!/bin/bash
 set -eux
 
-TUSKAR_ROLE_DIRECTORY=${TUSKAR_ROLE_DIRECTORY:-"/opt/stack/tripleo-heat-templates"}
+TUSKAR_ROLE_DIRECTORY=${TUSKAR_ROLE_DIRECTORY:-}
+if [ -z "$TUSKAR_ROLE_DIRECTORY" ]; then
+  if [ -d /usr/share/openstack-tripleo-heat-templates/ ]; then
+      # Fedora/RHEL RPMs store the templates here
+      TUSKAR_ROLE_DIRECTORY='/usr/share/openstack-tripleo-heat-templates/'
+  else
+      # Default to the source installed version
+      TUSKAR_ROLE_DIRECTORY='/opt/stack/tripleo-heat-templates'
+  fi
+fi
 
 if os-is-bootstrap-host ; then
     sudo -u tuskar -- tuskar-dbsync --config-file /etc/tuskar/tuskar.conf
