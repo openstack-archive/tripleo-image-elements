@@ -12,7 +12,6 @@ configured via Heat Metadata. For example:
         public_interface_raw_device: eth2
         public_interface_route: 12.34.56.78
         physical_bridge: br-ctlplane
-        physical_network: ctlplane
         network_vlan_ranges: ctlplane
         bridge_mappings: ctlplane:br-ctlplane
     bootstack:
