@@ -6,3 +6,4 @@ os-svc-install
 package-installs
 sysctl
 use-ephemeral
+ntp
