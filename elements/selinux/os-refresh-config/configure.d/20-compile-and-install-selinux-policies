@@ -5,16 +5,17 @@
 set -eux
 set -o pipefail
 
+TMPDIR=$(mktemp -d)
 if [ -x /usr/sbin/semanage ]; then
-    cd /tmp
+    cd $TMPDIR
     for file in $(ls /opt/stack/selinux-policy/*.te); do
         filename=$(basename $file)
         filename_no_ext=${filename%.*}
         # compile policy
-        cp $file /tmp
+        cp $file $TMPDIR
         make -f /usr/share/selinux/devel/Makefile $filename_no_ext.pp
-        # install policy
-        semodule -i /tmp/$filename_no_ext.pp
-        rm /tmp/$filename_no_ext.*
     done
+    # install policies
+    semodule -i $TMPDIR/*.pp
+    rm -rf $TMPDIR
 fi
