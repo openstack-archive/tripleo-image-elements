@@ -1,4 +1,4 @@
-Install neutron service from git.
+Install and configure Neutron.
 
 Configuration
 -------------

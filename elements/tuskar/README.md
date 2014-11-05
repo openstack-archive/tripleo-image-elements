@@ -1,4 +1,4 @@
-Install tuskar service from git.
+Install and configure Tuskar.
 
 Configuration
 -------------

@@ -1,4 +1,4 @@
-Install Ironic software from git.
+Install and configure Ironic.
 
 Required options can be provided via heat.
 For example:

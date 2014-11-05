@@ -1,4 +1,4 @@
-Install nova software from git.
+Install and configure Nova.
 
 Configuration
 -------------

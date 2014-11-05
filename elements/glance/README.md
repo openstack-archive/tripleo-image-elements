@@ -1,4 +1,4 @@
-Installs glance service from git.
+Install and configure Glance.
 
 Configuration
 -------------

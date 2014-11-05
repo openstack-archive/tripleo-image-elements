@@ -1,4 +1,4 @@
-Install Ceilometer from git.
+Install and configure Ceilometer.
 
 Configuration
 -------------
