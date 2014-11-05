@@ -1,5 +1,7 @@
 #!/bin/bash
+
 set -e
+set -o pipefail
 
 if [ -n "${HORIZON_VENV_DIR:-}" ] ; then
     cp /etc/horizon/local_settings.py $HORIZON_VENV_DIR/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py
@@ -15,6 +17,9 @@ if [ -n "${HORIZON_VENV_DIR:-}" ] ; then
     source $HORIZON_VENV_DIR/bin/activate
     DJANGO_SETTINGS_MODULE=openstack_dashboard.settings django-admin.py collectstatic --noinput
     DJANGO_SETTINGS_MODULE=openstack_dashboard.settings django-admin.py compress
+else
+    cp /etc/horizon/local_settings.py /usr/share/openstack-dashboard/openstack_dashboard/local/local_settings.py
+    sed -i 's#^STATIC_ROOT.*#STATIC_ROOT=/usr/share/openstack-dashboard/static#' /usr/share/openstack-dashboard/openstack_dashboard/local/local_settings.py
 fi
 
 os-svc-enable -n apache2
