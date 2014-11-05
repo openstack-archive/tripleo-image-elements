@@ -2,8 +2,6 @@
 
 set -eux
 
-install-packages memcached
-
 # On debian-based distros set memcached daemon to listen on port 0.0.0.0
 # This is the default on RedHat-based distros.
 # Without this setting the memcached daemon will suffer connection errors

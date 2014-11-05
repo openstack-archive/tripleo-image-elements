@@ -3,8 +3,6 @@ set -eux
 
 manifest=$(get-pip-manifest os-collect-config)
 
-install-packages build-essential libz-dev libxslt-dev libxml2-dev python-dev
-
 virtualenv --setuptools /opt/stack/venvs/os-collect-config
 set +u
 source /opt/stack/venvs/os-collect-config/bin/activate

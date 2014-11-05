@@ -2,8 +2,6 @@
 
 set -eux
 
-install-packages libffi-dev
-
 os-svc-install $SWIFT_EXTRA_INSTALL_OPTS -i "$SWIFT_VENV_DIR" -u swift -r /opt/stack/swift
 
 ln -s $SWIFT_VENV_DIR/bin/swift-ring-builder /usr/local/bin/swift-ring-builder

@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eu
 
-install-packages python-mysqldb
-
 cp -r /opt/stack/heat/etc/heat/environment.d /etc/heat
 cp -r /opt/stack/heat/etc/heat/templates /etc/heat
 
