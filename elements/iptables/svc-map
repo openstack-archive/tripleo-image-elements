@@ -1,0 +1,4 @@
+iptables-persistent:
+  default: iptables-persistent
+  ubuntu: iptables-persistent
+  debian: netfilter-persistent

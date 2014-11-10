@@ -37,10 +37,15 @@ if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
     fi
 
 elif [[ "Debian Ubuntu" =~ "$DISTRO" ]]; then
-    service iptables-persistent reload
+    # NOTE(kiall): os-svc-restart etc don't support the custom 'save'
+    #              action, so we grab the name and call the service
+    #              binary "by hand" instead.
+    SERVICE_NAME=$(svc-map iptables-persistent)
+
+    service $SERVICE_NAME reload
 
     iptables -C $RULE || iptables -I $RULE
 
-    service iptables-persistent save
+    service $SERVICE_NAME save
 
 fi
