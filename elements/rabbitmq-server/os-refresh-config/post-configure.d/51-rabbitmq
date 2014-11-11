@@ -28,52 +28,14 @@ if [ ${TOTAL_NODES} -le 1 ]; then
     exit 0
 fi
 
-## Cluster configuration set-up. ##
-function is_in_cluster() {
-    # Returns true if the list following "running_nodes" in rabbitmqctl
-    # cluster_status contains at least two nodes.
-    rabbitmqctl cluster_status 2>/dev/null |
-        grep -q "running_nodes,\[[^]]\+,"
-}
-
-# Number of nodes in the cluster according to remote node $1.
-# If $1 isn't in a cluster or it's in a cluster by itself, then this will
-# return 0.
-function cluster_size() {
-    local remote_node="${1}"
-    rabbitmqctl -n "rabbit@${remote_node}" cluster_status 2>/dev/null |
-        sed -n '/{running_nodes,\[[^]]\+,/,/\]\},/p' |
-        wc -l
-}
-
-function leave_cluster() {
-    rabbitmqctl stop_app
-    # This syncs all data into the cluster, then removes this node, cleaning local mnesia.
-    rabbitmqctl reset
-}
-export -f leave_cluster
-
-function join_cluster_with() {
-    local remote_node="${1}"
-    local local_node="${2}"
-    rabbitmqctl stop_app
-    rabbitmqctl join_cluster "rabbit@${remote_node}" 2>/dev/null || true
-    rabbitmqctl start_app
-
-    if ! is_in_cluster; then
-       echo "Failed to join node [${local_node}] with [${remote_node}]..."
-       return 1
-    fi
-}
-
 BOOTSTRAP_NODE="$(os-apply-config --key bootstrap_host.bootstrap_nodeid --type netaddress --key-default '')"
 BOOTSTRAP_NODE=${BOOTSTRAP_NODE,,}
 NODE_INDEX=""
 # Find the nodes being worked on in the NODES array.
 for (( index = 0; index < ${TOTAL_NODES}; index++ )); do
-   if [ "${NODES[$index]}" == "${LOCAL_RABBIT_HOST}" ]; then
-      NODE_INDEX=${index}
-   fi
+    if [ "${NODES[$index]}" == "${LOCAL_RABBIT_HOST}" ]; then
+        NODE_INDEX=${index}
+    fi
 done
 
 if [ -z "${BOOTSTRAP_NODE}" -o ${TOTAL_NODES} -lt 3 -o -z "${NODE_INDEX}" ]; then
@@ -115,8 +77,8 @@ done
 # takes for a node to join the cluster.
 PERIOD=10
 NODE_LEAVES_AT=$(( ${NODE_INDEX} * 2 ))
-while is_in_cluster; do
-    NODES_IN_CLUSTER=$(cluster_size "${BOOTSTRAP_NODE}")
+while rabbitmq_is_in_cluster; do
+    NODES_IN_CLUSTER=$(rabbitmq_size_of_cluster --remote-host "${BOOTSTRAP_NODE}")
     if [ ${NODES_IN_CLUSTER} -gt ${TOTAL_NODES} ]; then
         echo "A node we don't know about appears to have joined the cluster, aborting."
         exit 255
@@ -128,7 +90,7 @@ while is_in_cluster; do
         # All other nodes are in the cluster and it's our allotted time,
         # safe to leave. Tell other nodes we're about to leave the cluster.
         echo "Leaving cluster..."
-        timeout 300 bash -c leave_cluster || { rabbitmqctl start_app && exit 1; }
+        timeout 300 rabbitmq_reset_node || exit 1
     else
         echo "Refusing to allow node to leave cluster..."
     fi
@@ -140,32 +102,32 @@ os-svc-restart -n rabbitmq-server
 
 # We're the bootstrap node
 if [ "${LOCAL_RABBIT_HOST}" == "${BOOTSTRAP_NODE}" ]; then
-   # If we are not in a cluster keep trying to join a node.
-   # Note: This loop is required as the BOOTSTRAP_NODE may have left a running
-   #       cluster and it therefore must re-join.
-   while ! is_in_cluster; do
-       # Try to join with each node in turn.
-       COUNT=$(( (${COUNT:-0} + 1)  % ${TOTAL_NODES} ))
-       if [ ${COUNT} -ne ${NODE_INDEX} ]; then
-          join_cluster_with "${NODES[${COUNT}]}" "${LOCAL_RABBIT_HOST}" || true
-       fi
-   done
+    # If we are not in a cluster keep trying to join a node.
+    # Note: This loop is required as the BOOTSTRAP_NODE may have left a running
+    #       cluster and it therefore must re-join.
+    while ! rabbitmq_is_in_cluster; do
+        # Try to join with each node in turn.
+        COUNT=$(( (${COUNT:-0} + 1)  % ${TOTAL_NODES} ))
+        if [ ${COUNT} -ne ${NODE_INDEX} ]; then
+            rabbitmq_join_cluster --remote-host "${NODES[${COUNT}]}" || true
+        fi
+    done
 
-   # Check that we have not got a partition i.e. The case where we do not have
-   # synced clocks and hence we can get split in the clustering A+B C. If we
-   # get this we will wait as this is more favourable than a bad/broken
-   # cluster set-up.
-   while [[ $(cluster_size "${LOCAL_RABBIT_HOST}") -ne ${TOTAL_NODES} ]]; do
-       echo "Waiting for nodes to join [${BOOTSTRAP_NODE}]..."
-       sleep 10
-   done
+    # Check that we have not got a partition i.e. The case where we do not have
+    # synced clocks and hence we can get split in the clustering A+B C. If we
+    # get this we will wait as this is more favourable than a bad/broken
+    # cluster set-up.
+    while [[ $(rabbitmq_size_of_cluster) -ne ${TOTAL_NODES} ]]; do
+        echo "Waiting for nodes to join [${BOOTSTRAP_NODE}]..."
+        sleep 10
+    done
 else
-   # Wait until the BOOTSTRAP_NODE has at least formed a cluster with one node.
-   while [[ $(cluster_size "${BOOTSTRAP_NODE}") -lt 2 ]]; do
-       echo "Waiting for bootstrap node to initialise the cluster..."
-       sleep 10
-   done
-   is_in_cluster || join_cluster_with "${BOOTSTRAP_NODE}" "${LOCAL_RABBIT_HOST}"
+    # Wait until the BOOTSTRAP_NODE has at least formed a cluster with one node.
+    while [[ $(rabbitmq_size_of_cluster --remote-host "${BOOTSTRAP_NODE}") -lt 2 ]]; do
+        echo "Waiting for bootstrap node to initialise the cluster..."
+        sleep 10
+    done
+    rabbitmq_join_cluster --remote-host "${BOOTSTRAP_NODE}"
 fi
 
 # Make sure that all queues (except those with auto-generated names) are
