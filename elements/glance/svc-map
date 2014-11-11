@@ -1,0 +1,7 @@
+glance-api:
+  default: openstack-glance-api
+  debian: glance-api
+glance-reg:
+  default: openstack-glance-registry
+  debian: glance-reg
+
