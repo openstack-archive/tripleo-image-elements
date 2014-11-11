@@ -35,7 +35,6 @@ PATH=/usr/local/bin:$PATH
 EXTERNAL_BRIDGE=$(os-apply-config --key neutron.ovs.physical_bridge --type raw --key-default '')
 PHYSICAL_INTERFACE=$(os-apply-config --key neutron.ovs.public_interface --type raw  --key-default '')
 PHYSICAL_INTERFACE_IP=$(os-apply-config --key bootstack.public_interface_ip --type netaddress  --key-default '')
-PHYSICAL_INTERFACE_RAW_DEVICE=$(os-apply-config --key neutron.ovs.public_interface_raw_device --type raw --key-default '')
 PUBLIC_INTERFACE_ROUTE=$(os-apply-config --key neutron.ovs.public_interface_route --type netaddress --key-default '')
 # TAG is type raw because we can't do an absent key as a default in Heat, and '' is not an int.
 PUBLIC_INTERFACE_TAG=$(os-apply-config --key neutron.ovs.public_interface_tag --type raw --key-default '')
@@ -47,21 +46,6 @@ NET_CONFIG=$(os-apply-config --key os_net_config --type raw --key-default '')
 if [ -n "$NET_CONFIG" ]; then
     echo "Skipping init-neutron-ovs because os-net-config data detected."
     exit 0
-fi
-
-if [ -n "$PHYSICAL_INTERFACE_RAW_DEVICE" -a -n "$PUBLIC_INTERFACE_TAG" ]; then
-    echo "ERROR: cannot specify a raw device and a tagged access port at the same time." >&2
-    exit 1
-fi
-
-if [ -n "$PHYSICAL_INTERFACE_RAW_DEVICE" ]; then
-    echo "DEPRECATED: please use neutron.ovs.public_interface_ip_tag instead." >&2
-    if ! (ip link show dev $PHYSICAL_INTERFACE) ; then
-        VLAN_ID=$(echo $PHYSICAL_INTERFACE | sed s/vlan//)
-        vconfig set_name_type VLAN_PLUS_VID_NO_PAD
-        vconfig add $PHYSICAL_INTERFACE_RAW_DEVICE $VLAN_ID
-    fi
-    ip link set $PHYSICAL_INTERFACE up
 fi
 
 if [ -z "$EXTERNAL_BRIDGE" ] ; then
