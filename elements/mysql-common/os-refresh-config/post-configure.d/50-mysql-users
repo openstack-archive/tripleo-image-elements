@@ -78,13 +78,23 @@ to_create = should_exist - existing
 
 for createuser in to_create:
     dbvalue = by_user[createuser]
+
+    username = dbvalue['username']
+    database = dbvalue.get('database', None)
+    privilege = dbvalue.get('privilege', 'ALL')
+
     if 'password' in dbvalue:
         password = dbvalue['password']
     else:
         password = base64.b64encode(os.urandom(30))
 
-    cmd = "GRANT ALL PRIVILEGES ON `%s`.* TO `%s`@'%%' IDENTIFIED BY '%s'" % (
-        dbvalue['database'], dbvalue['username'], password)
+    if database is not None:
+        cmd = "GRANT %s ON `%s`.*" % (privilege, database)
+    else:
+        cmd = "GRANT %s ON *.*" % (privilege)
+
+    cmd += " TO `%s`@'%%' IDENTIFIED BY '%s'" % (username, password)
+
     if opts.noop:
         print("%s" % (cmd))
     else:
@@ -94,7 +104,7 @@ for createuser in to_create:
 
     if 'userhandle' in dbvalue:
         # Inform Heat of new password for this user
-        cmd = ['/opt/aws/bin/cfn-signal', '-i', dbvalue['username'],
+        cmd = ['/opt/aws/bin/cfn-signal', '-i', username,
                '-s', 'true', '--data', password, dbvalue['userhandle']]
         if opts.noop:
             print(cmd)
