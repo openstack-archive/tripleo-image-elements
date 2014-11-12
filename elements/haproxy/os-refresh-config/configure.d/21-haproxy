@@ -1,7 +1,8 @@
 #!/bin/bash
 set -eux
+set -o pipefail
 
-os-svc-enable -n haproxy
+os-svc-enable -an haproxy
 
 if service haproxy status; then
     service haproxy reload
