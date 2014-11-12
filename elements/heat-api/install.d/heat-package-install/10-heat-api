@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -eux
+set -o pipefail
 
 install-packages \
     openstack-heat-api \

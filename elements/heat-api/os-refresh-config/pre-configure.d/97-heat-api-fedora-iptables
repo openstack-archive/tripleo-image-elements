@@ -1,5 +1,6 @@
 #!/bin/bash
 set -eu
+set -o pipefail
 
 # heat-api-cfn, heat-api-cloudwatch, heat-api
 add-rule INPUT -p tcp -m multiport --dports 8000,8003,8004 -j ACCEPT
