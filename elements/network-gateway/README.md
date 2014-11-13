@@ -11,5 +11,5 @@ Currently only supported on ifcfg network configuration style systems.
 Configuration
 =============
 
-network-config:
-  gateway-dev: eth1
+    network-config:
+      gateway-dev: eth1
