@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eux
+
+os-svc-enable -n os-collect-config
