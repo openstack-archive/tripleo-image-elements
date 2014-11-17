@@ -1,0 +1,3 @@
+ceilometer-alarm-notifier:
+  default: ceilometer-alarm-notifier
+  redhat: openstack-ceilometer-alarm-notifier
