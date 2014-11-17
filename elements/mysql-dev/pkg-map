@@ -1,0 +1,10 @@
+{
+  "family": {
+    "redhat": {
+      "mysql_dev_package": "mysql-libs mysql-devel"
+    }
+  },
+  "default": {
+    "mysql_dev_package": "libmysqlclient-dev"
+  }
+}
