@@ -1,0 +1,3 @@
+ceilometer-alarm-evaluator:
+  default: ceilometer-alarm-evaluator
+  redhat: openstack-ceilometer-alarm-evaluator
