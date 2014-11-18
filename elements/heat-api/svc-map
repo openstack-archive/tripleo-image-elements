@@ -1,0 +1,9 @@
+heat-api:
+  default: openstack-heat-api
+  debian: heat-api
+heat-api-cfn:
+  default: openstack-heat-api-cfn
+  debian: heat-api-cfn
+heat-api-cloudwatch:
+  default: openstack-heat-api-cloudwatch
+  debian: heat-api-cloudwatch
