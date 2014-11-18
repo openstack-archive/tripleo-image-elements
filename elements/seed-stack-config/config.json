@@ -70,7 +70,6 @@
       "enable_tunneling": "False",
       "network_vlan_ranges": "ctlplane",
       "physical_bridge": "br-ctlplane",
-      "physical_network": "ctlplane",
       "public_interface": "eth1",
       "tenant_network_type": "vlan"
     },
