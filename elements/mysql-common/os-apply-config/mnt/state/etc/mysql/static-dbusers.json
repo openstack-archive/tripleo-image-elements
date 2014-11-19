@@ -1,4 +1,9 @@
 [{"username": "root"{{#mysql.root-password}},
   "password": "{{mysql.root-password}}"
 {{/mysql.root-password}}
+},
+{"username": "clustercheck",
+ "privilege": "USAGE"{{#mysql.clustercheck-password}},
+  "password": "{{mysql.clustercheck-password}}"
+{{/mysql.clustercheck-password}}
 }]

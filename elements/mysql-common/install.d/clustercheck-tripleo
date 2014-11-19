@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# xinetd is incapable of passing the two empty arguments, causing the check
+# to fail regardless of if the server is up and sync'd or not and requiring
+# us to wrap the clustercheck script with this.
+
+/usr/local/bin/clustercheck "" "" 0 /dev/null 1 /mnt/state/etc/mysql/mysqlchk.my.cnf

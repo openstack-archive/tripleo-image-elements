@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -eux
+set -o pipefail
+
+SCRIPTDIR=$(dirname $0)
+
+# Install the clustercheck script and xinetd service
+install -D -g root -o root -m 0755 ${SCRIPTDIR}/clustercheck /usr/local/bin/clustercheck
+install -D -g root -o root -m 0755 ${SCRIPTDIR}/clustercheck-tripleo /usr/local/bin/clustercheck-tripleo
+install -D -g root -o root -m 0644 ${SCRIPTDIR}/mysqlchk /etc/xinetd.d/mysqlchk
+
+cat <<EOF >> /etc/services
+mysqlchk    9200/tcp    # MySQL check
+EOF

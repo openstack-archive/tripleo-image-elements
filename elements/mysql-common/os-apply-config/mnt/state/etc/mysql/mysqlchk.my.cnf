@@ -1,0 +1,6 @@
+# This file is used by the mysqlchk xinetd service / clustercheck script
+[client]
+user = clustercheck
+{{#mysql.clustercheck-password}}
+password = {{.}}
+{{/mysql.clustercheck-password}}
