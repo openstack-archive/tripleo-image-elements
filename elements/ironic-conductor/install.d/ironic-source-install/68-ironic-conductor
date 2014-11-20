@@ -1,8 +1,9 @@
 #!/bin/bash
 set -eux
+set -o pipefail
 
 echo "ironic ALL=(root) NOPASSWD: $IRONIC_VENV_DIR/bin/ironic-rootwrap" > /etc/sudoers.d/ironic
 chmod 0440 /etc/sudoers.d/ironic
 visudo -c
 
-os-svc-daemon -i "$IRONIC_VENV_DIR" ironic-conductor ironic ironic-conductor "--config-file /etc/ironic/ironic.conf"
+os-svc-daemon -a -i "$IRONIC_VENV_DIR" ironic-conductor ironic ironic-conductor "--config-file /etc/ironic/ironic.conf"
