@@ -1,5 +1,6 @@
 #!/bin/bash
 set -eux
+set -o pipefail
 
 # keystone service, keystone admin
 add-rule INPUT -p tcp -m multiport --dports 5000,35357 -j ACCEPT

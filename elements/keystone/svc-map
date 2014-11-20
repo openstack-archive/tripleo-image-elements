@@ -1,0 +1,4 @@
+keystone:
+  default: openstack-keystone
+  debian: keystone
+
