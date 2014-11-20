@@ -1,4 +1,5 @@
 #!/bin/bash
 set -eu
+set -o pipefail
 
 add-rule INPUT -p tcp --dport 6385 -j ACCEPT

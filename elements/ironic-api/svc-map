@@ -1,0 +1,3 @@
+ironic-api:
+  default: ironic-api
+  redhat: openstack-ironic-api
