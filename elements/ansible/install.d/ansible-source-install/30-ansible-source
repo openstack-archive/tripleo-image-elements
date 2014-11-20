@@ -21,16 +21,15 @@ set -o pipefail
 
 install-packages build-essential libssl-dev libyaml-dev python-dev libxml2-dev libxslt-dev
 
-VENV=/opt/stack/venvs/ansible
-virtualenv $VENV
+virtualenv $ANSIBLE_VENV_DIR
 
 set +u
-source $VENV/bin/activate
+source $ANSIBLE_VENV_DIR/bin/activate
 set -u
 
-$VENV/bin/pip install paramiko PyYAML jinja2 httplib2
+$ANSIBLE_VENV_DIR/bin/pip install paramiko PyYAML jinja2 httplib2
 
-$VENV/bin/pip install ansible==1.7.0
+$ANSIBLE_VENV_DIR/bin/pip install ansible==1.7.0
 
-ln -s $VENV/bin/ansible /usr/local/bin/ansible
-ln -s $VENV/bin/ansible-playbook /usr/local/bin/ansible-playbook
+ln -s $ANSIBLE_VENV_DIR/bin/ansible /usr/local/bin/ansible
+ln -s $ANSIBLE_VENV_DIR/bin/ansible-playbook /usr/local/bin/ansible-playbook
