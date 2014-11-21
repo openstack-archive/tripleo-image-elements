@@ -2,5 +2,6 @@
 set -eux
 set -o pipefail
 
+install -d -o root -g cinder -m 0770 /var/lib/cinder
 install -d -o root -g cinder -m 0770 /var/lib/cinder/volumes
 register-state-path --leave-symlink /var/lib/cinder
