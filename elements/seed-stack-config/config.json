@@ -68,6 +68,7 @@
     "ovs": {
       "bridge_mappings": "ctlplane:br-ctlplane",
       "enable_tunneling": "False",
+      "local_ip": "192.0.2.1",
       "network_vlan_ranges": "ctlplane",
       "physical_bridge": "br-ctlplane",
       "public_interface": "eth1",
