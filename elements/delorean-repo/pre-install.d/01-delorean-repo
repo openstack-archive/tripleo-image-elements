@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+set -o xtrace
+
+if [ -n "$DELOREAN_REPO_URL" ]; then
+  curl $DELOREAN_REPO_URL/delorean.repo -o /etc/yum.repos.d/delorean.repo
+else
+  echo "Please configure a DELOREAN_REPO_URL."
+  exit 1
+fi
