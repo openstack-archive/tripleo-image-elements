@@ -1,5 +1,6 @@
 #!/bin/bash
 set -eux
+set -o pipefail
 
 # setup tftp directory structure
 if [ -f /usr/lib/syslinux/pxelinux.0 ]; then

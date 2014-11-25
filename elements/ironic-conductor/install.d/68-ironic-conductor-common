@@ -1,5 +1,6 @@
 #!/bin/bash
 set -eux
+set -o pipefail
 
 # ensure we have tftp and pxe requirements
 install-packages syslinux tftpd-hpa xinetd parted psmisc

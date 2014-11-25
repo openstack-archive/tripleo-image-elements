@@ -1,5 +1,6 @@
 #!/bin/bash
 set -eu
+set -o pipefail
 
 parent_dir=/mnt/state/var/lib/ironic
 
@@ -10,9 +11,9 @@ for directory in images master_images; do
     chown ironic:ironic $parent_dir/$directory
 done
 
-os-svc-enable -n ironic-conductor
+os-svc-enable -an ironic-conductor
 
-os-svc-restart -n ironic-conductor
+os-svc-restart -an ironic-conductor
 
 # ssh really wants these permissions
 chmod 600 /mnt/state/var/lib/ironic/virtual-power-key
