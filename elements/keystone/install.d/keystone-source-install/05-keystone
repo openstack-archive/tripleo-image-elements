@@ -1,5 +1,7 @@
 #!/bin/bash
 set -eux
+set -o pipefail
+
 os-svc-install $KEYSTONE_EXTRA_INSTALL_OPTS -i "$KEYSTONE_VENV_DIR" -u keystone -r /opt/stack/keystone
 
 # Workaround for https://bugs.launchpad.net/tripleo/+bug/1288425

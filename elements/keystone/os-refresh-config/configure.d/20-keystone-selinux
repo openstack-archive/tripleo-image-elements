@@ -1,5 +1,6 @@
 #!/bin/bash
 set -eux
+set -o pipefail
 
 # Allow openssl to read keys
 

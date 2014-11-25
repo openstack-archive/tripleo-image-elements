@@ -1,5 +1,6 @@
 #!/bin/sh
 set -eu
+set -o pipefail
 
 KEYSTONE_DB=$(os-apply-config --key keystone.db --type dsn)
 
