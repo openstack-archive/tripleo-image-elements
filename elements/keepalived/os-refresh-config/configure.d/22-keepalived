@@ -8,7 +8,7 @@ if [ -z "$INTERFACES" ] ; then
     exit 1
 fi
 
-os-svc-enable -n keepalived
+os-svc-enable -an keepalived
 
 if [ -e /var/run/keepalived.pid ] && pgrep -F /var/run/keepalived.pid keepalived &>/dev/null; then
     service keepalived reload
