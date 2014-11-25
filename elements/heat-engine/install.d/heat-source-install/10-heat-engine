@@ -1,9 +1,10 @@
 #!/bin/bash
 set -eu
+set -o pipefail
 
 cp -r /opt/stack/heat/etc/heat/environment.d /etc/heat
 cp -r /opt/stack/heat/etc/heat/templates /etc/heat
 
 ln -s $HEAT_VENV_DIR/bin/heat-manage /usr/local/bin/heat-manage
 
-os-svc-daemon -i "$HEAT_VENV_DIR" heat-engine heat heat-engine
+os-svc-daemon -a -i "$HEAT_VENV_DIR" heat-engine heat heat-engine
