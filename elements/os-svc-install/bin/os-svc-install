@@ -41,6 +41,17 @@ function python_install() {
         pip install -U 'pbr>=0.5.21,<1.0'
 
         if [ -n "$reqs" ] ; then
+            # Install requirements off source repo if the install type
+            # "source" has been specified and a cloned repo exists.
+            for i in $(cat $reqs | grep -v ^# | grep -v ^$ | awk -F'[=><]' '{print $1}') ; do
+                INSTALL_TYPE_VAR=DIB_INSTALLTYPE_${i//[^A-Za-z0-9]/_}
+                INSTALL_TYPE=${!INSTALL_TYPE_VAR:-source}
+                GIT_CLONE_DIR="/opt/stack/$i"
+                if [ "$INSTALL_TYPE" = "source" ] && [ -d "$GIT_CLONE_DIR" ] ; then
+                    pip install $GIT_CLONE_DIR
+                fi
+            done
+
             pip install -r $reqs
             # FIXME: pip requires doesn't include MySQL-python
             pip install MySQL-python
