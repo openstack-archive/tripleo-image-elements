@@ -4,9 +4,8 @@ set -o pipefail
 
 install-packages iptables
 
-DISTRO=`lsb_release -si` || true
 
-if [[ "Debian Ubuntu" =~ $DISTRO ]]; then
+if [[ "ubuntu debian" =~ "$DISTRO_NAME" ]]; then
     # Note in later versions will
     # need netfilter-persistent package
     install-packages iptables-persistent

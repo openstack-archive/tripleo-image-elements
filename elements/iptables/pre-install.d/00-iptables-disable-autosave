@@ -1,0 +1,9 @@
+#!/bin/bash
+set -eux
+set -o pipefail
+
+if [[ "ubuntu debian" =~ "$DISTRO_NAME" ]]; then
+    # Disable save of iptables rules on package install
+    debconf-set-selections <<< "iptables-persistent iptables-persistent/autosave_v4 boolean false"
+    debconf-set-selections <<< "iptables-persistent iptables-persistent/autosave_v6 boolean false"
+fi
