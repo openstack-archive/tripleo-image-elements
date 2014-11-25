@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eux
+set -o pipefail
+
+# Start building mirror in the background, this can take hours and downloads over 100G of data
+flock -n /var/run/bandersnatch -c \
+    "/usr/local/bin/bandersnatch mirror &>> /var/log/bandersnatch" &
