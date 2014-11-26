@@ -2,11 +2,19 @@
 module tripleo_selinux_rabbitmq 1.0;
 
 require {
-	type rabbitmq_var_lib_t;
-	type rabbitmq_beam_t;
-	class lnk_file read;
+        type rabbitmq_var_lib_t;
+        type rabbitmq_beam_t;
+        type rabbitmq_var_log_t;
+        type rabbitmq_t;
+        type hostname_exec_t;
+        class lnk_file read;
+        class file { read getattr open execute execute_no_trans };
 }
 
 #============= rabbitmq_beam_t ==============
 # https://bugs.launchpad.net/tripleo/+bug/1373145
 allow rabbitmq_beam_t rabbitmq_var_lib_t:lnk_file read;
+
+# https://bugs.launchpad.net/tripleo/+bug/1396417
+allow rabbitmq_t hostname_exec_t:file { read getattr open execute execute_no_trans };
+allow rabbitmq_t rabbitmq_var_log_t:lnk_file read;
