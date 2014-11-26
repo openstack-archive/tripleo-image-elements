@@ -33,7 +33,7 @@ function show_options() {
     echo "    will be searched for in myconfig/hp2_networks.json"
 }
 
-if [ -z "$1"]; then
+if [ -z "$1" ]; then
     echo "REGION_CODE is required"
     echo
     show_options
