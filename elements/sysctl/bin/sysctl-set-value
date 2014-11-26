@@ -35,8 +35,8 @@ else
         exit 1
     fi
 
-    sysctl-write-value $NAME $VALUE $COMMENT
+    sysctl-write-value $NAME "$VALUE" "$COMMENT"
 
-    sysctl -p$FILENAME
+    sysctl -p $FILENAME
 
 fi
