@@ -1,0 +1,10 @@
+/var/log/keepalived/keepalived.log {
+  daily
+  compress
+  delaycompress
+  missingok
+  copytruncate
+  maxsize 45M
+  rotate 6
+  create 640 root adm
+}
