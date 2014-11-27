@@ -42,6 +42,9 @@ keystone user-role-add --role Member --user tripleo-ci --tenant openstack-nodepo
 # Create the flavor nodepool uses
 nova flavor-show h1.ci || nova flavor-create h1.ci auto 8192 20 1
 
+# Create a flavor for mirrors with more disk space then is normal
+nova flavor-show d1.medium || nova flavor-create d1.medium auto 4096 200 2
+
 # The the images that nodepool uses to creat templates
 FEDORA_IMAGE=$(wget -q http://dl.fedoraproject.org/pub/fedora/linux/updates/20/Images/x86_64/ -O - | grep -o -E 'href="([^"#]+qcow2)"' | cut -d'"' -f2)
 F20_IMAGE_FILE=$TRIPLEO_ROOT/fedora-20.x86_64.qcow2
@@ -105,6 +108,25 @@ if ! nova $NP_CREDS show squid ; then
         --nic net-id=$DEFAULT_NET \
         --nic net-id=$TESTNETID,v4-fixed-ip=172.16.3.253 --key-name default \
         squid
+fi
+
+# Create and boot bandersnatch pypi mirror
+BANDERSNATCH_IMG=$TRIPLEO_ROOT/bandersnatch.qcow2
+if [ ! -e $BANDERSNATCH_IMG -o "$USE_CACHE" != "1" ] ; then
+    $TRIPLEO_ROOT/diskimage-builder/bin/disk-image-create -a amd64 -o $BANDERSNATCH_IMG \
+        $TE_DISTRO vm bandersnatch stackuser dhcp-all-interfaces
+fi
+# XXX(lifeless) make a load-image patch for virt use
+if glance image-show bandersnatch &> /dev/null; then
+    glance image-delete bandersnatch
+fi
+glance image-create --name bandersnatch --disk-format qcow2 --container-format bare --is-public 1 --file $BANDERSNATCH_IMG --progress
+
+if ! nova $NP_CREDS show bandersnatch ; then
+    nova $NP_CREDS boot --image "bandersnatch" --flavor d1.medium \
+        --nic net-id=$DEFAULT_NET \
+        --nic net-id=$TESTNETID,v4-fixed-ip=172.16.3.252 --key-name default \
+        bandersnatch
 fi
 
 # Assign a floting IP to the broker
