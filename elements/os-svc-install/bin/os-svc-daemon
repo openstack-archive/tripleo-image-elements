@@ -78,12 +78,28 @@ if [ -z "$SERVICENAME" ] || [ -z "$RUNAS" ] ; then
     fi
 fi
 
+function deprecated_posarg_warning {
+    echo "WARNING: Setting $1 via positional argument is deprecated and will be removed in a future release."
+}
+
 # Compatibility with old style passing w/o switches
-[ -n "$SERVICENAME" ] || { SERVICENAME=$1 ; shift; }
-[ -n "$RUNAS" ] || { RUNAS=$1 ; shift; }
+if [ -z "$SERVICENAME" ]; then
+    SERVICENAME=$1
+    shift
+    deprecated_posarg_warning "SERVICENAME"
+fi
+if [ -z "$RUNAS" ]; then
+    RUNAS=$1
+    shift
+    deprecated_posarg_warning "RUNAS"
+fi
 if [ -z "$RUNCMD" ]; then
     CHECK=${1:-""}
-    [ -n "$CHECK" ] && { RUNCMD=$1 ; shift; }
+    if [ -n "$CHECK" ]; then
+        RUNCMD=$1
+        shift
+        deprecated_posarg_warning "CHECK"
+    fi
 fi
 
 # if INSTALLDIR isn't set use /opt/stack/venvs/RUNAS
