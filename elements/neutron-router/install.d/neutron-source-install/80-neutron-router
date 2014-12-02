@@ -5,7 +5,7 @@ set -eux
 # kill metadata-proxy processes when routers are deleted.
 if [ -n "${NEUTRON_VENV_DIR}" ]
 then
-    sed -i "s, /usr/bin/python, ${NEUTRON_VENV_DIR}/bin/python," /etc/neutron/rootwrap.d/l3.filters
+    sed -i "s, python, ${NEUTRON_VENV_DIR}/bin/python," /etc/neutron/rootwrap.d/l3.filters
 fi
 
 os-svc-daemon -i "$NEUTRON_VENV_DIR" -n neutron-l3-agent -u neutron -c neutron-l3-agent -- --config-file /etc/neutron/l3_agent.ini --config-dir /etc/neutron
