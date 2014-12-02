@@ -29,7 +29,7 @@ set -u
 
 $ANSIBLE_VENV_DIR/bin/pip install paramiko PyYAML jinja2 httplib2
 
-$ANSIBLE_VENV_DIR/bin/pip install ansible==1.7.0
+$ANSIBLE_VENV_DIR/bin/pip install ansible==1.8.1
 
 ln -s $ANSIBLE_VENV_DIR/bin/ansible /usr/local/bin/ansible
 ln -s $ANSIBLE_VENV_DIR/bin/ansible-playbook /usr/local/bin/ansible-playbook
