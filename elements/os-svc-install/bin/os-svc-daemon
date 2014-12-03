@@ -8,11 +8,13 @@ usage() {
     echo ""
     echo "SERVICENAME, RUNAS, RUNCMD, and POSTSTART can be set via the"
     echo "environment as well. Command line arguments will override"
-    echo "environment variables."
+    echo "environment variables. By default this will create a python logging"
+    echo "configuration file in /etc/os-logging/servicename.conf"
     echo ""
     echo "  -a             Use alternate svc-map instead of map-services"
     echo "  -h             Show help and exit"
     echo "  -p             Print the job file instead of writing to disk"
+    echo "  -l             Create neither a python logging.conf nor pass --log-config-append argument to command."
     echo "  -d [NAME]      Specify the name of the runtime directory, which will be"
     echo "                 /var/run/[NAME]"
     echo "  -s POSTSTART   post_start will be added to the upstart job. Ignored with systemd."
@@ -32,6 +34,7 @@ INSTALLDIR=
 RUNAS=${RUNAS:-""}
 RUNCMD=${RUNCMD:-""}
 ENV=${ENV:-""}
+DISABLE_LOGGING_CONF=
 CREATE_DIR_NAME=${CREATE_DIR_NAME:-""}
 # The default helps avoid race with daemon listening. http://pad.lv/1179766
 POSTSTART=${POSTSTART:-$DEFAULT_POSTSTART}
@@ -53,7 +56,7 @@ OUTPUT=print_to_file
 APPEND=append_to_file
 
 nshift=0
-while getopts "aphd:s:n:i:u:c:e:" opt; do
+while getopts "aplhd:s:n:i:u:c:e:" opt; do
     case "$opt" in
         n) SERVICENAME=$OPTARG;;
         i) INSTALLDIR=$OPTARG;;
@@ -63,6 +66,7 @@ while getopts "aphd:s:n:i:u:c:e:" opt; do
         e) ENV=$OPTARG;;
         a) MAPPING_COMMAND=svc-map;;
         p) OUTPUT=print_only; APPEND=print_only;;
+        l) DISABLE_LOGGING_CONF="1";;
         d) CREATE_DIR_NAME=$OPTARG;;
         h) usage; exit 0;;
         \?) usage; exit 1;;
@@ -92,6 +96,33 @@ if [ -z "$INSTALLDIR" ]; then
     INSTALLDIR="/opt/stack/venvs/$RUNAS"
 fi
 
+if [ -z "$DISABLE_LOGGING_CONF" ]; then
+    # Set up service-specific logging config
+    LOGGING_CONFIG="/etc/os-logging/$SERVICENAME.config"
+    mkdir /etc/os-logging || true
+    $OUTPUT $LOGGING_CONFIG <<EOF
+[loggers]
+keys=root
+
+[handlers]
+keys=syslog
+
+[formatters]
+keys=normal
+
+[logger_root]
+handlers=syslog
+
+[handler_syslog]
+class=handlers.SysLogHandler
+args=('/dev/log', handlers.SysLogHandler.LOG_USER)
+formatter=normal
+
+[formatter_normal]
+format=$SERVICENAME: %(asctime)s %(levelname)s %(message)s
+EOF
+fi
+
 function install_upstart {
     local name=$1
     local install_dir=$2
@@ -108,6 +139,10 @@ function install_upstart {
 env }
     fi
     local target_file="/etc/init/$name.conf"
+
+    if [ -z "$DISABLE_LOGGING_CONF" ]; then
+        args="--log-config-append $LOGGING_CONFIG $args"
+    fi
 
     $OUTPUT $target_file <<EOF
 start on runlevel [2345]
@@ -128,13 +163,13 @@ EOF
 
 respawn
 # the default post-start of 1 second sleep delays respawning enough to
-# not hit the default of 10 times in 5 seconds. Make it 2 times in 5s.
-respawn limit 2 5
+# not hit the default of 10 times in 5 seconds. Make it 2 times in 10s.
+respawn limit 2 10
 
 # We're logging to syslog
 console none
 
-exec start-stop-daemon --start -c $user --exec $install_dir/bin/$cmd -- $args 2>&1 | logger -t $name
+exec start-stop-daemon --start -c $user --exec $install_dir/bin/$cmd -- $args
 
 post-start $POSTSTART
 EOF
@@ -154,6 +189,10 @@ function install_systemd {
         local env_pad=" $ENV"
         env_entries=${env_pad// /
 Environment=}
+    fi
+
+    if [ -z "$DISABLE_LOGGING_CONF" ]; then
+        args="--log-config-append $LOGGING_CONFIG $args"
     fi
 
     $OUTPUT /lib/systemd/system/$name.service <<EOF
