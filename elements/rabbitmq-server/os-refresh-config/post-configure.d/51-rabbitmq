@@ -3,8 +3,15 @@ set -eux
 set -o pipefail
 
 LOCAL_RABBIT_HOST="$(os-apply-config --key bootstrap_host.nodeid --type netaddress --key-default '')"
-NODES=($(os-apply-config --key rabbit.nodes --type raw --key-default '' | sed 's/,/\n/g' | sort))
+NODES=$(os-apply-config --key rabbit.nodes --type raw --key-default '' | sed 's/,/\n/g' | sort)
+# convert nodes to lowercase because rabbitmq uses hostname locally, hostname
+# is lowercased by cloud-init. If uppercase is used for node names then
+# there would be mismatch.
+LOCAL_RABBIT_HOST=${LOCAL_RABBIT_HOST,,}
+NODES=(${NODES,,})
 TOTAL_NODES=${#NODES[@]}
+
+
 
 # Insufficient meta-data to attempt to start-up RabbitMQ.
 if [ -z "${LOCAL_RABBIT_HOST}" ]; then
@@ -60,6 +67,7 @@ function join_cluster_with() {
 }
 
 BOOTSTRAP_NODE="$(os-apply-config --key bootstrap_host.bootstrap_nodeid --type netaddress --key-default '')"
+BOOTSTRAP_NODE=${BOOTSTRAP_NODE,,}
 NODE_INDEX=""
 # Find the nodes being worked on in the NODES array.
 for (( index = 0; index < ${TOTAL_NODES}; index++ )); do
