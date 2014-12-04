@@ -13,9 +13,15 @@ register-state-path --leave-symlink /srv/pypi/web
 /usr/local/bin/bandersnatch mirror || true
 
 # Run bandersnatch every hour
-echo "0 * * * * root flock -n /var/run/bandersnatch -c \"/usr/local/bin/bandersnatch mirror &>> /var/log/bandersnatch\"" > /etc/cron.d/bandersnatch.cron
+echo "0 * * * * root flock -n /var/run/bandersnatch -c \"/usr/local/bin/bandersnatch mirror >> /var/log/bandersnatch 2>&1\"" > /etc/cron.d/bandersnatch
+chmod 755 /etc/cron.d/bandersnatch
 
-cat > /etc/httpd/conf.d/bandersnatch.conf<<'EOF'
+HTTPDCONFFILE=/etc/httpd/conf.d/bandersnatch.conf
+if [ -d /etc/apache2/sites-enabled ]; then
+    HTTPDCONFFILE=/etc/apache2/sites-enabled/bandersnatch.conf
+fi
+
+cat > $HTTPDCONFFILE<<'EOF'
 Alias /pypi /srv/pypi/web
 <Directory "/srv/pypi/web">
     Options Indexes
