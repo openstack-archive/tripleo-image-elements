@@ -2,6 +2,7 @@
 set -eux
 
 os-svc-install $IRONIC_EXTRA_INSTALL_OPTS -i "$IRONIC_VENV_DIR" -u ironic -r /opt/stack/ironic
+${IRONIC_VENV_DIR}/bin/pip install -U 'proliantutils'
 
 install -d -m 0750 -o ironic -g ironic /etc/ironic
 install -o root -g root -m 0644 /opt/stack/ironic/etc/ironic/policy.json /etc/ironic
