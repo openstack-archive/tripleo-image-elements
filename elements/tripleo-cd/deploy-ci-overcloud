@@ -83,12 +83,14 @@ export DIB_COMMON_ELEMENTS="stackuser hosts use-ephemeral"
 export OVERCLOUD_PUBLIC_VLAN_START=$(jq -r .overcloud.public_vlan.start $NETWORKS_FILE)
 export OVERCLOUD_PUBLIC_VLAN_FINISH=$(jq -r .overcloud.public_vlan.finish $NETWORKS_FILE)
 export OVERCLOUD_PUBLIC_VLAN_CIDR=$(jq -r .overcloud.public_vlan.cidr $NETWORKS_FILE)
+export OVERCLOUD_PUBLIC_VIRTUAL_INTERFACE=$(jq -r .NeutronPublicInterface $CI_ENV_FILE)
 export OVERCLOUD_NTP_SERVER=$(jq -r .NtpServer $CI_ENV_FILE)
 export OVERCLOUD_NAME=$(jq -r .OvercloudName $OC_ENV_FILE)
 set +e
 OVERCLOUD_LIBVIRT_TYPE="kvm" \
-    devtest_overcloud.sh eth2 "" "" "" "${OVERCLOUD_PUBLIC_VLAN_START}" \
-    "${OVERCLOUD_PUBLIC_VLAN_FINISH}" "${OVERCLOUD_PUBLIC_VLAN_CIDR}" \
+    devtest_overcloud.sh "${OVERCLOUD_PUBLIC_VIRTUAL_INTERFACE}" "" "" "" \
+    "${OVERCLOUD_PUBLIC_VLAN_START}" "${OVERCLOUD_PUBLIC_VLAN_FINISH}" \
+    "${OVERCLOUD_PUBLIC_VLAN_CIDR}" \
     "${TRIPLEO_ROOT}/tripleo-incubator/tripleo-cloud/tripleo-cd-admins" \
     "${TRIPLEO_ROOT}/tripleo-incubator/tripleo-cloud/tripleo-cd-users" \
     "${STACKNAME}" "/home/shared/ssl/${OVERCLOUD_NAME}" "${OVERCLOUD_NAME}"
@@ -100,12 +102,12 @@ if [ $RESULT == 0 ] ; then
     export TE_DATAFILE=$TRIPLEO_ROOT/testenv.json
     source $TRIPLEO_ROOT/tripleo-incubator/overcloudrc
     $TRIPLEO_ROOT/tripleo-image-elements/elements/tripleo-cd/bin/prepare-ci-overcloud \
-        $TRIPLEO_ROOT/tripleo-image-elements/elements/tripleo-cd/configs/te_hp1rc
+        $TRIPLEO_ROOT/tripleo-image-elements/elements/tripleo-cd/configs/te_${REGION_CODE}rc
     RESULT=$?
     set -e
 fi
 
-MSG=$(echo "************** $STACKNAME complete status=$RESULT ************")
+MSG=$(echo "************** $STACKNAME $REGION_CODE complete status=$RESULT ************")
 echo "$MSG"
 set -x
 send-irc tripleo $STACKNAME "$MSG"
