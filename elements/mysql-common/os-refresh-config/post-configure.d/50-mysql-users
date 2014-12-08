@@ -93,13 +93,19 @@ for createuser in to_create:
     else:
         cmd = "GRANT %s ON *.*" % (privilege)
 
-    cmd += " TO `%s`@'%%' IDENTIFIED BY '%s'" % (username, password)
+    cmd_local = "%s TO `%s`@'localhost' IDENTIFIED BY '%s'" \
+        % (cmd, username, password)
+    cmd_global = "%s TO `%s`@'%%' IDENTIFIED BY '%s'" \
+        % (cmd, username, password)
 
     if opts.noop:
-        print("%s" % (cmd))
+        print(cmd_local)
+        print(cmd_global)
     else:
         cursor = conn.cursor()
-        cursor.execute(cmd)
+        cursor.execute(cmd_local)
+        cursor.execute(cmd_global)
+        cursor.execute("FLUSH PRIVILEGES")
         cursor.close()
 
     if 'userhandle' in dbvalue:
