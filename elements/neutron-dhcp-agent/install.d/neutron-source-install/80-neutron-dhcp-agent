@@ -4,7 +4,7 @@ set -eux
 # kill processes when networks are deleted.
 if [ -n "${NEUTRON_VENV_DIR}" ]
 then
-    sed -i "s, /usr/bin/python, ${NEUTRON_VENV_DIR}/bin/python," /etc/neutron/rootwrap.d/dhcp.filters
+    sed -i "s, python, ${NEUTRON_VENV_DIR}/bin/python," /etc/neutron/rootwrap.d/dhcp.filters
 fi
 
 install-packages dnsmasq dnsmasq-utils
