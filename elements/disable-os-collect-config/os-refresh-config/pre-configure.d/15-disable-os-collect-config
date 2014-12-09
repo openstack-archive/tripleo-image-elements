@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -eu
+set -o pipefail
+
+if [ -f /mnt/state/disable-os-collect-config ]; then
+    service os-collect-config stop
+    os-svc-enable-upstart os-collect-config disable
+    echo "Found os-collect-config disable file, disabling and exiting!"
+    exit 1
+fi
