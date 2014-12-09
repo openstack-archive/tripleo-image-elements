@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e
 set -o pipefail
 
@@ -22,5 +21,5 @@ else
     sed -i 's#^STATIC_ROOT.*#STATIC_ROOT=/usr/share/openstack-dashboard/static#' /usr/share/openstack-dashboard/openstack_dashboard/local/local_settings.py
 fi
 
-os-svc-enable -n apache2
-os-svc-restart -n apache2
+os-svc-enable -an apache2
+os-svc-restart -an apache2
