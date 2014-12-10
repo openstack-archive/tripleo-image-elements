@@ -1,0 +1,15 @@
+{
+  "family": {
+    "redhat": {
+      "nagios_plugins_package": "nagios-common",
+      "snmpd_package": "net-snmp",
+      "lm-sensors_package": "lm_sensors"
+    }
+  },
+  "default": {
+    "nagios_plugins_package": "nagios-plugins-basic",
+    "snmpd_package": "snmpd",
+    "snmp-mibs-downloader_package": "snmp-mibs-downloader",
+    "lm-sensors_package": "lm-sensors"
+  }
+}

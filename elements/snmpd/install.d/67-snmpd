@@ -1,7 +1,8 @@
 #!/bin/bash
 set -eux
 
-install-packages snmpd snmp-mibs-downloader lm-sensors nagios-plugins-basic
+install-packages -m snmpd nagios_plugins_package snmpd_package snmp-mibs-downloader_package lm-sensors_package
+
 # install our snmp check script
 DEST_DIR="/usr/lib64/nagios/plugins"
 if [ ! 'amd64' = "$ARCH" ] || [ ! -d $DEST_DIR ]; then
