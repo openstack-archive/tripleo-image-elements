@@ -20,7 +20,6 @@ set -o pipefail
 
 # Setup the environment
 TEMPEST_RUN_CONCURRENCY=${TEMPEST_RUN_CONCURRENCY:-0}
-TEMPEST_ALLOW_TENANT_ISOLATION=${TEMPEST_ALLOW_TENANT_ISOLATION:-true}
 TEMPEST_IMAGE_NAME=${TEMPEST_IMAGE_NAME:-user}
 
 cd /opt/stack/tempest
@@ -76,42 +75,20 @@ set /augeas/load/PythonPaste/incl "/opt/stack/tempest/etc/tempest.conf"
 load
 
 set /files/opt/stack/tempest/etc/tempest.conf/DEFAULT/lock_path $LOCK_PATH
-set /files/opt/stack/tempest/etc/tempest.conf/DEFAULT/debug true
-set /files/opt/stack/tempest/etc/tempest.conf/DEFAULT/use_stderr false
-set /files/opt/stack/tempest/etc/tempest.conf/DEFAULT/log_file tempest.log
 
 set /files/opt/stack/tempest/etc/tempest.conf/identity/uri $OS_AUTH_URL
 set /files/opt/stack/tempest/etc/tempest.conf/identity/uri_v3 $OS_V3_AUTH_URL
-set /files/opt/stack/tempest/etc/tempest.conf/identity/region regionOne
 
 set /files/opt/stack/tempest/etc/tempest.conf/identity/admin_username $OS_USERNAME
 set /files/opt/stack/tempest/etc/tempest.conf/identity/admin_tenant_name $OS_TENANT_NAME
 set /files/opt/stack/tempest/etc/tempest.conf/identity/admin_password $OS_PASSWORD
-set /files/opt/stack/tempest/etc/tempest.conf/identity/username demo_t1
-set /files/opt/stack/tempest/etc/tempest.conf/identity/tenant_name demo_t1
-set /files/opt/stack/tempest/etc/tempest.conf/identity/password secret
-set /files/opt/stack/tempest/etc/tempest.conf/identity/alt_username demo_t2
-set /files/opt/stack/tempest/etc/tempest.conf/identity/alt_password secret
-set /files/opt/stack/tempest/etc/tempest.conf/identity/alt_tenant_name demo_t2
 
 set /files/opt/stack/tempest/etc/tempest.conf/compute/image_ref $USER_IMAGE_ID
 set /files/opt/stack/tempest/etc/tempest.conf/compute/image_ref_alt $USER_IMAGE_ID2
-set /files/opt/stack/tempest/etc/tempest.conf/compute/flavor_ref_alt 99
 
-set /files/opt/stack/tempest/etc/tempest.conf/compute/allow_tenant_isolation $TEMPEST_ALLOW_TENANT_ISOLATION
-set /files/opt/stack/tempest/etc/tempest.conf/compute/fixed_network_name default-net
 set /files/opt/stack/tempest/etc/tempest.conf/compute/network_for_ssh $EXTNET
 set /files/opt/stack/tempest/etc/tempest.conf/compute-admin/password $OS_PASSWORD
-set /files/opt/stack/tempest/etc/tempest.conf/compute-feature-enabled/resize false
 set /files/opt/stack/tempest/etc/tempest.conf/network/public_network_id $EXTNET
-set /files/opt/stack/tempest/etc/tempest.conf/service_available/cinder false
-set /files/opt/stack/tempest/etc/tempest.conf/service_available/heat true
-set /files/opt/stack/tempest/etc/tempest.conf/service_available/neutron true
-set /files/opt/stack/tempest/etc/tempest.conf/service_available/ceilometer false
-set /files/opt/stack/tempest/etc/tempest.conf/service_available/horizon false
-set /files/opt/stack/tempest/etc/tempest.conf/stress/max_instances 4
-set /files/opt/stack/tempest/etc/tempest.conf/stress/default_thread_number_per_action 2
-set /files/opt/stack/tempest/etc/tempest.conf/network/tenant_network_cidr 172.16.0.0/16
 
 save
 EOF
