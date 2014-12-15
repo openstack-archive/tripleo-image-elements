@@ -10,7 +10,10 @@ To successfully run tempest your overcloud should have
 To use you should simply run the command run-tempest with the
 OS_* environment variables for admin defined.
 
+Tempest configuration may be overwritten via pass-through.
+tempest-run configuration is defined in etc/tempestrunrc; values in there
+may be overwritten using ExtraConfig.
+
 TODO:
 * Remove as many of the filters in tests2skip.txt as possible
-* Investigate setting allow_tenant_isolation to true
 * Investigate setting run_ssh to true
