@@ -17,6 +17,13 @@ fi
 
 source /root/stackrc
 
+# Test tuskar-api and wait for it to start up
+export TUSKAR_API_TEST=$(curl localhost:8585)
+if [ ! -n "$TUSKAR_API_TEST" ]; then
+    echo "Waiting 5 second for tuskar-api to start";
+    sleep 5;
+fi
+
 if [ -z "$(tuskar --tuskar-api-version 2 plan-list | grep overcloud)" ]; then
     COMPUTE_IMAGE_ID=$( glance image-show overcloud-compute | grep id | awk '$2=="id" {print $4}' )
     CONTROL_IMAGE_ID=$( glance image-show overcloud-control | grep id | awk '$2=="id" {print $4}' )
