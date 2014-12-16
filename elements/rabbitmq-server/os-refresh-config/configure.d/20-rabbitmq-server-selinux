@@ -3,8 +3,11 @@ set -eu
 
 [ -x /usr/sbin/semanage ] || exit 0
 
-semanage fcontext -a -t rabbitmq_var_lib_t "/var/lib/rabbitmq(/.*)?"
-restorecon -Rv /var/lib/rabbitmq
+RABBIT_LIB_DIR="$(readlink -f /var/lib/rabbitmq)"
+RABBIT_LOG_DIR="$(readlink -f /var/log/rabbitmq)"
 
-semanage fcontext -a -t rabbitmq_var_log_t "/var/log/rabbitmq(/.*)?"
-restorecon -Rv /var/log/rabbitmq
+semanage fcontext -a -t rabbitmq_var_lib_t "$RABBIT_LIB_DIR(/.*)?"
+restorecon -Rv $RABBIT_LIB_DIR
+
+semanage fcontext -a -t rabbitmq_var_log_t "$RABBIT_LOG_DIR(/.*)?"
+restorecon -Rv $RABBIT_LOG_DIR
