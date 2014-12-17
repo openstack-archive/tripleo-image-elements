@@ -57,7 +57,10 @@ if [ -n "$MIGRATION_HOST" ] ; then
     # If we are planning on setting up a full slave
     SLAVE_OPTS=""
     if [ -n "$MIGRATION_USER" ] && [ -n "$MIGRATION_PASSWORD" ] ; then
+        # Dont output passwords
+        set +x
         local_mysql -e "CHANGE MASTER TO master_host='${MIGRATION_HOST}', master_user='${MIGRATION_USER}', master_password='${MIGRATION_PASSWORD}'"
+        set -x
         SLAVE_OPTS="--master-data"
     fi
     mysqldump --defaults-extra-file=/root/metadata.my.cnf \
@@ -73,8 +76,11 @@ if [ -n "$MIGRATION_HOST" ] ; then
     # Now that database has been loaded, use creds that should match
     cp -f /root/metadata.my.cnf /root/.my.cnf
     # Now get the slave going if creds were provided
+    # Dont output passwords
+    set +x
     if [ -n "$MIGRATION_USER" ] && [ -n "$MIGRATION_PASSWORD" ] ; then
         local_mysql -e "START SLAVE"
     fi
+    set -x
     touch $DONE_FILE
 fi
