@@ -113,4 +113,4 @@ if [ -n "$PUBLIC_INTERFACE_ROUTE" ]; then
     fi
 fi
 
-os-net-config -c /etc/os-net-config/neutron-openvswitch-agent.conf -d
+os-net-config -c /etc/os-net-config/neutron-openvswitch-agent.conf -v
