@@ -70,6 +70,8 @@ OS_V3_AUTH_URL=${OS_AUTH_URL%/*}/v3
 # TODO : see what other defaults can be used
 # cp the tempest config file and edit the settings
 cp etc/tempest.conf.sample etc/tempest.conf
+# We dont want to output passwords
+set +x
 cat - <<EOF | augtool --noautoload
 set /augeas/load/PythonPaste/lens "PythonPaste.lns"
 set /augeas/load/PythonPaste/incl "/opt/stack/tempest/etc/tempest.conf"
@@ -115,5 +117,6 @@ set /files/opt/stack/tempest/etc/tempest.conf/network/tenant_network_cidr 172.16
 
 save
 EOF
+set -x
 
 testr run --parallel --concurrency ${TEMPEST_RUN_CONCURRENCY} $(python tests2skip.py tests2skip.txt)
