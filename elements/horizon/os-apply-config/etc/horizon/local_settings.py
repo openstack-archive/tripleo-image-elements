@@ -56,6 +56,10 @@ CACHES = {
     }
 }
 
+{{#horizon.caches.memcached}}
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+{{/horizon.caches.memcached}}
+
 # Send email to the console by default
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
