@@ -1,0 +1,16 @@
+{{#tempestrun.concurrency}}
+# Number of test processes spawned by testr
+TEMPEST_RUN_CONCURRENCY={{tempestrun.concurrency}}
+{{/tempestrun.concurrency}}
+{{^tempestrun.concurrency}}
+# Number of test processes spawned by testr
+TEMPEST_RUN_CONCURRENCY=0
+{{/tempestrun.concurrency}}
+{{#tempestrun.image}}
+# Name of the test image to be used
+TEMPEST_IMAGE_NAME={{tempestrun.image}}
+{{/tempestrun.image}}
+{{^tempestrun.image}}
+# Name of the test image to be used
+TEMPEST_IMAGE_NAME=user
+{{/tempestrun.image}}

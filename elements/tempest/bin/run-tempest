@@ -18,9 +18,15 @@
 set -eux
 set -o pipefail
 
-# Setup the environment
-TEMPEST_RUN_CONCURRENCY=${TEMPEST_RUN_CONCURRENCY:-0}
-TEMPEST_IMAGE_NAME=${TEMPEST_IMAGE_NAME:-user}
+function check_environment {
+    # Check the environment to fail nicely if something is missing
+    TEMPEST_RUN_CONCURRENCY=${TEMPEST_RUN_CONCURRENCY:?"TEMPEST_RUN_CONCURRENCY must be defined"}
+    TEMPEST_IMAGE_NAME=${TEMPEST_IMAGE_NAME:?"TEMPEST_IMAGE_NAME must be defined"}
+}
+
+# Setup the environment. tempestrunrc file must exist, if not we fail
+source /etc/tempestrunrc
+check_environment
 
 cd /opt/stack/tempest
 
