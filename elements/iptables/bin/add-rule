@@ -18,7 +18,7 @@ RULE="$@"
 DISTRO=`lsb_release -si` || true
 
 
-if [[ "RedHatEnterpriseServer CentOS Fedora" =~ "$DISTRO" ]]; then
+if [[ "RedHatEnterpriseServer RedHatEnterpriseWorkstation CentOS Fedora" =~ "$DISTRO" ]]; then
     IPT_FILE=
     # Check if the iptables service is active
     if systemctl is-active iptables.service ; then
