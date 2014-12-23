@@ -1,0 +1,14 @@
+module tripleo-selinux-openvswitch 1.0;
+
+require {
+	type sysctl_net_t;
+	type openvswitch_t;
+	class dir search;
+	class file { read getattr open };
+}
+
+# https://bugs.launchpad.net/tripleo/+bug/1405021
+# https://bugzilla.redhat.com/show_bug.cgi?id=1176730
+#============= openvswitch_t ==============
+allow openvswitch_t sysctl_net_t:dir search;
+allow openvswitch_t sysctl_net_t:file { read getattr open };
