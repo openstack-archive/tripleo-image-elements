@@ -1,10 +1,12 @@
 {
   "family": {
     "debian": {
-      "arping_package": "iputils-arping"
+      "arping_package": "iputils-arping",
+      "conntrack_package": "conntrack"
     }
   },
   "default": {
-    "arping_package": "iputils"
+    "arping_package": "iputils",
+    "conntrack_package": "conntrack-tools"
   }
 }
