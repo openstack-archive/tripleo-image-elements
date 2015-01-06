@@ -14,3 +14,8 @@ wsrep_sst_method=rsync
 
 # Cluster name
 wsrep_cluster_name=tripleo-{{mysql.cluster_name}}
+
+{{#mysql.cluster_key}}
+# Security options
+wsrep_provider_options="gmcast.listen_addr=tcp://{{local-ipv4}}:4567; socket.ssl_cert=/etc/ssl/mysql/from-heat.crt; socket.ssl_key=/etc/ssl/mysql/from-heat.key"
+{{/mysql.cluster_key}}

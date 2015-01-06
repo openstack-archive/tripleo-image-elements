@@ -2,3 +2,13 @@
 set -eu
 
 chmod 600 /mnt/state/etc/mysql/debian.cnf /mnt/state/etc/mysql/dbusers.json /mnt/state/etc/mysql/static-dbusers.json /mnt/state/root/metadata.my.cnf
+
+# Galera clustering certificates
+if [ -f /etc/ssl/mysql/from-heat.crt ]; then
+    chown mysql /etc/ssl/mysql/from-heat.crt
+    chmod 600 /etc/ssl/mysql/from-heat.crt
+fi
+if [ -f /etc/ssl/mysql/from-heat.key ]; then
+    chown mysql /etc/ssl/mysql/from-heat.key
+    chmod 600 /etc/ssl/mysql/from-heat.key
+fi
