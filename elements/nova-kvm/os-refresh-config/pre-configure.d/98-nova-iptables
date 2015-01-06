@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eu
+
+# nova live migration
+add-rule INPUT -p tcp --dport 16509 -j ACCEPT
