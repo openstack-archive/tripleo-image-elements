@@ -19,8 +19,11 @@ set -eux
 set -o pipefail
 
 CA_CERT=/etc/ssl/from-heat-ca.crt
+CA_CERT_SIZE=$(stat -c '%s' "$CA_CERT")
 
-if [ -s ${CA_CERT} ]; then
+# A PEM encoded SSL Cert will have at least 54 characters for the START/END
+# markers.
+if [ $CA_CERT_SIZE -gt 54 ]; then
   if [[ "ubuntu debian" =~ "${DISTRO_NAME}" ]]; then
     # On Debian, place the CA certificate where 'update-ca-certificates' will find it
     cp ${CA_CERT} /usr/local/share/ca-certificates/from-heat-ca.crt
