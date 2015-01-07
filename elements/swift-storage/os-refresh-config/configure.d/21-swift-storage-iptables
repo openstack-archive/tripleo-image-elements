@@ -1,0 +1,25 @@
+#!/bin/bash
+set -eux
+set -o pipefail
+
+get_bind_port () {
+    # first argument is the config file path
+    bind_string=$(grep bind_port $1)
+    if [ "$bind_string" != "" ]; then
+        equals_index=$(expr index "$bind_string" "=")
+        port_number=${bind_string:$equals_index}
+        echo ${port_number/ /}
+    else
+        echo ""
+    fi
+}
+
+# Open ports for swift-storage servers
+add-rule INPUT -p tcp --dport $(get_bind_port /etc/swift/object-server.conf) -j ACCEPT
+add-rule INPUT -p tcp --dport $(get_bind_port /etc/swift/container-server.conf) -j ACCEPT
+add-rule INPUT -p tcp --dport $(get_bind_port /etc/swift/account-server.conf) -j ACCEPT
+
+# Swift performs rsync for clustering on port 873
+add-rule INPUT -p tcp --dport 873 -j ACCEPT
+
+
