@@ -225,6 +225,7 @@ function configure_bridge_interface_dhcp_eni() {
     sed -e "/auto $interface\$/,/^$/d" -i $tmp_config
     sed -e "/allow-ovs $bridge\$/,/^$/d" -i $tmp_config
     sed -e "/auto int_public\$/,/^$/d" -i $tmp_config
+    sed -e "/allow-$bridge $interface\$/,/^$/d" -i $tmp_config
 
     if [ -n "$bridge_route_prefix" ]; then
         local route_line="post-up ip route replace $bridge_route_prefix via $bridge_route_via"
@@ -275,6 +276,7 @@ iface int_public inet static
  ovs_bridge $bridge
  ovs_type OVSIntPort
  ovs_options tag=$public_tag
+
 EOF_CAT
     fi
 
