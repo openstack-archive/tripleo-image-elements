@@ -1,0 +1,64 @@
+#!/bin/bash
+set -eu
+set -o pipefail
+
+SCRIPT_NAME="$(basename $0)"
+
+function show_options () {
+    echo "Usage: ${SCRIPT_NAME} [options]"
+    echo "Queries to see if RabbitMQ is in a cluster."
+    echo "Options:"
+    echo "    --check-node <NODENAME>  - Node to check is in the cluster."
+    echo "                               Defaults to rabbit."
+    echo "    --check-host <HOSTNAME>  - Host to check is in the cluster."
+    echo "                               Defaults to none."
+    echo "    --remote-node <NODENAME> - The Rabbit remote node name to use."
+    echo "                               Defaults to rabbit."
+    echo "    --remote-host <HOSTNAME> - The Rabbit remote host name to use."
+    echo "                               If not set, the local machine is tested."
+    exit ${1}
+}
+
+# RabbitMQ database is tied to the system hostname.
+REMOTE_HOST="$(hostname)"
+REMOTE_NODE="rabbit"
+CHECK_HOST=""
+CHECK_NODE="rabbit"
+
+TEMP=$(getopt -o h -l help,check-node:,check-host:,remote-node:,remote-host: -n "${SCRIPT_NAME}" -- "${@}")
+[ ${?} -ne 0 ] && { echo "Terminating..." >&2; exit 1; };
+
+# Note the quotes around "$TEMP": they are essential!
+eval set -- "${TEMP}"
+
+while true ; do
+    case "${1}" in
+        -h | --help) show_options 0;;
+        --check-node) CHECK_NODE="${2}"; shift 2 ;;
+        --check-host) CHECK_HOST="${2}"; shift 2 ;;
+        --remote-node) REMOTE_NODE="${2}"; shift 2 ;;
+        --remote-host) REMOTE_HOST="${2}"; shift 2 ;;
+        --) shift ; break ;;
+        *) echo "Error: unsupported option ${1}." >&2 ; exit 1 ;;
+    esac
+done
+
+
+function running_cluster_nodes() {
+    local remote_node="${1}"
+    local remote_host="${2}"
+    # Returns true if the list following "running_nodes" in rabbitmqctl
+    # cluster_status contains at least two nodes.
+    rabbitmqctl -n "${remote_node}@${remote_host}" cluster_status 2>/dev/null |
+        awk '/running_nodes,\[[^]]+,/,/]},/' |
+        sed 's/,\([^[]\)/,\n\1/g'
+}
+
+RUNNING_NODES="$(running_cluster_nodes "${REMOTE_NODE}" "${REMOTE_HOST}")"
+
+# Cluster is not formed.
+[ -z "${RUNNING_NODES}" ] && exit 1
+# Cluster is formed and we are not checking for a particular host.
+[ -z "${CHECK_HOST}" ] && exit 0
+# Cluster is formed and we are checking for a particular host.
+grep -q "${CHECK_NODE}@${CHECK_HOST}" <<< "${RUNNING_NODES}"
