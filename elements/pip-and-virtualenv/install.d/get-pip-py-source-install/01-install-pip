@@ -3,5 +3,4 @@
 set -eux
 
 python /tmp/get-pip.py
-pip install -U 'setuptools<8.0'
 pip install virtualenv
