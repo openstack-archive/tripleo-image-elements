@@ -21,11 +21,16 @@ set -eux
 # in. While we only CD the overcloud, only overcloud related keys are needed
 # - e.g. {"arch": "amd64"}
 
+function cleanup(){
+    rm -f $THROTTLELOCK
+}
+
 export OVERCLOUD_DIB_EXTRA_ARGS="pypi"
 export DIB_COMMON_ELEMENTS="pypi stackuser"
 export DIB_DISTRIBUTION_MIRROR=http://10.10.16.169/ubuntu
 export PYPI_MIRROR_URL=http://10.10.16.169/pypi/simple
 THROTTLELOCK=$(mktemp /tmp/tripleo-cd-throttle-XXXXXX.lock)
+trap cleanup EXIT
 while true; do
     flock -x $THROTTLELOCK sleep 600 &
     source /opt/stack/tripleo-incubator/scripts/refresh-env /opt/stack
@@ -54,7 +59,6 @@ while true; do
     send-irc tripleo cd-undercloud "$MSG"
     flock -x $THROTTLELOCK echo
     if [ "0" != "$RESULT" ]; then
-        rm -f $THROTTLELOCK
         exit $RESULT
     fi
 done
