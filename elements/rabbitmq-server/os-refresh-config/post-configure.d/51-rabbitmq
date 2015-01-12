@@ -109,7 +109,7 @@ if [ "${LOCAL_RABBIT_HOST}" == "${BOOTSTRAP_NODE}" ]; then
         # Try to join with each node in turn.
         COUNT=$(( (${COUNT:-0} + 1)  % ${TOTAL_NODES} ))
         if [ ${COUNT} -ne ${NODE_INDEX} ]; then
-            rabbitmq_join_cluster --remote-host "${NODES[${COUNT}]}" || true
+            rabbitmq_join_cluster --remote-host "${NODES[${COUNT}]}" --clean-on-error || true
         fi
     done
 
@@ -127,7 +127,7 @@ else
         echo "Waiting for bootstrap node to initialise the cluster..."
         sleep 10
     done
-    rabbitmq_join_cluster --remote-host "${BOOTSTRAP_NODE}"
+    rabbitmq_join_cluster --remote-host "${BOOTSTRAP_NODE}" --clean-on-error
 fi
 
 # Make sure that all queues (except those with auto-generated names) are
