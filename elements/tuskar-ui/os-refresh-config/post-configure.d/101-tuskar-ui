@@ -13,6 +13,7 @@ else
     LOCAL_SETTINGS_FILE=/etc/horizon/local_settings.py
     DJANGO_ADMIN=django-admin
     cp $LOCAL_SETTINGS_FILE /usr/share/openstack-dashboard/openstack_dashboard/local/local_settings.py
+    sed -i 's#^STATIC_ROOT.*#STATIC_ROOT = "'/usr/share/openstack-dashboard/static'"#' /usr/share/openstack-dashboard/openstack_dashboard/local/local_settings.py
 fi
 
 source /root/stackrc
@@ -73,7 +74,7 @@ if [ -n "${HORIZON_VENV_DIR:-}" ]; then
     set -u
 else
     cp $LOCAL_SETTINGS_FILE /usr/share/openstack-dashboard/openstack_dashboard/local/local_settings.py
-    cp -r /var/www/horizon/static/dashboard/* /usr/share/openstack-dashboard/static/dashboard/
+    sed -i 's#^STATIC_ROOT.*#STATIC_ROOT = "'/usr/share/openstack-dashboard/static'"#' /usr/share/openstack-dashboard/openstack_dashboard/local/local_settings.py
 fi
 
 os-svc-enable -n apache2
