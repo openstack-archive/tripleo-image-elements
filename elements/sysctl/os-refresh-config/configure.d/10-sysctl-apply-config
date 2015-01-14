@@ -2,7 +2,7 @@
 
 # Configure sysctl settings based on Heat metadata.
 set -eu
-SYSCTL_DATA=$(os-apply-config --key sysctl --type raw --key-default '' | sed "s/u'/'/g"|sed "s/'/\"/g")
+SYSCTL_DATA=$(os-apply-config --key sysctl --type raw --key-default '')
 SYSCTL_KEYS=$(jq keys <<< $SYSCTL_DATA)
 COUNT=$(($(jq length <<< $SYSCTL_KEYS) - 1))
 for i in $(seq 0 $COUNT); do
