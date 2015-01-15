@@ -2,34 +2,34 @@
 set -eux
 set -o pipefail
 
+BOOTSTRAP_NODE="$(os-apply-config --key bootstrap_host.bootstrap_nodeid --type netaddress --key-default '')"
 LOCAL_RABBIT_HOST="$(os-apply-config --key bootstrap_host.nodeid --type netaddress --key-default '')"
 NODES=$(os-apply-config --key rabbit.nodes --type raw --key-default '' | sed 's/,/\n/g' | sort)
 # convert nodes to lowercase because rabbitmq uses hostname locally, hostname
 # is lowercased by cloud-init. If uppercase is used for node names then
 # there would be mismatch.
+BOOTSTRAP_NODE=${BOOTSTRAP_NODE,,}
 LOCAL_RABBIT_HOST=${LOCAL_RABBIT_HOST,,}
 NODES=(${NODES,,})
 TOTAL_NODES=${#NODES[@]}
 
-
-
 # Insufficient meta-data to attempt to start-up RabbitMQ.
-if [ -z "${LOCAL_RABBIT_HOST}" ]; then
-    echo "RabbitMQ bootstrap_host.nodeid is not defined in meta-data, aborting."
+if [ -z "${LOCAL_RABBIT_HOST}" -o -z "${BOOTSTRAP_NODE}" ]; then
+    echo "RabbitMQ bootstrap_host details are not fully defined in heat meta-data, aborting."
     exit 255
 fi
 
 os-svc-enable -n rabbitmq-server
 
 ## Non-cluster configuration set-up. ##
-if [ ${TOTAL_NODES} -le 1 ]; then
+if [ ${TOTAL_NODES} -le 1 -a \
+       "${BOOTSTRAP_NODE}" == "${LOCAL_RABBIT_HOST}" ] &&
+           ! rabbitmq_is_in_cluster; then
     os-svc-restart -n rabbitmq-server
     echo "RabbitMQ non-cluster configuration complete..."
     exit 0
 fi
 
-BOOTSTRAP_NODE="$(os-apply-config --key bootstrap_host.bootstrap_nodeid --type netaddress --key-default '')"
-BOOTSTRAP_NODE=${BOOTSTRAP_NODE,,}
 NODE_INDEX=""
 # Find the nodes being worked on in the NODES array.
 for (( index = 0; index < ${TOTAL_NODES}; index++ )); do
@@ -38,11 +38,10 @@ for (( index = 0; index < ${TOTAL_NODES}; index++ )); do
     fi
 done
 
-if [ -z "${BOOTSTRAP_NODE}" -o ${TOTAL_NODES} -lt 3 -o -z "${NODE_INDEX}" ]; then
-    #      We do not know who the bootstrap is, why are we attempting to bring up a Rabbit cluster?
-    # -OR- we do not have sufficient nodes to support HA so lets abort.
+if [ ${TOTAL_NODES} -lt 3 -o -z "${NODE_INDEX}" ]; then
+    #      We do not have sufficient nodes to support HA so lets abort.
     # -OR- we did not find our node in the array and hence did not set node_indexs.
-    echo "bootstrap_host.bootstrap_nodeid: ${BOOTSTRAP_NODE}, TOTAL_NODES: ${TOTAL_NODES}, NODE_INDEX: ${NODE_INDEX}"
+    echo "TOTAL_NODES: ${TOTAL_NODES}, NODE_INDEX: ${NODE_INDEX}"
     echo "RabbitMQ cluster configuration prerequisites not met, aborting."
     exit 255
 fi
