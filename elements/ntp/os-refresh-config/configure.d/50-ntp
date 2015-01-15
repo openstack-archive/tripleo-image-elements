@@ -1,0 +1,22 @@
+#!/bin/bash
+set -eu
+set -o pipefail
+
+# NTP server to sync with.
+NTP_SERVER="$(os-apply-config --key 'ntp.servers.0.server' --type raw --key-default '')"
+SERVICE_NAME="$(svc-map ntpd)"
+
+if [ -n "${NTP_SERVER}" ]; then
+    ntpdate -q "${NTP_SERVER}" ||
+        { echo "ERROR: ntpdate cannot connect to: ${NTP_SERVER}"; exit 1; }
+
+    # Check ntpd is running, if it is stop the service.
+    service "${SERVICE_NAME}" status && service "${SERVICE_NAME}" stop
+
+    # Set the system clock to the value of the NTP clock.
+    # Note: This will not sanity check the ntp server like ntpd.
+    ntpdate -b "${NTP_SERVER}"
+    hwclock --systohc # Re-align the H/W clock. (incase of power loss)
+
+    service "${SERVICE_NAME}" start
+fi

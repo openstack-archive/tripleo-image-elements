@@ -1,2 +1,0 @@
-#!/bin/sh
-service ntp restart || service ntpd restart
