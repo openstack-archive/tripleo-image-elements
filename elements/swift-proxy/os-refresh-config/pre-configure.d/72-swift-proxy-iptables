@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eux
+set -o pipefail
+
+# port 11211 is used for memcache in swift-proxy clusters
+add-rule INPUT -p tcp --dport 11211 -j ACCEPT
+
