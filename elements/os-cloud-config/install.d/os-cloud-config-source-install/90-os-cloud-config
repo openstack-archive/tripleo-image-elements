@@ -1,6 +1,5 @@
 #!/bin/bash
 set -eux
-set -o pipefail
 
 manifest=$(get-pip-manifest os-cloud-config)
 
@@ -19,9 +18,20 @@ else
     ${OS_CLOUD_CONFIG_VENV_DIR}/bin/pip install -U 'setuptools>=1.0'
     # bug #1293812 : Avoid easy_install triggering on pbr.
     ${OS_CLOUD_CONFIG_VENV_DIR}/bin/pip install -U 'pbr>=0.6,<1.0'
-    ${OS_CLOUD_CONFIG_VENV_DIR}/bin/pip install \
-        --install-option="--install-scripts=/usr/local/bin" -U os-cloud-config
+    if [ -e /opt/stack/os-cloud-config/requirements.txt ]; then
+        reqs=/opt/stack/os-cloud-config/requirements.txt
+    elif [ -e /opt/stack/os-cloud-config/tools/pip-requires ]; then
+        reqs=/opt/stack/os-cloud-config/tools/pip-requires
+    else
+        reqs=""
+    fi
+    if [ -n "$reqs" ] ; then
+        pip install -r $reqs
+    fi
 fi
+
+# All reqs are installed, install from source (dev versions are not installed from manifests)
+pip install /opt/stack/os-cloud-config
 
 # Write the manifest of what was installed
 write-pip-manifest os-cloud-config

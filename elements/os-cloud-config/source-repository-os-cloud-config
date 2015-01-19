@@ -1,0 +1,1 @@
+os-cloud-config git /opt/stack/os-cloud-config https://git.openstack.org/openstack/os-cloud-config
