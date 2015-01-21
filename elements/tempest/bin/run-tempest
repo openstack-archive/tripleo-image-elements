@@ -74,8 +74,14 @@ trap "rm -rf $LOCK_PATH" EXIT
 OS_V3_AUTH_URL=${OS_AUTH_URL%/*}/v3
 
 # TODO : see what other defaults can be used
-# cp the tempest config file and edit the settings
-cp etc/tempest.conf.sample etc/tempest.conf
+
+# If tempest.conf already exists we are using pass-through, so
+# do not override the configuration
+if [ ! -f etc/tempest.conf ]; then
+    # cp the tempest config file and edit the settings
+    cp etc/tempest.conf.sample etc/tempest.conf
+fi
+
 # We dont want to output passwords
 set +x
 cat - <<EOF | augtool --noautoload
