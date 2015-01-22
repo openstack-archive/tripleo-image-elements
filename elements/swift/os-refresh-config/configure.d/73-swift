@@ -3,6 +3,12 @@
 set -eux
 set -o pipefail
 
+if [ -e "/etc/swift/object.ring.gz" -a -e "/etc/swift/container.ring.gz" -a \
+     -e "/etc/swift/account.ring.gz" ]; then
+    echo "Won't build rings. Already exist."
+    exit 0
+fi
+
 PARTPOWER=$(os-apply-config --key swift.part-power --key-default 10)
 REPLICAS=$(os-apply-config --key swift.replicas --key-default 1)
 DEVICES=$(os-apply-config --key swift.devices --key-default "" --type raw)
