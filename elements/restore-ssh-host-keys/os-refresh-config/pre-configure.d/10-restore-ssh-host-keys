@@ -13,7 +13,7 @@ if [ -d "$KEYS_DIR" ]; then
       echo "Waiting until cloud-init has completed SSH configuration."
       sleep 1
     done
-    mv -f ${KEYS_DIR}/ssh_host_*" /etc/ssh/ && rm -rf "$KEYS_DIR"
+    mv -f ${KEYS_DIR}/ssh_host_* /etc/ssh/ && rm -rf "$KEYS_DIR"
     grep -q -F 'VersionAddendum TRIPLEO_HK_RESTORED' /etc/ssh/sshd_config || echo 'VersionAddendum TRIPLEO_HK_RESTORED' >> /etc/ssh/sshd_config
     os-svc-restart -n ssh
 fi
