@@ -1,6 +1,11 @@
 #!/bin/bash
 set -eux
 
+# Some templates explictly pass completion-handle/completion-signal in the
+# StructuredConfig data, if we find a handle, send a completion signal
+# Note, this for backwards compatibility, in general the logic below should be
+# used instead, where a per-deployment signal is sent using the handle provided
+# automatically by heat
 HANDLE=$(os-apply-config --key completion-handle --type raw --key-default "")
 SIGNAL=$(os-apply-config --key completion-signal --type raw --key-default "")
 ID=$(os-apply-config --key instance-id --type raw --key-default "")
@@ -26,3 +31,15 @@ fi
 if [ -n "$SIGNAL" ]; then
     call_curl POST $SIGNAL
 fi
+
+# This extracts "deploy_signal_id" from any deployments of group "os-apply-config"
+# deploy_signal_id is a pre-signed URL when CFN_SIGNAL is specified, it's not
+# included if NO_SIGNAL is specified.  Won't yet work with HEAT_SIGNAL.
+DEPLOYMENT_HANDLES=$(os-apply-config --key deployments --type raw --key-default "" | \
+                     jq -r "map(select(.group == \"os-apply-config\") | .inputs | \
+                            map(select(.name == \"deploy_signal_id\"))) | .[][].value")
+for url in ${DEPLOYMENT_HANDLES}
+do
+    echo "Signalling deploy_signal_handle=$url"
+    call_curl POST $url
+done
