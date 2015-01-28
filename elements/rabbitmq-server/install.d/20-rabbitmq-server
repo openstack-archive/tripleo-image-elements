@@ -15,6 +15,7 @@ FILES="$(dirname $0)/../files"
 
 # In Ubuntu rabbit's default init.d script is broken.
 if [ "$DISTRO_NAME" = "ubuntu" ] || [ "$DISTRO_NAME" = "debian" -a "$DIB_INIT_SYSTEM" = "upstart" ]; then
+    sed -i 's,/etc/init.d/rabbitmq-server rotate-logs,/usr/sbin/rabbitmqctl -q rotate_logs,g' /etc/logrotate.d/rabbitmq-server
     update-rc.d -f rabbitmq-server remove
     rm /etc/init.d/rabbitmq-server
 
