@@ -78,28 +78,30 @@ OS_V3_AUTH_URL=${OS_AUTH_URL%/*}/v3
 cp etc/tempest.conf.sample etc/tempest.conf
 # We dont want to output passwords
 set +x
-cat - <<EOF | augtool --noautoload
-set /augeas/load/PythonPaste/lens "PythonPaste.lns"
-set /augeas/load/PythonPaste/incl "/opt/stack/tempest/etc/tempest.conf"
-load
 
-set /files/opt/stack/tempest/etc/tempest.conf/DEFAULT/lock_path $LOCK_PATH
+# Append settings to tempest.conf. In case of duplicates the last entry wins.
+cat - <<EOF >> etc/tempest.conf
 
-set /files/opt/stack/tempest/etc/tempest.conf/identity/uri $OS_AUTH_URL
-set /files/opt/stack/tempest/etc/tempest.conf/identity/uri_v3 $OS_V3_AUTH_URL
+[DEFAULT]
+lock_path = $LOCK_PATH
 
-set /files/opt/stack/tempest/etc/tempest.conf/identity/admin_username $OS_USERNAME
-set /files/opt/stack/tempest/etc/tempest.conf/identity/admin_tenant_name $OS_TENANT_NAME
-set /files/opt/stack/tempest/etc/tempest.conf/identity/admin_password $OS_PASSWORD
+[identity]
+uri = $OS_AUTH_URL
+uri_v3 = $OS_V3_AUTH_URL
+admin_username = $OS_USERNAME
+admin_tenant_name = $OS_TENANT_NAME
+admin_password = $OS_PASSWORD
 
-set /files/opt/stack/tempest/etc/tempest.conf/compute/image_ref $USER_IMAGE_ID
-set /files/opt/stack/tempest/etc/tempest.conf/compute/image_ref_alt $USER_IMAGE_ID2
+[compute]
+image_ref = $USER_IMAGE_ID
+image_ref_alt = $USER_IMAGE_ID2
+network_for_ssh = $EXTNET
 
-set /files/opt/stack/tempest/etc/tempest.conf/compute/network_for_ssh $EXTNET
-set /files/opt/stack/tempest/etc/tempest.conf/compute-admin/password $OS_PASSWORD
-set /files/opt/stack/tempest/etc/tempest.conf/network/public_network_id $EXTNET
+[compute-admin]
+password = $OS_PASSWORD
 
-save
+[network]
+public_network_id = $EXTNET
 EOF
 set -x
 
