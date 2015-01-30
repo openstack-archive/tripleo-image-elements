@@ -70,8 +70,8 @@ LOCK_PATH=`mktemp -d`
 trap "rm -rf $LOCK_PATH" EXIT
 
 # Calculate the keystone v3 from the v2 one
-# Assuming the AUTH_URL is http://ip:port/version
-OS_V3_AUTH_URL=${OS_AUTH_URL%/*}/v3
+# Assuming the AUTH_URL is http://ip:port/version[/]
+OS_V3_AUTH_URL=$(dirname ${OS_AUTH_URL})/v3
 
 # TODO : see what other defaults can be used
 # cp the tempest config file and edit the settings
