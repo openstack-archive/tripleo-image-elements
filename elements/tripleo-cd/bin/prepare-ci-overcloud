@@ -45,15 +45,16 @@ nova flavor-show h1.ci || nova flavor-create h1.ci auto 8192 20 1
 # Create a flavor for mirrors with more disk space then is normal
 nova flavor-show d1.medium || nova flavor-create d1.medium auto 4096 200 2
 
+USE_CACHE=${USE_CACHE:-0}
 # The the images that nodepool uses to creat templates
-FEDORA_IMAGE=$(wget -q http://dl.fedoraproject.org/pub/fedora/linux/updates/20/Images/x86_64/ -O - | grep -o -E 'href="([^"#]+qcow2)"' | cut -d'"' -f2)
 F20_IMAGE_FILE=$TRIPLEO_ROOT/fedora-20.x86_64.qcow2
-if [ ! -e $F20_IMAGE_FILE ] ; then
+if [ ! -e $F20_IMAGE_FILE -o "$USE_CACHE" != "1" ] ; then
+    FEDORA_IMAGE=$(wget -q http://dl.fedoraproject.org/pub/fedora/linux/updates/20/Images/x86_64/ -O - | grep -o -E 'href="([^"#]+qcow2)"' | cut -d'"' -f2)
     curl http://dl.fedoraproject.org/pub/fedora/linux/updates/20/Images/x86_64/$FEDORA_IMAGE > $F20_IMAGE_FILE
 fi
 PRECISE_IMAGE_FILE=$TRIPLEO_ROOT/precise-server-cloudimg-amd64-disk1.img
 PRECISE_IMAGE_URL=http://cloud-images.ubuntu.com/precise/current/precise-server-cloudimg-amd64-disk1.img
-if [ ! -e $PRECISE_IMAGE_FILE ] ; then
+if [ ! -e $PRECISE_IMAGE_FILE -o "$USE_CACHE" != "1" ] ; then
     curl $PRECISE_IMAGE_URL -o $PRECISE_IMAGE_FILE
 fi
 if ! glance image-show "Fedora 20 64-bit" ; then
@@ -79,7 +80,7 @@ if glance image-show te-broker &> /dev/null; then
 fi
 glance image-create --name "te-broker" --disk-format qcow2 --container-format bare --is-public 1 --file $BROKER_IMG --progress
 
-NP_CREDS="--os-username=tripleo-ci --os-password=$TE_OVERCLOUDPASSWD --os-tenant-name=openstack-nodepool"
+NP_CREDS="--os-username=openstack-nodepool --os-password=$TE_OVERCLOUDNPPASSWD --os-tenant-name=openstack-nodepool"
 if ! nova $NP_CREDS keypair-list | grep -q " default "; then
     nova $NP_CREDS keypair-add default > ~/.ssh/tripleo-ci
     chmod 0600 ~/.ssh/tripleo-ci
