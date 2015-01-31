@@ -93,10 +93,10 @@ for createuser in to_create:
     else:
         cmd = "GRANT %s ON *.*" % (privilege)
 
-    cmd_local = "%s TO `%s`@'localhost' IDENTIFIED BY '%s'" \
-        % (cmd, username, password)
-    cmd_global = "%s TO `%s`@'%%' IDENTIFIED BY '%s'" \
-        % (cmd, username, password)
+    cmd_local = ("%s TO `%s`@'localhost' IDENTIFIED BY '%s'" %
+                 (cmd, username, password))
+    cmd_global = ("%s TO `%s`@'%%' IDENTIFIED BY '%s'" %
+                  (cmd, username, password))
 
     if opts.noop:
         print(cmd_local)
