@@ -16,7 +16,8 @@ export TE_GEARMANHOST=172.16.3.254
 export TE_OVERCLOUDPASSWD=$(awk '$1=="tripleo-ci" { print $2 }' < /os-asserted-users)
 export TE_OVERCLOUDNPPASSWD=$(awk '$1=="openstack-nodepool" { print $2 }' < /os-asserted-users)
 export TE_CPUPERENV=3
-export TE_DISKPERENV=60
-export TE_MEMPERENV=10
+export TE_DISKPERENV=150
+# It should 16 here but free -g is reporting 62 instead of 64G
+export TE_MEMPERENV=15
 
 export TE_BROKER_FLAVOR=m1.medium
