@@ -1,0 +1,10 @@
+{
+  "family": {
+    "debian": {
+      "os-refresh-config": "python-os-refresh-config"
+    }
+  },
+  "default": {
+    "os-refresh-config": "os-refresh-config"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "family": {
+    "debian": {
+      "os-collect-config": "python-os-collect-config"
+    }
+  },
+  "default": {
+    "os-collect-config": "os-collect-config"
+  }
+}

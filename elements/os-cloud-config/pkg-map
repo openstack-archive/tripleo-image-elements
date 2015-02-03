@@ -1,0 +1,10 @@
+{
+  "family": {
+    "debian": {
+      "os-cloud-config": "python-os-cloud-config"
+    }
+  },
+  "default": {
+    "os-cloud-config": "os-cloud-config"
+  }
+}

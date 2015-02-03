@@ -1,0 +1,10 @@
+{
+  "family": {
+    "debian": {
+      "os-apply-config": "python-os-apply-config"
+    }
+  },
+  "default": {
+    "os-apply-config": "os-apply-config"
+  }
+}
