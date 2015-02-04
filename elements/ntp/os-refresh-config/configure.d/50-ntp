@@ -10,8 +10,15 @@ if [ -n "${NTP_SERVER}" ]; then
     ntpdate -q "${NTP_SERVER}" ||
         { echo "ERROR: ntpdate cannot connect to: ${NTP_SERVER}"; exit 1; }
 
-    # Check ntpd is running, if it is stop the service.
-    service "${SERVICE_NAME}" status && service "${SERVICE_NAME}" stop
+    # Ensure ntpd is not running
+    NTP_STOP_LOOPS=5; LOOP_COUNT=0
+    while service "${SERVICE_NAME}" status &>/dev/null &&
+            [ ${LOOP_COUNT} -lt ${NTP_STOP_LOOPS} ]; do
+        service "${SERVICE_NAME}" stop
+        sleep $((5 * $((LOOP_COUNT + 1))))
+    done
+    # If ntpd is still running then abort.
+    service "${SERVICE_NAME}" status &>/dev/null && exit 1
 
     # Set the system clock to the value of the NTP clock.
     # Note: This will not sanity check the ntp server like ntpd.
