@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -eu
+
+sudo rm -fr "${TMP_MOUNT_PATH}/opt/stack/cinder"
