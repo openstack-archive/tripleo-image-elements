@@ -24,6 +24,7 @@ class TestOsSvcDaemon(tests.base.ScriptTestBase):
         self._stub_script('dib-init-system', 'echo systemd')
         output = self._run_command(
             ['elements/os-svc-install/bin/os-svc-daemon',
+             '-l',
              '-p',
              '-n', 'foo',
              '-u', 'bar',
@@ -59,6 +60,7 @@ RequiredBy=foo.service
         self._stub_script('dib-init-system', 'echo upstart')
         output = self._run_command(
             ['elements/os-svc-install/bin/os-svc-daemon',
+             '-l',
              '-p',
              '-n', 'foo',
              '-u', 'bar',
@@ -78,8 +80,8 @@ end script
 
 respawn
 # the default post-start of 1 second sleep delays respawning enough to
-# not hit the default of 10 times in 5 seconds. Make it 2 times in 5s.
-respawn limit 2 5
+# not hit the default of 10 times in 5 seconds. Make it 2 times in 10s.
+respawn limit 2 10
 
 exec start-stop-daemon --start -c bar --exec /opt/stack/venvs/bar/bin/baz -- a
 
@@ -91,6 +93,7 @@ post-start exec sleep 1
         self._stub_script('dib-init-system', 'echo systemd')
         output = self._run_command(
             ['elements/os-svc-install/bin/os-svc-daemon',
+             '-l',
              '-p',
              '-n', 'foo',
              '-u', 'bar',
@@ -112,6 +115,7 @@ RequiredBy=foo.service
         self._stub_script('dib-init-system', 'echo upstart')
         output = self._run_command(
             ['elements/os-svc-install/bin/os-svc-daemon',
+             '-l',
              '-p',
              '-n', 'foo',
              '-u', 'bar',
@@ -134,6 +138,7 @@ end script
         self._stub_script('dib-init-system', 'echo systemd')
         output = self._run_command(
             ['elements/os-svc-install/bin/os-svc-daemon',
+             '-l',
              '-p',
              '-n', 'foo',
              '-u', 'foo',
@@ -146,6 +151,7 @@ end script
         self._stub_script('dib-init-system', 'echo upstart')
         output = self._run_command(
             ['elements/os-svc-install/bin/os-svc-daemon',
+             '-l',
              '-p',
              '-n', 'foo',
              '-u', 'foo',
@@ -182,6 +188,7 @@ end script
         self._stub_script('dib-init-system', 'echo upstart')
         output = self._run_command(
             ['elements/os-svc-install/bin/os-svc-daemon',
+             '-l',
              '-p',
              '-n', 'foo',
              '-u', 'foo',
