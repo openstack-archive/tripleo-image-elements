@@ -76,9 +76,6 @@ function append_config {
 if [ -n "$PHYSICAL_INTERFACE_IP" ]; then
     append_config "    addresses:"
     append_config "      - ip_netmask: $PHYSICAL_INTERFACE_IP"
-
-else
-    append_config "    use_dhcp: true"
 fi
 
 if [ -n "$PUBLIC_INTERFACE_TAG" -a -n "$PUBLIC_INTERFACE_TAG_IP" ]; then
@@ -89,6 +86,10 @@ cat >> /etc/os-net-config/neutron-openvswitch-agent.conf <<EOF_CAT
         addresses:
           - ip_netmask: $PUBLIC_INTERFACE_TAG_IP
 EOF_CAT
+fi
+
+if [ -z "$PHYSICAL_INTERFACE_IP" ]; then
+    append_config "    use_dhcp: true"
 fi
 
 # begin routes for the EXTERNAL_BRIDGE
