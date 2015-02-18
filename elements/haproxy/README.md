@@ -51,6 +51,7 @@ Each haproxy.services can define the following sub-properties
 * proxy_port: *DEPRECATED* Port for a service to bind to.
 * service_maxconn: A limit on the number of concurrent connections allowed to
   this service.
+* check_interval: The interval between two consecutive health checks in milliseconds.
 
 Each haproxy.nodes can define the following sub-properties
 
