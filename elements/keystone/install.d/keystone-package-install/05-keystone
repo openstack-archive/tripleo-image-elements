@@ -3,8 +3,6 @@
 set -eux
 set -o pipefail
 
-install-packages openstack-keystone python-ldap
-
 KEYSTONE_USER=keystone
 if [ "opensuse" = "$DISTRO_NAME" ]; then
     KEYSTONE_USER=openstack-keystone
