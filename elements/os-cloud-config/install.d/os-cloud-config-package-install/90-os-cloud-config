@@ -1,6 +1,0 @@
-#!/bin/bash
-
-set -eux
-set -o pipefail
-
-install-packages os-cloud-config

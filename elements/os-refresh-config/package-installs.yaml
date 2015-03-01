@@ -1,0 +1,3 @@
+jq:
+os-refresh-config:
+  installtype: package

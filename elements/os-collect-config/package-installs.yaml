@@ -1,0 +1,7 @@
+os-collect-config:
+  installtype: package
+build-essential:
+libxml2-dev:
+libz-dev:
+libxslt-dev:
+python-dev:
