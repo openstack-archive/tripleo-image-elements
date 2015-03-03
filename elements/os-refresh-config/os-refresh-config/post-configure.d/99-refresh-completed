@@ -36,7 +36,7 @@ fi
 # deploy_signal_id is a pre-signed URL when CFN_SIGNAL is specified, it's not
 # included if NO_SIGNAL is specified.  Won't yet work with HEAT_SIGNAL.
 DEPLOYMENT_HANDLES=$(os-apply-config --key deployments --type raw --key-default "" | \
-                     jq -r "map(select(.group == \"os-apply-config\") | .inputs | \
+                     jq -r "map(select(.group == \"script\") | .inputs | \
                             map(select(.name == \"deploy_signal_id\"))) | .[][].value")
 for url in ${DEPLOYMENT_HANDLES}
 do
