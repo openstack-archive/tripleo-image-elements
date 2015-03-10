@@ -16,6 +16,15 @@ if [ -n "${HORIZON_VENV_DIR:-}" ] ; then
     source $HORIZON_VENV_DIR/bin/activate
     DJANGO_SETTINGS_MODULE=openstack_dashboard.settings django-admin.py collectstatic --noinput
     DJANGO_SETTINGS_MODULE=openstack_dashboard.settings django-admin.py compress
+
+    # Compile translations. makemessages isn't necessary because the
+    # non-English .po files are updated from Transifex. This also has to be
+    # done here for the same reason as above. It requires gettext.
+    for project in openstack_dashboard horizon openstack_auth; do
+       pushd $HORIZON_VENV_DIR/lib/python2.7/site-packages/$project
+       DJANGO_SETTINGS_MODULE=openstack_dashboard.settings django-admin.py compilemessages
+       popd
+    done
 else
     cp /etc/horizon/local_settings.py /usr/share/openstack-dashboard/openstack_dashboard/local/local_settings.py
     sed -i 's#^STATIC_ROOT.*#STATIC_ROOT=/usr/share/openstack-dashboard/static#' /usr/share/openstack-dashboard/openstack_dashboard/local/local_settings.py
