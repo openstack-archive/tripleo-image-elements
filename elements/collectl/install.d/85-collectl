@@ -11,3 +11,6 @@ os-svc-enable -an collectl
 # networks. Both raw and plottable files will be produced.
 
 sudo sed -i "/^DaemonCommands/c\DaemonCommands = -f /var/log/collectl -r00:00,7 -m -F60 -scdmnZ --rawnetfilt eth|bond -P --rawtoo" /etc/collectl.conf
+
+# Save all collectl logs to /mnt/state
+register-state-path --leave-symlink /var/log/collectl
