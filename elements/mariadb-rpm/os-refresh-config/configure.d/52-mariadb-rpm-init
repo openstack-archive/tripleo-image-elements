@@ -30,7 +30,7 @@ if [ ! -e ${MYSQL_INITIALIZED} ]; then
         mv -f $CLUSTER_FILE.orc_bkp $CLUSTER_FILE
     fi
 
-    # We did db initialization by hand so reset-db doesnt need to interfere
+    # We did db initialization by hand so reset-db doesn't need to interfere
     touch ${MYSQL_INITIALIZED}
 fi
 
