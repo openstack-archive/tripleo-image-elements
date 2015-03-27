@@ -4,7 +4,26 @@ set -eux
 set -o pipefail
 
 if [ "$ARCH" == "amd64" -o "$ARCH" == "i386" ]; then
-    install-packages grub-pc
+    # grub-pc deb package postinst will try to install grub into root
+    # device which definitely fail at this stage.
+    # The workaround is to skip error and remove postinst script
+    if [[ "ubuntu debian" =~ "$DISTRO_NAME" ]]; then
+        set +e
+        install-packages grub-pc
+        # if grub-pc.postinst exists, it's the postinst issue
+        # otherwise we should still fail here
+        if [ $? -ne 0 ]; then
+            GRUB_POSTINST=/var/lib/dpkg/info/grub-pc.postinst
+            if [ -e $GRUB_POSTINST ]; then
+                rm -f $GRUB_POSTINST
+            else
+                set -e && false
+            fi
+        fi
+        set -e
+    else
+        install-packages grub-pc
+    fi
 
 elif [ "$ARCH" == "aarch64" -o "$ARCH" == "armhf" ]; then
     install-package u-boot-tools
