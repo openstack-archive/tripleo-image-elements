@@ -3,5 +3,5 @@ set -eux
 set -o pipefail
 
 if os-is-bootstrap-host ; then
-    sudo -u ironic -- ironic-dbsync --config-file /etc/ironic/ironic.conf
+    su -s /bin/bash -c 'ironic-dbsync --config-file /etc/ironic/ironic.conf' ironic
 fi

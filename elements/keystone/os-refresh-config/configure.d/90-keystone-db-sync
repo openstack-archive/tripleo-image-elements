@@ -3,5 +3,5 @@ set -eux
 set -o pipefail
 
 if os-is-bootstrap-host ; then
-    sudo -u keystone -- keystone-manage db_sync
+    su -s /bin/bash -c 'keystone-manage db_sync' keystone
 fi

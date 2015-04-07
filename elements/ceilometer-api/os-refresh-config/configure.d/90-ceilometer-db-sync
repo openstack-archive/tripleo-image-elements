@@ -2,5 +2,5 @@
 set -eux
 
 if os-is-bootstrap-host ; then
-    sudo -u ceilometer -- ceilometer-dbsync --config-file /etc/ceilometer/ceilometer.conf
+    su -s /bin/bash -c 'ceilometer-dbsync --config-file /etc/ceilometer/ceilometer.conf' ceilometer
 fi
