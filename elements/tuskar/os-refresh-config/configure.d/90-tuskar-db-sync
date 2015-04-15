@@ -1,7 +1,26 @@
 #!/bin/bash
 set -eux
-
+TUSKAR_CONF=/etc/tuskar/tuskar.conf
 TUSKAR_ROLE_DIRECTORY=${TUSKAR_ROLE_DIRECTORY:-}
+
+function load_roles() {
+    TUSKAR_LOAD_ROLE_BASE="tuskar-load-role --config-file $TUSKAR_CONF "
+    roles=( $(echo "$1") )
+    dir="${2}" ;
+    suffix="${3}"
+    extra_data="${4}"
+    for ROLE in ${roles[@]}; do
+        lowercase=`echo $ROLE | tr '[:upper:]' '[:lower:]'`
+        if [ -f $dir/$lowercase$suffix ]; then
+            TUSKAR_LOAD_ROLE="$TUSKAR_LOAD_ROLE_BASE -n $ROLE
+                            -f $dir/$lowercase$suffix $extra_data"
+            $TUSKAR_LOAD_ROLE            # only need to load this once
+            # only need to load this once, so clear variable
+            extra_data=
+        fi
+    done
+}
+
 if [ -z "$TUSKAR_ROLE_DIRECTORY" ]; then
   if [ -d /usr/share/openstack-tripleo-heat-templates/ ]; then
       # Fedora/RHEL RPMs store the templates here
@@ -13,23 +32,41 @@ if [ -z "$TUSKAR_ROLE_DIRECTORY" ]; then
 fi
 
 if os-is-bootstrap-host ; then
-    sudo -u tuskar -- tuskar-dbsync --config-file /etc/tuskar/tuskar.conf
+    sudo -u tuskar -- tuskar-dbsync --config-file $TUSKAR_CONF
 
-    BLOCK_STORAGE_ROLE="$TUSKAR_ROLE_DIRECTORY/cinder-storage.yaml"
-    OBJECT_STORAGE_ROLE="$TUSKAR_ROLE_DIRECTORY/swift-storage.yaml"
+    # pop trailing / from role directory if it is there
+    TUSKAR_ROLE_DIRECTORY=`echo $TUSKAR_ROLE_DIRECTORY | sed 's/\/$//'`
 
-    EXTRA_ROLES=""
-    if [ -e "$BLOCK_STORAGE_ROLE" ]; then
-        EXTRA_ROLES="$EXTRA_ROLES -r $BLOCK_STORAGE_ROLE"
+    # Load the master seed and puppet or non-puppet roles, accordingly
+    PUPPET_DIR="$TUSKAR_ROLE_DIRECTORY/puppet"
+    OVERCLOUD_PLAN="$TUSKAR_ROLE_DIRECTORY/overcloud-without-mergepy.yaml"
+    TUSKAR_LOAD_SEED="tuskar-load-seed --config-file $TUSKAR_CONF
+                         --master-seed $OVERCLOUD_PLAN "
+    if [ -d $PUPPET_DIR ]; then
+        RESOURCE_REGISTRY="$TUSKAR_ROLE_DIRECTORY/overcloud-resource-registry-puppet.yaml"
+        TUSKAR_LOAD_SEED="$TUSKAR_LOAD_SEED --resource-registry $RESOURCE_REGISTRY"
+        $TUSKAR_LOAD_SEED
+
+        # Collect any role extra-data
+        ROLE_EXTRA_DATA=""
+        for puppet_extra_dir in hieradata manifests; do
+            if [ -d "$PUPPET_DIR/$puppet_extra_dir" ]; then
+                for i in `ls -1 "$PUPPET_DIR/$puppet_extra_dir"` ; do
+                    ROLE_EXTRA_DATA="$ROLE_EXTRA_DATA --extra-data
+                                     $PUPPET_DIR/$puppet_extra_dir/$i "
+                done
+            fi
+        done
+
+        ROLES=( "Compute" "Controller" "Swift-Storage" "Cinder-Storage" "Ceph-Storage" )
+        load_roles "$(echo ${ROLES[@]})" $PUPPET_DIR "-puppet.yaml" "$ROLE_EXTRA_DATA"
+    else
+        RESOURCE_REGISTRY="$TUSKAR_ROLE_DIRECTORY/overcloud-resource-registry.yaml"
+        TUSKAR_LOAD_SEED="$TUSKAR_LOAD_SEED --resource-registry $RESOURCE_REGISTRY"
+        $TUSKAR_LOAD_SEED
+
+        # Load the non-puppet roles if there:
+        ROLES=( "Compute" "Controller" "Swift-Storage" "Cinder-Storage" "Ceph-Storage" )
+        load_roles "$(echo ${ROLES[@]})" $TUSKAR_ROLE_DIRECTORY ".yaml"
     fi
-    if [ -e "$OBJECT_STORAGE_ROLE" ]; then
-        EXTRA_ROLES="$EXTRA_ROLES -r $OBJECT_STORAGE_ROLE"
-    fi
-
-    sudo -u tuskar -- tuskar-load-roles --config-file /etc/tuskar/tuskar.conf \
-        --master-seed $TUSKAR_ROLE_DIRECTORY/overcloud-without-mergepy.yaml \
-        --resource-registry $TUSKAR_ROLE_DIRECTORY/overcloud-resource-registry.yaml \
-        $EXTRA_ROLES \
-        -r $TUSKAR_ROLE_DIRECTORY/compute.yaml \
-        -r $TUSKAR_ROLE_DIRECTORY/controller.yaml
 fi
