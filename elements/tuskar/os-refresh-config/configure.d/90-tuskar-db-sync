@@ -43,8 +43,8 @@ if os-is-bootstrap-host ; then
     TUSKAR_LOAD_SEED="tuskar-load-seed --config-file $TUSKAR_CONF
                          --master-seed $OVERCLOUD_PLAN "
     if [ -d $PUPPET_DIR ]; then
-        RESOURCE_REGISTRY="$TUSKAR_ROLE_DIRECTORY/overcloud-resource-registry-puppet.yaml"
-        TUSKAR_LOAD_SEED="$TUSKAR_LOAD_SEED --resource-registry $RESOURCE_REGISTRY"
+        TUSKAR_RESOURCE_REGISTRY=${TUSKAR_RESOURCE_REGISTRY:-"$TUSKAR_ROLE_DIRECTORY/overcloud-resource-registry-puppet.yaml"}
+        TUSKAR_LOAD_SEED="$TUSKAR_LOAD_SEED --resource-registry $TUSKAR_RESOURCE_REGISTRY"
         $TUSKAR_LOAD_SEED
 
         # Collect any role extra-data
@@ -61,8 +61,8 @@ if os-is-bootstrap-host ; then
         ROLES=( "Compute" "Controller" "Swift-Storage" "Cinder-Storage" "Ceph-Storage" )
         load_roles "$(echo ${ROLES[@]})" $PUPPET_DIR "-puppet.yaml" "$ROLE_EXTRA_DATA"
     else
-        RESOURCE_REGISTRY="$TUSKAR_ROLE_DIRECTORY/overcloud-resource-registry.yaml"
-        TUSKAR_LOAD_SEED="$TUSKAR_LOAD_SEED --resource-registry $RESOURCE_REGISTRY"
+        TUSKAR_RESOURCE_REGISTRY=${TUSKAR_RESOURCE_REGISTRY:-"$TUSKAR_ROLE_DIRECTORY/overcloud-resource-registry.yaml"}
+        TUSKAR_LOAD_SEED="$TUSKAR_LOAD_SEED --resource-registry $TUSKAR_RESOURCE_REGISTRY"
         $TUSKAR_LOAD_SEED
 
         # Load the non-puppet roles if there:
