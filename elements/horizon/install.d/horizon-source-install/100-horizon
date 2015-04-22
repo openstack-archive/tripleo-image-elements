@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-install-packages libapache2-mod-wsgi libssl-dev libffi-dev
+install-packages libapache2-mod-wsgi libssl-dev libffi-dev gettext
 
 TEMPLATE_ROOT="$(os-apply-config --print-templates)"
 FILES="$(dirname $0)/../files/"
