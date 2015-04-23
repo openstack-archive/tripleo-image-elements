@@ -3,7 +3,6 @@ python-cinderclient git /opt/stack/python-cinderclient https://git.openstack.org
 python-glanceclient git /opt/stack/python-glanceclient https://git.openstack.org/openstack/python-glanceclient.git
 python-heatclient git /opt/stack/python-heatclient https://git.openstack.org/openstack/python-heatclient.git
 python-ironicclient git /opt/stack/python-ironicclient https://git.openstack.org/openstack/python-ironicclient.git
-python-keystoneclient git /opt/stack/python-keystoneclient https://git.openstack.org/openstack/python-keystoneclient.git
 python-neutronclient git /opt/stack/python-neutronclient https://git.openstack.org/openstack/python-neutronclient.git
 python-novaclient git /opt/stack/python-novaclient https://git.openstack.org/openstack/python-novaclient.git
 python-swiftclient git /opt/stack/python-swiftclient https://git.openstack.org/openstack/python-swiftclient.git

@@ -41,14 +41,6 @@ if [ -z "${IRONICCLIENT_EXTRA_INSTALL_OPTS:-}" ]; then
     export IRONICCLIENT_EXTRA_INSTALL_OPTS=${OPENSTACK_EXTRA_INSTALL_OPTS:-""}
 fi
 
-# keystoneclient
-if [ -z "${KEYSTONECLIENT_VENV_DIR:-}" ]; then
-    export KEYSTONECLIENT_VENV_DIR=${OPENSTACK_VENV_DIR:-"/opt/stack/venvs/python-keystoneclient"}
-fi
-if [ -z "${KEYSTONECLIENT_EXTRA_INSTALL_OPTS:-}" ]; then
-    export KEYSTONECLIENT_EXTRA_INSTALL_OPTS=${OPENSTACK_EXTRA_INSTALL_OPTS:-""}
-fi
-
 # neutronclient
 if [ -z "${NEUTRONCLIENT_VENV_DIR:-}" ]; then
     export NEUTRONCLIENT_VENV_DIR=${OPENSTACK_VENV_DIR:-"/opt/stack/venvs/python-neutronclient"}
