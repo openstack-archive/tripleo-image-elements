@@ -14,7 +14,7 @@ $TRIPLEO_ROOT/tripleo-incubator/scripts/assert-users $TRIPLEO_ROOT/tripleo-incub
 $TRIPLEO_ROOT/tripleo-incubator/scripts/assert-users $TRIPLEO_ROOT/tripleo-incubator/tripleo-cloud/tripleo-cd-users
 
 # Get the ID of the nodepool tenant
-NODEPOOL_TENANT_ID=$(keystone tenant-list | awk '$4=="openstack-nodepool" {print $2}')
+NODEPOOL_TENANT_ID=$(openstack project list | awk '$4=="openstack-nodepool" {print $2}')
 
 # Each instance uses 3 ports
 neutron quota-update --tenant-id $NODEPOOL_TENANT_ID --port 300
@@ -37,7 +37,7 @@ neutron subnet-update $DEFAULTSUBNETID --dns-nameservers list=true 8.8.8.8
 
 # we may already have this so keystone may error
 # XXX: we can query this membership.
-keystone user-role-add --role Member --user tripleo-ci --tenant openstack-nodepool || true
+openstack role add --user tripleo-ci --project openstack-nodepool Member || true
 
 # Create the flavor nodepool uses
 nova flavor-show h1.ci || nova flavor-create h1.ci auto 8192 20 1
