@@ -8,12 +8,17 @@
     "debian": {
       "ldap_devel_package": "libldap2-dev",
       "sasl_devel_package": "libsasl2-dev",
-      "ssl_devel_package": "libssl-dev"
+      "ssl_devel_package": "libssl-dev",
+      "openstack-keystone": "keystone"
     },
     "suse": {
       "ldap_devel_package": "openldap2-devel",
       "sasl_devel_package": "cyrus-sasl-devel",
       "ssl_devel_package": "libopenssl-devel"
     }
+  },
+  "default": {
+    "openstack-keystone": "openstack-keystone",
+    "python-ldap": "python-ldap"
   }
 }
