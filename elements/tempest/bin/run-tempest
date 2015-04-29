@@ -32,17 +32,17 @@ check_environment
 cd /opt/stack/tempest
 
 # Tempest needs 2 users, we add them here so that we know their passwords
-keystone tenant-get demo_t1 || keystone tenant-create --name demo_t1
-keystone user-get demo_t1 || keystone user-create --name demo_t1 --tenant demo_t1 --pass secret
-keystone tenant-get demo_t2 || keystone tenant-create --name demo_t2
-keystone user-get demo_t2 || keystone user-create --name demo_t2 --tenant demo_t2 --pass secret
+openstack project create --or-show demo_t1
+openstack user create --project demo_t1 --password secret --or-show demo_t1
+openstack project create --or-show demo_t2
+openstack user create --project demo_t2 --password secret --or-show demo_t2
 
 # the orchestration tests need this
-keystone user-role-add --user admin --role admin --tenant demo_t1 || true
+openstack role add --user admin  --project demo_t1 admin || true
 
 # Users need either this or the admin role to use swift
-keystone user-role-add --user demo_t1 --role _member_ --tenant demo_t1 || true
-keystone user-role-add --user demo_t2 --role _member_ --tenant demo_t2 || true
+openstack role add --user demo_t1  --project demo_t1 _member_ || true
+openstack role add --user demo_t2  --project demo_t2 _member_ || true
 
 # We require that a image is present
 USER_IMAGE=$(glance image-show $TEMPEST_IMAGE_NAME)
