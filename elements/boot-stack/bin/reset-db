@@ -54,4 +54,4 @@ create_db_from_config "glance.db" "mysql://glance:${db_pass}@localhost/glance"
 
 create_db_from_config "heat.db" "mysql://heat:${db_pass}@localhost/heat"
 
-create_db_from_config "neutron.ovs.db" "mysql://neutron:${db_pass}@localhost/ovs_neutron"
+create_db_from_config "neutron.ovs_db" "mysql://neutron:${db_pass}@localhost/ovs_neutron"
