@@ -30,7 +30,7 @@ write_entries() {
 
 }
 
-ENTRIES=$(os-apply-config --key hosts --type raw --key-default '')
+ENTRIES=$(os-apply-config --key hosts --type raw --key-default '' | tr '[A-Z]' '[a-z]')
 if [ ! -z "$ENTRIES" ]; then
     # cloud-init files are /etc/cloud/templates/hosts.OSNAME.tmpl
     DIST=$(lsb_release -is | tr -s [A-Z] [a-z])
