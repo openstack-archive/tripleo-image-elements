@@ -2,8 +2,10 @@
 set -e
 set -o xtrace
 
+export DELOREAN_REPO_FILE=${DELOREAN_REPO_FILE:-"delorean.repo"}
+
 if [ -n "$DELOREAN_REPO_URL" ]; then
-  curl $DELOREAN_REPO_URL/delorean.repo -o /etc/yum.repos.d/delorean.repo
+  curl $DELOREAN_REPO_URL/$DELOREAN_REPO_FILE -o /etc/yum.repos.d/$DELOREAN_REPO_FILE
 else
   echo "Please configure a DELOREAN_REPO_URL."
   exit 1
