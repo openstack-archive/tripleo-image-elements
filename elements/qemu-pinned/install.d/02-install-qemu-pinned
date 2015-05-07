@@ -1,4 +1,0 @@
-#!/bin/bash
-set -eux
-
-yum -y downgrade https://kojipkgs.fedoraproject.org//packages/qemu/2.1.3/3.fc21/x86_64/qemu-kvm-2.1.3-3.fc21.x86_64.rpm https://kojipkgs.fedoraproject.org//packages/qemu/2.1.3/3.fc21/x86_64/qemu-system-x86-2.1.3-3.fc21.x86_64.rpm https://kojipkgs.fedoraproject.org//packages/qemu/2.1.3/3.fc21/x86_64/qemu-img-2.1.3-3.fc21.x86_64.rpm https://kojipkgs.fedoraproject.org//packages/qemu/2.1.3/3.fc21/x86_64/qemu-common-2.1.3-3.fc21.x86_64.rpm
