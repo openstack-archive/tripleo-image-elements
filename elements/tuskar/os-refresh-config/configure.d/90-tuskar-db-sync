@@ -58,6 +58,11 @@ if os-is-bootstrap-host ; then
             fi
         done
 
+        # extraconfig/tasks includes package update script/template
+        for i in `find "$TUSKAR_ROLE_DIRECTORY/extraconfig/tasks" -type f`; do
+            ROLE_EXTRA_DATA="$ROLE_EXTRA_DATA --extra-data $i "
+        done
+
         ROLES=( "Compute" "Controller" "Swift-Storage" "Cinder-Storage" "Ceph-Storage" )
         load_roles "$(echo ${ROLES[@]})" $PUPPET_DIR "-puppet.yaml" "$ROLE_EXTRA_DATA"
     else
