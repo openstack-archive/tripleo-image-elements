@@ -1,0 +1,29 @@
+#!/bin/bash
+
+source /root/stackrc
+
+i="0"
+while tuskar plan-list 2>&1 | grep "Max retries"; do
+    i=$[$i+1]
+    if [ "$i" -gt "10" ]; then
+        echo "Could not connect to tuskar-api service" 1>&2
+        exit 1
+    fi
+done
+
+
+PLAN_ID=$(tuskar plan-show overcloud | awk '$2=="uuid" {print $4}')
+
+if [ -z "$PLAN_ID" ]; then
+    tuskar plan-create overcloud
+    PLAN_ID=$(tuskar plan-show overcloud | awk '$2=="uuid" {print $4}')
+fi
+
+for ROLE_NAME in "Controller" "Compute" "Swift-Storage" "Cinder-Storage" "Ceph-Storage" ; do
+    ROLE_ID=$(tuskar role-list | awk '$4==VAR {print $2}' VAR="$ROLE_NAME")
+    ROLE_EXISTS=$(tuskar plan-show $PLAN_ID | grep $ROLE_ID)
+    if [ -z "$ROLE_EXISTS" ]; then
+        tuskar plan-add-role $PLAN_ID -r $ROLE_ID
+    fi
+done
+
