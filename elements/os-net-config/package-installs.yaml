@@ -1,0 +1,2 @@
+os-net-config:
+  installtype: package
