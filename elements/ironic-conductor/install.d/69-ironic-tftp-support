@@ -25,6 +25,14 @@ if [ -f /usr/share/syslinux/ldlinux.* ]; then
     cp /usr/share/syslinux/ldlinux.* /tftpboot
 fi
 
+# Copy in the chain loader for full disk image booting.
+syslinux='/usr/share/syslinux'
+for f in chain.c32 libcom32.c32 libutil.c32; do
+    if [ -f $syslinux/$f ]; then
+        cp $syslinux/$f /tftpboot
+    fi
+done
+
 # Disable the tftp-hpa upstart job, we're using xinetd
 [ -f /etc/init/tftpd-hpa.conf ] && echo "manual" > /etc/init/tftpd-hpa.override
 
