@@ -24,6 +24,19 @@ call_curl() {
     fi
 }
 
+call_curl_deployment() {
+    local method=$1
+    local url=$2
+    local stdout=$3
+    local output=$(mktemp)
+    status=$(curl -s -w %{http_code} -X $method -H 'Content-Type:' -o $output --data-binary "{\"deploy_stdout\": \"$stdout\", \"deploy_status_code\": \"0\"}" $url)
+    cat $output
+    rm $output
+    if [ "$status" != "200" ]; then
+        exit 1
+    fi
+}
+
 # Signals use POST, wait handles use PUT
 if [ -n "$HANDLE" ]; then
     call_curl PUT $HANDLE
@@ -35,11 +48,25 @@ fi
 # This extracts "deploy_signal_id" from any deployments of group "os-apply-config"
 # deploy_signal_id is a pre-signed URL when CFN_SIGNAL is specified, it's not
 # included if NO_SIGNAL is specified.  Won't yet work with HEAT_SIGNAL.
-DEPLOYMENT_HANDLES=$(os-apply-config --key deployments --type raw --key-default "" | \
-                     jq -r "map(select(.group == \"os-apply-config\") | .inputs | \
-                            map(select(.name == \"deploy_signal_id\"))) | .[][].value")
-for url in ${DEPLOYMENT_HANDLES}
+# We also include the id, which provides a means to identify when a config
+# being deployed has changed.  DEPLOYMENTS is a list of concatenated ID+URL.
+#
+# The jq is really hard to read, so here's the process line by line:
+# 1. Extract all deployments data via os-apply-config
+# 2. Select all which have a config group of "os-apply-config"
+# 3. Filter further for only deployments with a deploy_signal_id input
+#    thus avoiding NO_SIGNAL deployments
+# 4. Extract and join the "id" key and the input value for deploy_signal_id
+# 5. Print the elements of the resulting list to enable for loop iteration
+DEPLOYMENTS=$(os-apply-config --key deployments --type raw --key-default "" |
+              jq -r "map(select(.group == \"os-apply-config\") |
+              select(.inputs[].name == \"deploy_signal_id\") |
+              .id + (.inputs | map(select(.name == \"deploy_signal_id\")) | .[].value)) |
+              .[]")
+for dep  in ${DEPLOYMENTS}
 do
-    echo "Signalling deploy_signal_handle=$url"
-    call_curl POST $url
+    DEPLOY_ID=$(echo $dep | sed "s/http.*$//")
+    DEPLOY_URL=$(echo $dep | sed "s/^.*http/http/")
+    echo "Signalling os-apply-config deployment $DEPLOY_ID $DEPLOY_URL"
+    call_curl_deployment POST $DEPLOY_URL "os-apply-config deployment $DEPLOY_ID completed"
 done
