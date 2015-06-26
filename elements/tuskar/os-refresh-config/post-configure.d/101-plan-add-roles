@@ -31,6 +31,7 @@ done
 if [ -n "$NEW_PLAN" ]; then
     # Set defaults
     tuskar plan-update -P Ceph-Storage-1::Flavor=baremetal \
+        -P Ceph-Storage-1::count=0 \
         -P Ceph-Storage-1::Image=overcloud-full \
         -P Cinder-Storage-1::CinderISCSIHelper=lioadm \
         -P Cinder-Storage-1::count=0 \
