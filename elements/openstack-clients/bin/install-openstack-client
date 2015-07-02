@@ -65,7 +65,7 @@ else
     pip install -U 'setuptools>=1.0'
 
     # bug #1293812 : Avoid easy_install triggering on pbr.
-    pip install -U 'pbr>=0.5.21,<1.0'
+    pip install -U 'pbr>=0.11,<2.0'
 
     if [ -e requirements.txt ]; then
         pip install -r requirements.txt
