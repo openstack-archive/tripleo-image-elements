@@ -3,7 +3,7 @@
 set -eux
 
 # bug #1293812 : Avoid easy_install triggering on pbr.
-$SWIFT_VENV_DIR/bin/pip install -U 'pbr>=0.5.21,<1.0'
+$SWIFT_VENV_DIR/bin/pip install -U 'pbr>=0.11,<2.0'
 
 # These are only needed if using keystone auth, so are not in requirements.txt
 $SWIFT_VENV_DIR/bin/pip install keystonemiddleware

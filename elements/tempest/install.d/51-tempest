@@ -11,7 +11,7 @@ set -u
 
 cd /opt/stack/tempest
 # bug #1293812 : Avoid easy_install triggering on pbr.
-pip install -U 'pbr>=0.5.21,<1.0'
+pip install -U 'pbr>=0.11,<2.0'
 
 pip install -r test-requirements.txt
 
