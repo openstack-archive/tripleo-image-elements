@@ -3,5 +3,5 @@ set -eux
 set -o pipefail
 
 if os-is-bootstrap-host ; then
-    sudo -u heat -- heat-manage db_sync
+    su -s /bin/bash -c 'heat-manage db_sync' heat
 fi

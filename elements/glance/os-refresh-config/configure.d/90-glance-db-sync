@@ -2,5 +2,5 @@
 set -eux
 
 if os-is-bootstrap-host ; then
-    sudo -u glance -- glance-manage db sync
+    su -s /bin/bash -c 'glance-manage db sync' glance
 fi

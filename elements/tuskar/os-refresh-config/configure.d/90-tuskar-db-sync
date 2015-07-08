@@ -32,7 +32,7 @@ if [ -z "$TUSKAR_ROLE_DIRECTORY" ]; then
 fi
 
 if os-is-bootstrap-host ; then
-    sudo -u tuskar -- tuskar-dbsync --config-file $TUSKAR_CONF
+    su -s /bin/bash -c "tuskar-dbsync --config-file $TUSKAR_CONF" tuskar
 
     # pop trailing / from role directory if it is there
     TUSKAR_ROLE_DIRECTORY=`echo $TUSKAR_ROLE_DIRECTORY | sed 's/\/$//'`
