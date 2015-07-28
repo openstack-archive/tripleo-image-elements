@@ -59,7 +59,9 @@ if os-is-bootstrap-host ; then
         done
 
         # extraconfig/tasks includes package update script/template
-        for i in `find "$TUSKAR_ROLE_DIRECTORY/extraconfig/tasks" -type f`; do
+        # also grab validation scripts
+        for i in `find "$TUSKAR_ROLE_DIRECTORY/extraconfig/tasks" \
+                       "$TUSKAR_ROLE_DIRECTORY/validation-scripts/" -type f`; do
             ROLE_EXTRA_DATA="$ROLE_EXTRA_DATA --extra-data $i "
         done
 
