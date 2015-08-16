@@ -1,8 +1,62 @@
 #!/bin/bash
-set -eux
+set -ux
+
+function get_metadata_ip() {
+
+  local METADATA_IP
+
+  # Look for a variety of Heat transports
+  # FIXME: Heat should provide a way to obtain this in a single place
+  for URL in os-collect-config.cfn.metadata_url os-collect-config.heat.auth_url os-collect-config.swift.metadata_put_url os-collect-config.zaqar.auth_url; do
+    METADATA_IP=$(os-apply-config --key $URL --key-default '' --type raw 2>/dev/null | sed -e 's|http.*://\([^:]*\).*|\1|')
+    [ -n "$METADATA_IP" ] && break
+  done
+
+  echo $METADATA_IP
+
+}
+
+function is_local_ip() {
+  local IP_TO_CHECK=$1
+  if ip a | grep ^\ *inet | grep $IP_TO_CHECK &>/dev/null; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+function ping_metadata_ip() {
+  local METADATA_IP=$(get_metadata_ip)
+
+  if [ -n "$METADATA_IP" ] && ! is_local_ip $METADATA_IP; then
+
+    echo -n "Trying to ping metadata IP ${METADATA_IP}..."
+
+    local COUNT=0
+    until ping -c 1 $METADATA_IP &> /dev/null; do
+      COUNT=$(( $COUNT + 1 ))
+      if [ $COUNT -eq 10 ]; then
+        echo "FAILURE"
+        echo "$METADATA_IP is not pingable." >&2
+        exit 1
+      fi
+    done
+    echo "SUCCESS"
+
+  else
+    echo "No metadata IP found. Skipping."
+  fi
+}
 
 NET_CONFIG=$(os-apply-config --key os_net_config --type raw --key-default '')
 
 if [ -n "$NET_CONFIG" ]; then
-    os-net-config -c /etc/os-net-config/config.json -v
+    os-net-config -c /etc/os-net-config/config.json -v --detailed-exit-codes
+    RETVAL=$?
+    if [[ $RETVAL == 2 ]]; then
+        ping_metadata_ip
+    elif [[ $RETVAL != 0 ]]; then
+        echo "ERROR: os-net-config configuration failed." >&2
+        exit 1
+    fi
 fi
