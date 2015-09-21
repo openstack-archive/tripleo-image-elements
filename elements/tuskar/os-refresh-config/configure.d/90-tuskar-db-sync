@@ -64,7 +64,12 @@ if os-is-bootstrap-host ; then
         done
 
         ROLES=( "Compute" "Controller" "Swift-Storage" "Cinder-Storage" "Ceph-Storage" )
-        load_roles "$(echo ${ROLES[@]})" $PUPPET_DIR "-puppet.yaml" "$ROLE_EXTRA_DATA"
+        # we are dropping the -puppet.yaml extension upstream
+        if ls $PUPPET_DIR/*-puppet.yaml &>/dev/null; then
+            load_roles "$(echo ${ROLES[@]})" $PUPPET_DIR "-puppet.yaml" "$ROLE_EXTRA_DATA"
+        else
+            load_roles "$(echo ${ROLES[@]})" $PUPPET_DIR ".yaml" "$ROLE_EXTRA_DATA"
+        fi
     else
         TUSKAR_RESOURCE_REGISTRY=${TUSKAR_RESOURCE_REGISTRY:-"$TUSKAR_ROLE_DIRECTORY/overcloud-resource-registry.yaml"}
         TUSKAR_LOAD_SEED="$TUSKAR_LOAD_SEED --resource-registry $TUSKAR_RESOURCE_REGISTRY"
