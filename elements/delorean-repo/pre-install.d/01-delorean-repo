@@ -4,6 +4,13 @@ set -o xtrace
 
 export DELOREAN_REPO_FILE=${DELOREAN_REPO_FILE:-"delorean.repo"}
 
+# delorean requires delorean-deps
+if [[ "rhel7 centos7" =~ "$DISTRO_NAME" ]]; then
+    curl http://trunk.rdoproject.org/centos7/delorean-deps.repo -o /etc/yum.repos.d/delorean-deps.repo
+elif [[ "fedora" =~ "$DISTRO_NAME" ]]; then
+    curl http://trunk.rdoproject.org/f$DIB_RELEASE/delorean-deps.repo -o /etc/yum.repos.d/delorean-deps.repo
+fi
+
 if [ -n "$DELOREAN_REPO_URL" ]; then
   curl $DELOREAN_REPO_URL/$DELOREAN_REPO_FILE -o /etc/yum.repos.d/$DELOREAN_REPO_FILE
 else
