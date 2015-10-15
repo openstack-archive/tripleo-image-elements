@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -eux
+
+export CONTRAIL_URL=${CONTRAIL_URL:-""}
+
+if [ -z "$CONTRAIL_URL" ]; then
+  echo "One should specify an HTTP URL to the contrail-install-packages for this element to work"
+  exit 1
+fi
+
+yum -y install $CONTRAIL_URL
