@@ -3,7 +3,7 @@ set -eu
 
 # This file is currently used to setup the loopback file.  This file would likely never be used in production.
 # In a production installation, there may be multiple backends.
-# See http://docs.openstack.org/admin-guide-cloud/content/multi_backend.html
+# See http://docs.openstack.org/admin-guide-cloud/blockstorage_multi_backend.html
 
 # TODO: resize volume group in response to config changes.
 # TODO: is there a safe way to shrink a volume group?
