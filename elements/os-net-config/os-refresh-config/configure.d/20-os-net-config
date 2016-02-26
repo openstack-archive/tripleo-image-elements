@@ -7,7 +7,7 @@ function get_metadata_ip() {
 
   # Look for a variety of Heat transports
   # FIXME: Heat should provide a way to obtain this in a single place
-  for URL in os-collect-config.cfn.metadata_url os-collect-config.heat.auth_url os-collect-config.swift.metadata_put_url os-collect-config.zaqar.auth_url; do
+  for URL in os-collect-config.cfn.metadata_url os-collect-config.heat.auth_url os-collect-config.request.metadata_url os-collect-config.zaqar.auth_url; do
     METADATA_IP=$(os-apply-config --key $URL --key-default '' --type raw 2>/dev/null | sed -e 's|http.*://\([^:]*\).*|\1|')
     [ -n "$METADATA_IP" ] && break
   done
