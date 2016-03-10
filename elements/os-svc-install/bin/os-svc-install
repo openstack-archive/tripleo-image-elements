@@ -53,8 +53,6 @@ function python_install() {
             done
 
             pip install -r $reqs
-            # FIXME: pip requires doesn't include MySQL-python
-            pip install MySQL-python
         fi
     fi
     # Always replay this, as we cannot use the entry this would generate in the manifest
