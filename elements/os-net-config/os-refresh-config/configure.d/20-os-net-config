@@ -104,6 +104,15 @@ if [ -n "$NET_CONFIG" ]; then
     RETVAL=$?
     if [[ $RETVAL == 2 ]]; then
         ping_metadata_ip
+
+        #NOTE: dprince this udev rule can apparently leak DHCP processes?
+        # https://bugs.launchpad.net/tripleo/+bug/1538259
+        # until we discover the root cause we can simply disable the
+        # rule because networking has already been configured at this point
+        if [ -f /etc/udev/rules.d/99-dhcp-all-interfaces.rules ]; then
+            rm /etc/udev/rules.d/99-dhcp-all-interfaces.rules
+        fi
+
     elif [[ $RETVAL != 0 ]]; then
         echo "ERROR: os-net-config configuration failed." >&2
         exit 1
