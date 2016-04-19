@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eux
 
-install-packages -m openvswitch openvswitch-switch_package
-
 if [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
     os-svc-enable -n openvswitch-switch
 fi
