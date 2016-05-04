@@ -19,6 +19,8 @@
 set -eux
 set -o pipefail
 
+ANSIBLE_VERSION=${ANSIBLE_VERSION:-1.8.1}
+
 install-packages build-essential libssl-dev libyaml-dev python-dev libxml2-dev libxslt-dev libffi-dev
 
 virtualenv $ANSIBLE_VENV_DIR
@@ -29,7 +31,7 @@ set -u
 
 $ANSIBLE_VENV_DIR/bin/pip install paramiko PyYAML jinja2 httplib2
 
-$ANSIBLE_VENV_DIR/bin/pip install ansible==1.8.1
+$ANSIBLE_VENV_DIR/bin/pip install ansible==${ANSIBLE_VERSION}
 
 ln -s $ANSIBLE_VENV_DIR/bin/ansible /usr/local/bin/ansible
 ln -s $ANSIBLE_VENV_DIR/bin/ansible-playbook /usr/local/bin/ansible-playbook
