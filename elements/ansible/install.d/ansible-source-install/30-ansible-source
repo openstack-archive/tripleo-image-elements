@@ -19,7 +19,7 @@
 set -eux
 set -o pipefail
 
-install-packages build-essential libssl-dev libyaml-dev python-dev libxml2-dev libxslt-dev
+install-packages build-essential libssl-dev libyaml-dev python-dev libxml2-dev libxslt-dev libffi-dev
 
 virtualenv $ANSIBLE_VENV_DIR
 
