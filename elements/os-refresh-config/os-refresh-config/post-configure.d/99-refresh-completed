@@ -63,10 +63,23 @@ DEPLOYMENTS=$(os-apply-config --key deployments --type raw --key-default "" |
               select(.inputs[].name == \"deploy_signal_id\") |
               .id + (.inputs | map(select(.name == \"deploy_signal_id\")) | .[].value)) |
               .[]")
+
+# We store a file per deployment similar to how heat-config stores them under
+# /var/lib/heat-config/deployed, here we use /var/lib/os-apply-config-deployments/deployed
+DEPLOYED_DIR="/var/lib/os-apply-config-deployments/deployed"
+if [ ! -d $DEPLOYED_DIR ]; then
+    mkdir -p $DEPLOYED_DIR
+fi
+
 for dep  in ${DEPLOYMENTS}
 do
     DEPLOY_ID=$(echo $dep | sed "s/http.*$//")
     DEPLOY_URL=$(echo $dep | sed "s/^.*http/http/")
-    echo "Signalling os-apply-config deployment $DEPLOY_ID $DEPLOY_URL"
-    call_curl_deployment POST $DEPLOY_URL "os-apply-config deployment $DEPLOY_ID completed"
+    if [ ! -f $DEPLOYED_DIR/$DEPLOY_ID ]; then
+        echo "Signalling os-apply-config deployment $DEPLOY_ID $DEPLOY_URL"
+        call_curl_deployment POST $DEPLOY_URL "os-apply-config deployment $DEPLOY_ID completed"
+        touch $DEPLOYED_DIR/$DEPLOY_ID
+    else
+        echo "Skipping $DEPLOY_ID, already deployed"
+    fi
 done
