@@ -18,7 +18,7 @@ function get_metadata_ip() {
 
 function is_local_ip() {
   local IP_TO_CHECK=$1
-  if ip a | grep ^\ *inet | grep $IP_TO_CHECK &>/dev/null; then
+  if ip -o a | grep "inet6\? $IP_TO_CHECK/" &>/dev/null; then
     return 0
   else
     return 1
