@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -eux
+
+rpm -q rdo-release || install-packages http://rdo.fedorapeople.org/openstack-$RDO_RELEASE/rdo-release-$RDO_RELEASE.rpm
