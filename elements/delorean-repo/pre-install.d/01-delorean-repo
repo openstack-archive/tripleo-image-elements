@@ -6,9 +6,15 @@ export DELOREAN_REPO_FILE=${DELOREAN_REPO_FILE:-"delorean.repo"}
 
 # delorean requires delorean-deps
 if [[ "rhel7 centos7" =~ "$DISTRO_NAME" ]]; then
+
+  if [ -z "$STABLE_RELEASE" ]; then
     curl http://trunk.rdoproject.org/centos7/delorean-deps.repo -o /etc/yum.repos.d/delorean-deps.repo
+  else
+    curl http://trunk.rdoproject.org/centos7-$STABLE_RELEASE/delorean-deps.repo -o /etc/yum.repos.d/delorean-deps.repo
+  fi
+
 elif [[ "fedora" =~ "$DISTRO_NAME" ]]; then
-    curl http://trunk.rdoproject.org/f$DIB_RELEASE/delorean-deps.repo -o /etc/yum.repos.d/delorean-deps.repo
+  curl http://trunk.rdoproject.org/f$DIB_RELEASE/delorean-deps.repo -o /etc/yum.repos.d/delorean-deps.repo
 fi
 
 if [ -n "$DELOREAN_REPO_URL" ]; then
