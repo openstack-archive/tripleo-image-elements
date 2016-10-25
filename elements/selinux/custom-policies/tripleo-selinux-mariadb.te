@@ -1,5 +1,5 @@
 
-module tripleo_selinux_mariadb 1.0;
+module tripleo-selinux-mariadb 1.0;
 
 require {
 	type haproxy_t;
