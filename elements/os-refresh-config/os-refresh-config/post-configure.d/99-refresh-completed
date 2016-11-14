@@ -16,7 +16,7 @@ call_curl() {
     local method=$1
     local url=$2
     local output=$(mktemp)
-    status=$(curl -s -w %{http_code} -X $method -H 'Content-Type:' -o $output --data-binary "{\"Status\" : \"SUCCESS\",\"Reason\" : \"Configuration Complete\",\"UniqueId\" : \"$ID\",\"Data\" : \"Finished os-refresh-config.\"}" $url)
+    status=$(curl -s -w %{http_code} -X $method -H 'Content-Type: application/json' -o $output --data-binary "{\"Status\" : \"SUCCESS\",\"Reason\" : \"Configuration Complete\",\"UniqueId\" : \"$ID\",\"Data\" : \"Finished os-refresh-config.\"}" $url)
     cat $output
     rm $output
     if [ "$status" != "200" ]; then
@@ -29,7 +29,7 @@ call_curl_deployment() {
     local url=$2
     local stdout=$3
     local output=$(mktemp)
-    status=$(curl -s -w %{http_code} -X $method -H 'Content-Type:' -o $output --data-binary "{\"deploy_stdout\": \"$stdout\", \"deploy_status_code\": \"0\"}" $url)
+    status=$(curl -s -w %{http_code} -X $method -H 'Content-Type: application/json' -o $output --data-binary "{\"deploy_stdout\": \"$stdout\", \"deploy_status_code\": \"0\"}" $url)
     cat $output
     rm $output
     if [ "$status" != "200" ]; then
