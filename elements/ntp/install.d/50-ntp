@@ -1,5 +1,10 @@
 #!/bin/bash
 set -ue
 
+# we don't want chrony and ntp conflict each others.
+if rpm -q chrony; then
+    yum remove -y chrony
+fi
+
 # ntpdate is used when the network is brought up to correct any large time skew
 install-packages ntp ntpdate
