@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eux
+set -o pipefail
+
+if [[ "rhel rhel7 centos7 fedora" =~ "$DISTRO_NAME" ]]; then
+    echo '# empty ruleset created by tripleo-image-elements' > /etc/sysconfig/iptables
+fi
