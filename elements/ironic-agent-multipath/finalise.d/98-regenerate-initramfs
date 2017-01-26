@@ -10,4 +10,8 @@ RET=$(select-boot-kernel-initrd)
 KERNEL_VERSION=`echo ${RET%:*} | sed 's/vmlinuz-//g'`
 RAMDISK=/boot/${RET#*:}
 
-dracut -v --force --add-drivers "$IRONIC_AGENT_MULTIPATH_DRIVERS" $RAMDISK $KERNEL_VERSION
+if [ -z $IRONIC_AGENT_MULTIPATH_DRIVERS ]; then
+  dracut -v --force $RAMDISK $KERNEL_VERSION
+else
+  dracut -v --force --add-drivers "$IRONIC_AGENT_MULTIPATH_DRIVERS" $RAMDISK $KERNEL_VERSION
+fi
