@@ -10,3 +10,6 @@ build
 AUTHORS
 ChangeLog
 elements/seed-stack-config/local.json
+
+# Files created by releasenotes build
+releasenotes/build
