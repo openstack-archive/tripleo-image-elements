@@ -2,3 +2,36 @@
 prelude: >
     6.0.0 is the final Ocata release for tripleo-image-elements.
     This is also the first release with release notes.
+features:
+  - Add zaqar.use_websockets option to os-collect-config.
+  - Add scripts to zero iptables & ip6tables files at build time.
+    When including these new elements, we empty the stock
+    /etc/sysconfig/iptables and /etc/sysconfig/ip6tables filse as
+    shipped by the iptables rpm package. The reason for this is that
+    puppet firewall has a hard time to cope with exiting rules when
+    these files are populated and the iptables service is not
+    active.
+  - Add element to customize dracut on the agent.
+    Updates the ironic agent, installing multipath package
+    and regenerating dracut to add all the specified drivers.
+  - Add element to rebuild dracut enabling modules
+    To support TripleO whole disk images (with enabled
+    security), we need lvm and crypt modules.
+    So creating that element in TripleO, that will install the
+    needed packages, and will rebuild the image to add the
+    modules we need.
+fixes:
+  - Purge Chrony package in NTP element.
+    If NTP is installed and used, make sure Chrony is not installed because
+    they would conflict each others.
+  - Fixes `bug 1659493
+    <https://bugs.launchpad.net/tripleo/+bug/1659493>`__ so we don't fail
+    on building the IPA ramdisk, by setting
+    IRONIC_AGENT_MULTIPATH_DRIVERS to empty when undefined.
+other:
+  - Copy map-services script to tripleo elements.
+    map-services will be removed on dib v2 branch, but
+    TripleO still relies heavily on it. To prevent breakage,
+    copy the script to the internal element using it.
+    In the future, all elements will need to be migrated
+    to new svc-map, but it is a massive change.
