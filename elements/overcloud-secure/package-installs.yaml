@@ -1,0 +1,4 @@
+kexec-tools:
+  uninstall: True
+telnet:
+  uninstall: True
