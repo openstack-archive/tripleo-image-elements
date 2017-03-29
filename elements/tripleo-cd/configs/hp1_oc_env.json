@@ -1,7 +1,0 @@
-{
-    "OvercloudHypervisorPublicInterface": "eth2",
-    "OvercloudName": "ci-overcloud.hp1.tripleo.org",
-    "OvercloudControlscale": "3",
-    "OvercloudComputescale": "16",
-    "OvercloudNodeArch": "amd64"
-}

@@ -1,7 +1,0 @@
-#!/bin/bash
-set -eux
-set -o pipefail
-
-# VxLAN ports
-add-rule INPUT -p udp -m udp --dport 4789 -j ACCEPT
-add-rule INPUT -m pkttype --pkt-type multicast -j ACCEPT

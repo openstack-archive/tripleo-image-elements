@@ -1,5 +1,0 @@
-#!/bin/bash
-
-set -eux
-
-install-packages -m mysql-dev mysql_dev_package

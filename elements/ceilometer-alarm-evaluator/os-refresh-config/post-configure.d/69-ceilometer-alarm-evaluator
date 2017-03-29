@@ -1,6 +1,0 @@
-#!/bin/bash
-set -eux
-
-os-svc-enable -an ceilometer-alarm-evaluator
-
-os-svc-restart -an ceilometer-alarm-evaluator

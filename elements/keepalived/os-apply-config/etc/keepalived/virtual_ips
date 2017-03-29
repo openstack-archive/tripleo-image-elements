@@ -1,3 +1,0 @@
-{{#virtual_ips}}
-{{ip}}
-{{/virtual_ips}}

@@ -1,8 +1,0 @@
-{
-  "family": {
-    "redhat": {
-      "galera_server_package": "mariadb-galera-server",
-      "python_mysqldb_package": "MySQL-python"
-    }
-  }
-}

@@ -1,8 +1,0 @@
-#!/bin/bash
-set -eu
-
-if [ -d /etc/sudoers.d ]; then
-    echo "Defaults:cinder !requiretty" > /etc/sudoers.d/cinder-notty
-    chmod 0440 /etc/sudoers.d/cinder-notty
-    visudo -c
-fi

@@ -1,5 +1,0 @@
-keystone git /opt/stack/keystone https://git.openstack.org/openstack/keystone.git
-cinder git /opt/stack/cinder https://git.openstack.org/openstack/cinder.git
-nova git /opt/stack/nova https://git.openstack.org/openstack/nova.git
-glance git /opt/stack/glance https://git.openstack.org/openstack/glance.git
-neutron git /opt/stack/neutron https://git.openstack.org/openstack/neutron.git

@@ -1,6 +1,0 @@
-#!/bin/bash
-set -eux
-set -o pipefail
-
-os-svc-enable -an ceilometer-collector
-os-svc-restart -an ceilometer-collector

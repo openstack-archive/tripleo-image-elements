@@ -1,7 +1,0 @@
-#!/bin/bash
-set -eu
-
-# exit if we can't source our required data
-DEFAULTS=/etc/nagios3/nova_access_info
-source $DEFAULTS
-htpasswd -bc /etc/nagios3/htpasswd.users nagiosadmin $nagiosadmin_pass

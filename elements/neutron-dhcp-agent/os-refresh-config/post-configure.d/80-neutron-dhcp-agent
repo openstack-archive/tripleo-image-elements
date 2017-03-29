@@ -1,6 +1,0 @@
-#!/bin/bash
-set -eux
-
-os-svc-enable -n neutron-dhcp-agent
-
-os-svc-restart -n neutron-dhcp-agent

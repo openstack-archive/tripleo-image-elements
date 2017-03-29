@@ -1,3 +1,0 @@
-ceilometer-agent-notification:
-  default: ceilometer-agent-notification
-  redhat: openstack-ceilometer-notification

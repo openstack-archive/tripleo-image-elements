@@ -1,6 +1,0 @@
-#!/bin/bash
-set -eux
-
-os-svc-enable -n nova-baremetal-deploy-helper
-
-os-svc-restart -n nova-baremetal-deploy-helper

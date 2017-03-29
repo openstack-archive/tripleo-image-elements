@@ -1,7 +1,0 @@
-#!/bin/bash
-
-set -eux
-
-install-packages openstack-heat-common
-
-rm -rf /usr/lib/python2.7/site-packages/heat/db/sqlalchemy/migrate_repo/versions/065_update_at_fsp.py{,c,o}

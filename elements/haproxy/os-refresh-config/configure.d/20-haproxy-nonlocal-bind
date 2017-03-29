@@ -1,6 +1,0 @@
-#!/bin/bash
-
-set -eu
-set -o pipefail
-
-sysctl-set-value net.ipv4.ip_nonlocal_bind 1

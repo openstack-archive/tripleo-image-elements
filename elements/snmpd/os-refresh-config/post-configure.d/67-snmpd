@@ -1,7 +1,0 @@
-#!/bin/bash
-set -eux
-set -o pipefail
-
-os-svc-enable -n snmpd
-
-os-svc-restart -n snmpd

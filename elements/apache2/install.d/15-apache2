@@ -1,8 +1,0 @@
-#!/bin/bash
-# install apache2
-
-set -eux
-
-if [ -f /etc/debian_version ]; then
-    install-packages ssl-cert
-fi

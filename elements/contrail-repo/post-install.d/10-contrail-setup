@@ -1,5 +1,0 @@
-#!/bin/bash
-
-set -eux
-
-/opt/contrail/contrail_packages/setup.sh

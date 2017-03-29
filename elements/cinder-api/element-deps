@@ -1,6 +1,0 @@
-cinder
-os-is-bootstrap-host
-os-refresh-config
-os-svc-install
-source-repositories
-use-ephemeral

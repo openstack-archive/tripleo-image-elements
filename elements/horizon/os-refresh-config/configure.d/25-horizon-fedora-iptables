@@ -1,5 +1,0 @@
-#!/bin/bash
-set -eu
-
-# Open the appropriate port for Horizon depending on its configuration (i.e. 80 vs 443)
-add-rule INPUT -p tcp --dport $(os-apply-config --key 'horizon.port' --type int --key-default 80) -j ACCEPT

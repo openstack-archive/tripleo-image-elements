@@ -1,5 +1,0 @@
-{
-  "default": {
-    "ceilometer_alarm_package": "openstack-ceilometer-alarm"
-  }
-}

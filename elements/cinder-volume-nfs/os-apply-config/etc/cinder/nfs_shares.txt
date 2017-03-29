@@ -1,3 +1,0 @@
-{{#cinder.nfs_shares}}
-{{.}}
-{{/cinder.nfs_shares}}

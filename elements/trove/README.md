@@ -1,1 +1,0 @@
-Install OpenStack Trove.

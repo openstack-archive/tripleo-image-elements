@@ -1,7 +1,0 @@
-#!/bin/bash
-set -eu
-set -o pipefail
-
-os-svc-enable -an ironic-api
-
-os-svc-restart -an ironic-api

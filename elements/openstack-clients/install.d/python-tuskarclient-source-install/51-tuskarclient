@@ -1,7 +1,0 @@
-#!/bin/bash
-
-set -eux
-
-install-openstack-client $TUSKARCLIENT_EXTRA_INSTALL_OPTS -c tuskar -i $TUSKARCLIENT_VENV_DIR
-
-add-selinux-path-substitution /usr/bin "$TUSKARCLIENT_VENV_DIR/bin"

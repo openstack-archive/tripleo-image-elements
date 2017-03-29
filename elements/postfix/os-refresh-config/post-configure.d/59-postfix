@@ -1,4 +1,0 @@
-#!/bin/bash
-set -uex
-
-service postfix reload

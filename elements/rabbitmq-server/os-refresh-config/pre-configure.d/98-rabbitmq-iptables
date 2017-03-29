@@ -1,4 +1,0 @@
-#!/bin/bash
-set -eu
-
-add-rule INPUT -p tcp -m multiport --dports 4369,61000 -j ACCEPT

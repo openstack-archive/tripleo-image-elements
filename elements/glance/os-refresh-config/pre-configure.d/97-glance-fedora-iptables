@@ -1,5 +1,0 @@
-#!/bin/bash
-set -eu
-
-add-rule INPUT -p tcp --dport 9292 -j ACCEPT
-add-rule INPUT -p tcp --dport 9191 -j ACCEPT

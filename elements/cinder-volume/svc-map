@@ -1,3 +1,0 @@
-cinder-volume:
-  default: openstack-cinder-volume
-  debian: cinder-volume

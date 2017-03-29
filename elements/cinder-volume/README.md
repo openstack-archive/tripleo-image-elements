@@ -1,1 +1,0 @@
-Installs cinder volume service.

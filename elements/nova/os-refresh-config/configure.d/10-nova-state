@@ -1,7 +1,0 @@
-#!/bin/bash
-set -ue
-
-[ -d /mnt/state/var/lib/nova ] && exit 0
-install -D -d -o nova -g nova -m 0775 /mnt/state/var/lib/nova
-[ -d /mnt/state/var/log/nova ] && exit 0
-install -D -d -o nova -g nova -m 0775 /mnt/state/var/log/nova

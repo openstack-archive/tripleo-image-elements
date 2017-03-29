@@ -1,6 +1,0 @@
-#!/bin/bash
-set -eux
-
-os-svc-daemon -i "$NOVA_VENV_DIR" nova-baremetal-deploy-helper nova nova-baremetal-deploy-helper "--config-dir /etc/nova"
-
-ln -s $NOVA_VENV_DIR/bin/nova-baremetal-manage /usr/local/bin/nova-baremetal-manage

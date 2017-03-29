@@ -1,5 +1,0 @@
-{
-  "default": {
-    "ironic_api_package": "openstack-ironic-api"
-  }
-}

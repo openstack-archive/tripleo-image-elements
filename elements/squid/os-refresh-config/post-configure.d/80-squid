@@ -1,5 +1,0 @@
-#!/bin/bash
-set -eux
-
-os-svc-enable -n squid
-os-svc-restart -n squid

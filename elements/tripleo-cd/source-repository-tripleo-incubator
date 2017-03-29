@@ -1,4 +1,0 @@
-tripleo-incubator git /opt/stack/tripleo-incubator https://git.openstack.org/openstack/tripleo-incubator.git
-diskimage-builder git /opt/stack/diskimage-builder https://git.openstack.org/openstack/diskimage-builder.git
-tripleo-image-elements git /opt/stack/tripleo-image-elements https://git.openstack.org/openstack/tripleo-image-elements.git
-tripleo-heat-templates git /opt/stack/tripleo-heat-templates https://git.openstack.org/openstack/tripleo-heat-templates.git

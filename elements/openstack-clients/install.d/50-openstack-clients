@@ -1,5 +1,0 @@
-#!/bin/bash
-
-set -eux
-
-install-packages git build-essential python-dev libssl-dev libxml2-dev libxslt-dev libffi-dev

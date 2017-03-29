@@ -1,7 +1,0 @@
-#!/bin/bash
-set -eux
-set -o pipefail
-
-if os-is-bootstrap-host ; then
-    su -s /bin/bash -c 'heat-manage db_sync' heat
-fi

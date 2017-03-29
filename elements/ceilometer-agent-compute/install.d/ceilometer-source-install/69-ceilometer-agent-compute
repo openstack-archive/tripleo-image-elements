@@ -1,6 +1,0 @@
-#!/bin/bash
-set -eux
-
-$CEILOMETER_VENV_DIR/bin/pip install libvirt-python
-
-os-svc-daemon -i "$CEILOMETER_VENV_DIR" ceilometer-agent-compute ceilometer ceilometer-agent-compute --config-dir /etc/ceilometer

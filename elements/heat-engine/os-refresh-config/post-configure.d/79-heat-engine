@@ -1,8 +1,0 @@
-#!/bin/bash
-
-set -eu
-set -o pipefail
-
-os-svc-enable -an heat-engine
-
-os-svc-restart -an heat-engine

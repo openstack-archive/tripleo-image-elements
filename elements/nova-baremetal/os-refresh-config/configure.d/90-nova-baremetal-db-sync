@@ -1,6 +1,0 @@
-#!/bin/bash
-set -eux
-
-if os-is-bootstrap-host ; then
-    su -s /bin/bash -c 'nova-baremetal-manage db sync' nova
-fi

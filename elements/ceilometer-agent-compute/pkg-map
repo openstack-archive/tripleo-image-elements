@@ -1,5 +1,0 @@
-{
-  "default": {
-    "ceilometer_agent_compute_package": "openstack-ceilometer-compute"
-  }
-}

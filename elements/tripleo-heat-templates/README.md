@@ -1,1 +1,0 @@
-Install tripleo-heat-templates.

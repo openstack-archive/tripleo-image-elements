@@ -1,7 +1,0 @@
-#!/bin/bash
-
-set -eux
-
-install-openstack-client $IRONICCLIENT_EXTRA_INSTALL_OPTS -c ironic -i $IRONICCLIENT_VENV_DIR
-
-add-selinux-path-substitution /usr/bin $IRONICCLIENT_VENV_DIR/bin

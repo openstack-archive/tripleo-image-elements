@@ -1,7 +1,0 @@
-#!/bin/bash
-
-set -eux
-
-install-packages openstack-neutron openstack-neutron-dhcp-agent
-
-os-svc-daemon -i "$NEUTRON_VENV_DIR" -n neutron-dhcp-agent -u neutron

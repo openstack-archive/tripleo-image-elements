@@ -1,7 +1,0 @@
-ceilometer
-iptables
-os-is-bootstrap-host
-os-refresh-config
-os-svc-install
-package-installs
-pkg-map

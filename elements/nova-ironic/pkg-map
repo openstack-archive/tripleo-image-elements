@@ -1,5 +1,0 @@
-{
-  "default": {
-    "nova_ironic_package": "openstack-ironic-common"
-  }
-}

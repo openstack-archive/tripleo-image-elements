@@ -1,5 +1,0 @@
-apache2
-os-apply-config
-os-refresh-config
-package-installs
-postfix

@@ -1,5 +1,0 @@
-[client]
-user = root
-{{#mysql.root-password}}
-password = {{.}}
-{{/mysql.root-password}}

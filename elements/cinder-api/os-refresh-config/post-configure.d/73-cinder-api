@@ -1,7 +1,0 @@
-#!/bin/bash
-set -eu
-
-os-svc-enable -an cinder-api
-os-svc-enable -an cinder-scheduler
-os-svc-restart -an cinder-api
-os-svc-restart -an cinder-scheduler

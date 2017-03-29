@@ -1,5 +1,0 @@
-{
-  "default": {
-    "ceilometer_api_package": "openstack-ceilometer-api"
-  }
-}

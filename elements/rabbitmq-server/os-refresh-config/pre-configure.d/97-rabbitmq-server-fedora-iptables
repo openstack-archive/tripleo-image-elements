@@ -1,5 +1,0 @@
-#!/bin/bash
-set -eu
-
-# AMQP
-add-rule INPUT -p tcp --dport 5672  -j ACCEPT

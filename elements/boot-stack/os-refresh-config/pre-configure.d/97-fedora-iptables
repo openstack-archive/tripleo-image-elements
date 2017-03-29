@@ -1,7 +1,0 @@
-#!/bin/bash
-set -eu
-
-# Forward packets to the private ctlplane network
-add-rule FORWARD -d 192.0.2.0/24 -j ACCEPT
-# Forward packets to the hosts libvirt network
-add-rule FORWARD -d 192.168.122.0/24 -j ACCEPT

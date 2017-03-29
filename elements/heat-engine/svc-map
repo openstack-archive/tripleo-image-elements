@@ -1,3 +1,0 @@
-heat-engine:
-  default: openstack-heat-engine
-  debian: heat-engine

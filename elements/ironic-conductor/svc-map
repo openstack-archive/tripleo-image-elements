@@ -1,3 +1,0 @@
-ironic-conductor:
-  default: ironic-conductor
-  redhat: openstack-ironic-conductor

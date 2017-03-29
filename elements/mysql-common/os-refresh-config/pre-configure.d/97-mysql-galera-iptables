@@ -1,6 +1,0 @@
-#!/bin/bash
-set -eu
-
-add-rule INPUT -p tcp --dport 4567 -j ACCEPT  # galera
-add-rule INPUT -p tcp --dport 4568 -j ACCEPT  # galera
-add-rule INPUT -p tcp --dport 4444 -j ACCEPT  # mysql cluster

@@ -1,7 +1,0 @@
-#!/bin/bash
-
-set -eux
-
-pushd /opt/stack/diskimage-builder
-pip install .
-popd

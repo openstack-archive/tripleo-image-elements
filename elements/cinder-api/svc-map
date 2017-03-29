@@ -1,6 +1,0 @@
-cinder-api:
-  default: openstack-cinder-api
-  debian: cinder-api
-cinder-scheduler:
-  default: openstack-cinder-scheduler
-  debian: cinder-scheduler
