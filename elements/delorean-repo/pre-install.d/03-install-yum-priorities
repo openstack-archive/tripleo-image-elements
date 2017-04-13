@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+set -o xtrace
+
+install-packages -m delorean-repo yum_plugin_priorities_package

@@ -1,0 +1,5 @@
+{
+  "default": {
+    "yum_plugin_priorities_package": "yum-plugin-priorities"
+  }
+}
