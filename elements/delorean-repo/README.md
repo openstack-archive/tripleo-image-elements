@@ -14,5 +14,5 @@ packages:
  https://github.com/openstack-packages/delorean
 
 The Delorean tool currently supports Fedora packages and Yum
-repositories. Support for other distributions may be added in
-the future.
+repositories.
+Support for other distributions may be added in the future.

@@ -17,7 +17,7 @@ Instructions
 
 Checkout this source tree and also the diskimage builder, export an
 ELEMENTS\_PATH to add elements from this tree, and build any disk images you
-need.
+need:
 
     virtualenv .
     source bin/activate
