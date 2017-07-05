@@ -100,7 +100,7 @@ NET_CONFIG=$(os-apply-config --key os_net_config --type raw --key-default '')
 
 if [ -n "$NET_CONFIG" ]; then
     trap configure_safe_defaults EXIT
-    os-net-config -c /etc/os-net-config/config.json -v --detailed-exit-codes
+    os-net-config -c /etc/os-net-config/element_config.json -v --detailed-exit-codes
     RETVAL=$?
     if [[ $RETVAL == 2 ]]; then
         ping_metadata_ip
