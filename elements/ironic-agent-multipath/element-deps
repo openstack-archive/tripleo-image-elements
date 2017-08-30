@@ -1,2 +1,3 @@
+install-static
 package-installs
 select-boot-kernel-initrd
