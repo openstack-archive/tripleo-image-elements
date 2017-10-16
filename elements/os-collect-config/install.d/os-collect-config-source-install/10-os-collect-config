@@ -47,7 +47,7 @@ elif [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
     cat > /lib/systemd/system/os-collect-config.service <<eof
 [Unit]
 Description=Collect metadata and run hook commands.
-After=cloud-final.service
+After=cloud-config.service
 Before=crond.service
 
 [Service]
