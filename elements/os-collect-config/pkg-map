@@ -2,6 +2,13 @@
   "family": {
     "debian": {
       "os-collect-config": "python-os-collect-config"
+    },
+    "suse": {
+      "libxml2-dev": "libxml2-devel",
+      "libz-dev": "zlib-devel",
+      "libxslt-dev": "libxslt-devel",
+      "python-dev": "python-devel",
+      "build-essential": "pattern:devel_basis"
     }
   },
   "default": {
