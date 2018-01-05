@@ -1,0 +1,5 @@
+kernel-rt:
+kernel-rt-kvm:
+tuned-profiles-nfv-host:
+kernel:
+  uninstall: True
