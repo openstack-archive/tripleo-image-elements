@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -eux
+
+# Uninstalling the default kernel in chroot might fail, if it is the same
+# kernel that runs in the host. Therefore we are forcing it here by
+# disabling the protected_packages config.
+# The machine suffix is required to not accidentally remove the
+# kernel-rt again in case the default kernel is not installed.
+yum -v -y --setopt=protected_packages= erase kernel.$(uname -m)
