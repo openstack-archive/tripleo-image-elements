@@ -1,7 +1,5 @@
----
 
 - project:
-    name: openstack/tripleo-image-elements
     templates:
       - tripleo-multinode-baremetal-minimal
       - tripleo-multinode-container-minimal
