@@ -44,7 +44,12 @@ exec os-collect-config  2>&1 | logger -t os-collect-config
 eof
 
 elif [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
-    cat > /lib/systemd/system/os-collect-config.service <<eof
+    if [ -d "/lib/systemd" ]; then
+      path=/lib/systemd/system/os-collect-config.service
+    else
+      path=/usr/lib/systemd/system/os-collect-config.service
+    fi
+    cat > $path <<eof
 [Unit]
 Description=Collect metadata and run hook commands.
 After=cloud-config.service
