@@ -24,7 +24,7 @@
                 fstab:
                     options: "rw,nosuid,nodev,noexec,relatime"
       - name: var
-        size: 7G
+        size: 10G
         mkfs:
             type: xfs
             mount:
