@@ -6,7 +6,7 @@
     partitions:
       - name: root
         flags: [ boot,primary ]
-        size: 20G
+        size: 23G
 - lvm:
     name: lvm
     base: [ root ]
@@ -21,16 +21,16 @@
     lvs:
         - name: lv_root
           base: vg
-          extents: 30%VG
+          extents: 28%VG
         - name: lv_tmp
           base: vg
-          extents: 5%VG
+          extents: 4%VG
         - name: lv_var
           base: vg
-          extents: 35%VG
+          extents: 40%VG
         - name: lv_log
           base: vg
-          extents: 25%VG
+          extents: 23%VG
         - name: lv_audit
           base: vg
           extents: 4%VG
