@@ -2,3 +2,6 @@ kexec-tools:
   uninstall: True
 telnet:
   uninstall: True
+openscap-scanner:
+scap-security-guide:
+aide:
