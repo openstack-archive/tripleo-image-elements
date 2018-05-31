@@ -177,6 +177,7 @@ end script
         output = self._run_command(
             ['elements/os-svc-install/bin/os-svc-daemon',
              '-p',
+             '-l',
              '-n', 'foo',
              '-u', 'foo',
              '-e', 'foo=bar',
