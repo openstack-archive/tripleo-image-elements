@@ -1,5 +1,6 @@
 
 - project:
     templates:
+      - openstack-python-jobs
       - tripleo-multinode-baremetal-minimal
       - tripleo-multinode-container-minimal
