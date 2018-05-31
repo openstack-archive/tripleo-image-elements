@@ -24,7 +24,7 @@ class ScriptTestBase(base.BaseTestCase):
         super(ScriptTestBase, self).setUp()
         self.tmpdir = tempfile.mkdtemp()
         self.env = os.environ.copy()
-        self.env['PATH'] = self.env['PATH'] + ':' + self.tmpdir
+        self.env['PATH'] = self.tmpdir + ':' + self.env['PATH']
 
     def _stub_script(self, name, contents):
         filename = os.path.join(self.tmpdir, name)
