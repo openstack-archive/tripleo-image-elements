@@ -95,3 +95,6 @@ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations
 under the License.
+
+Release notes for the project can be found at:
+  https://docs.openstack.org/releasenotes/tripleo-image-elements
