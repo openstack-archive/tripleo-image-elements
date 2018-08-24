@@ -1,5 +1,8 @@
-
 - project:
     templates:
       - tripleo-multinode-baremetal-minimal
       - tripleo-multinode-container-minimal
+      - release-notes-jobs
+    post:
+      jobs:
+        - publish-openstack-python-branch-tarball
