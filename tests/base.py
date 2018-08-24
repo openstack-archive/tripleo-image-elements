@@ -38,7 +38,7 @@ class ScriptTestBase(base.BaseTestCase):
         try:
             return subprocess.check_output(cmd,
                                            stderr=subprocess.STDOUT,
-                                           env=self.env)
+                                           env=self.env).decode('utf-8')
         # NOTE(bnemec): If we don't handle this exception, all we get is the
         # exit code if the command fails.
         except subprocess.CalledProcessError as e:
