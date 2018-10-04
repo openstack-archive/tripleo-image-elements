@@ -19,7 +19,7 @@
         size: 8MiB
       - name: root
         flags: [ boot ]
-        size: 23G
+        size: 40G
 - lvm:
     name: lvm
     base: [ root ]
@@ -34,13 +34,13 @@
     lvs:
         - name: lv_root
           base: vg
-          extents: 28%VG
+          extents: 23%VG
         - name: lv_tmp
           base: vg
           extents: 4%VG
         - name: lv_var
           base: vg
-          extents: 40%VG
+          extents: 45%VG
         - name: lv_log
           base: vg
           extents: 23%VG
@@ -59,7 +59,7 @@
         mount_point: /
         fstab:
             options: "rw,relatime"
-            fck-passno: 1
+            fsck-passno: 1
 - mkfs:
     name: fs_tmp
     base: lv_tmp
@@ -68,6 +68,7 @@
         mount_point: /tmp
         fstab:
             options: "rw,nosuid,nodev,noexec,relatime"
+            fsck-passno: 2
 - mkfs:
     name: fs_var
     base: lv_var
@@ -76,6 +77,7 @@
         mount_point: /var
         fstab:
             options: "rw,relatime"
+            fsck-passno: 2
 - mkfs:
     name: fs_log
     base: lv_log
@@ -84,6 +86,7 @@
         mount_point: /var/log
         fstab:
             options: "rw,relatime"
+            fsck-passno: 3
 - mkfs:
     name: fs_audit
     base: lv_audit
@@ -92,6 +95,7 @@
         mount_point: /var/log/audit
         fstab:
             options: "rw,relatime"
+            fsck-passno: 4
 - mkfs:
     name: fs_home
     base: lv_home
@@ -100,4 +104,5 @@
         mount_point: /home
         fstab:
             options: "rw,nodev,relatime"
+            fsck-passno: 2
 
