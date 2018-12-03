@@ -1,2 +1,4 @@
 os-apply-config:
   installtype: package
+rsync:
+  phase: pre-install.d
