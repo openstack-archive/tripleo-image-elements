@@ -20,5 +20,5 @@ Element Specific Guidelines
 
 References
 ----------
-.. [1]  http://docs.openstack.org/developer/hacking/
+.. [1]  https://docs.openstack.org/hacking/latest/
 .. [2]  http://docs.openstack.org/developer/tripleo-incubator/HACKING.html
