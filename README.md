@@ -62,6 +62,7 @@ We have five places we can do configuration in TripleO:
 
 Our current heuristic for deciding where to do any particular configuration
 step:
+
  - per user config should be done from the outside via APIs, even for
    users like 'admin' that we know we'll have. Note that service accounts
    are different - they are a form of inter-node configuration.
