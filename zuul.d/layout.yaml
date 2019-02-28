@@ -4,6 +4,7 @@
       - tripleo-multinode-baremetal-minimal
       - tripleo-multinode-container-minimal
       - release-notes-jobs
+      - release-notes-jobs-python3
     post:
       jobs:
         - publish-openstack-python-branch-tarball
