@@ -25,8 +25,8 @@ need::
     virtualenv .
     source bin/activate
     pip install dib-utils pyyaml
-    git clone https://git.openstack.org/openstack/diskimage-builder.git
-    git clone https://git.openstack.org/openstack/tripleo-image-elements.git
+    git clone https://opendev.org/openstack/diskimage-builder.git
+    git clone https://opendev.org/openstack/tripleo-image-elements.git
     export ELEMENTS_PATH=tripleo-image-elements/elements
     diskimage-builder/bin/disk-image-create -u base vm bootstrap local-config stackuser heat-cfntools -a i386 -o bootstrap
 

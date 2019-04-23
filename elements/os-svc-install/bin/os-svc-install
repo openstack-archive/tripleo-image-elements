@@ -69,7 +69,7 @@ function python_install() {
 
 function install_os_service() {
     local user=$1
-    local repo=$(echo $2 | sed 's/github.com/review.openstack.org/')
+    local repo=$(echo $2 | sed 's/github.com/review.opendev.org/')
     local branch=$3
     local directory=$4
     local system_site_packages=$5
