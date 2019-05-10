@@ -1,23 +1,26 @@
+========================
 Team and repository tags
 ========================
 
-[![Team and repository tags](https://governance.openstack.org/tc/badges/tripleo-image-elements.svg)](https://governance.openstack.org/tc/reference/tags/index.html)
+.. image:: https://governance.openstack.org/tc/badges/tripleo-image-elements.svg
+    :target: https://governance.openstack.org/tc/reference/tags/index.html
 
-<!-- Change things from this point on -->
+.. Change things from this point on
 
 Image building rules for OpenStack images
 =========================================
 
 These elements are used to build disk images for deploying OpenStack via Heat.
-They are built as part of the TripleO (https://wiki.openstack.org/wiki/TripleO)
-umbrella project.
+They are built as part of the TripleO_ umbrella project.
+
+.. _TripleO: https://wiki.openstack.org/wiki/TripleO
 
 Instructions
 ------------
 
 Checkout this source tree and also the diskimage builder, export an
-ELEMENTS\_PATH to add elements from this tree, and build any disk images you
-need:
+ELEMENTS_PATH to add elements from this tree, and build any disk images you
+need::
 
     virtualenv .
     source bin/activate
@@ -80,7 +83,7 @@ Copyright
 =========
 
 Copyright 2012,2013 Hewlett-Packard Development Company, L.P.
-Copyright (c) 2012 NTT DOCOMO, INC. 
+Copyright (c) 2012 NTT DOCOMO, INC.
 
 All Rights Reserved.
 
