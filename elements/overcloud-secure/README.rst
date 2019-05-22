@@ -1,10 +1,6 @@
 overcloud-secure
 ================
 
-CAUTION: This element is part of the security hardened images feature, that
-is delivered in this release as tech preview. The following element is not
-intended for production usage.
-
 overcloud-secure is an element to add extra security hardening features to
 the tripleo images: partition creation and unsafe package uninstall.
 
