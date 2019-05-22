@@ -1,10 +1,6 @@
 overcloud-secure-uefi
 =====================
 
-CAUTION: This element is part of the security hardened images feature, that
-is delivered in this release as tech preview. The following element is not
-intended for production usage.
-
 overcloud-secure-uefi is an element to add extra security hardening features to
 the tripleo images: partition creation and unsafe package uninstall. This
 element is the equivalent of overcloud-secure one, but is used when needed to
