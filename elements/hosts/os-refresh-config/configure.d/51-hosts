@@ -16,9 +16,9 @@ write_entries() {
         temp=$(mktemp)
         (
         sed '/^# HEAT_HOSTS_START/,$d' "$file"
-        echo -ne "\n# HEAT_HOSTS_START - Do not edit manually within this section!\n"
+        echo -ne "# HEAT_HOSTS_START - Do not edit manually within this section!\n"
         echo "$entries"
-        echo -ne "# HEAT_HOSTS_END\n\n"
+        echo -ne "# HEAT_HOSTS_END\n"
         sed '1,/^# HEAT_HOSTS_END/d' "$file"
         ) > "$temp"
         echo "INFO: Updating hosts file $file, check below for changes"
