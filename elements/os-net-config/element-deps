@@ -3,3 +3,4 @@ os-refresh-config
 package-installs
 pip-manifest
 openvswitch
+interface-names
