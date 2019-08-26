@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -eux
+set -o pipefail
+
+if [ -f /etc/default/grub ]; then
+    # net.ifacenames is defined and set to 0 starting with RHEL8.
+    # This is a change from RHEL7 which can affect network configurations.
+    sed -i 's/net.ifnames=0//g' /etc/default/grub
+fi
