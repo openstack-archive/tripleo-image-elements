@@ -3,7 +3,7 @@
 rm -rf releasenotes/build
 
 sphinx-build -a -E -W \
-    -d releasenotes/build/doctrees \
+    -d releasenotes/build/doctrees --keep-going \
     -b html \
     releasenotes/source releasenotes/build/html
 BUILD_RESULT=$?
