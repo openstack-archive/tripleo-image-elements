@@ -1,4 +1,11 @@
 {
+  "release": {
+    "ubuntu": {
+      "focal": {
+        "python-dev": "python3-dev"
+      }
+    }
+  },
   "family": {
     "debian": {
       "os-collect-config": "python-os-collect-config"
