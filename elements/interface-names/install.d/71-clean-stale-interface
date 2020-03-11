@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -eux
+set -o pipefail
+
+# https://bugs.centos.org/view.php?id=17133
+if [ -f /etc/sysconfig/network-scripts/ifcfg-ens3 ]; then
+    rm -f /etc/sysconfig/network-scripts/ifcfg-ens3
+fi
