@@ -5,3 +5,6 @@ libxml2-dev:
 libz-dev:
 libxslt-dev:
 python-dev:
+  dib_python_version: 2
+python3-dev:
+  dib_python_version: 3
