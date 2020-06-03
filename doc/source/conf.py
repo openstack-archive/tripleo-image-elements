@@ -239,6 +239,7 @@ texinfo_documents = [
 # texinfo_no_detailmenu = False
 
 # openstackdocstheme options
-repository_name = 'openstack/tripleo-image-elements'
-bug_project = 'tripleo'
-bug_tag = 'documentation'
+openstackdocs_repo_name = 'openstack/tripleo-image-elements'
+openstackdocs_auto_name = False
+openstackdocs_bug_project = 'tripleo'
+openstackdocs_bug_tag = 'documentation'
