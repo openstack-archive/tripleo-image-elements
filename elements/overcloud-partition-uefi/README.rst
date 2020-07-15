@@ -1,9 +1,9 @@
-overcloud-secure-uefi
-=====================
+overcloud-partition-uefi
+========================
 
-overcloud-secure-uefi is an element to add extra security hardening features to
-the tripleo images: partition creation and unsafe package uninstall. This
-element is the equivalent of overcloud-secure one, but is used when needed to
+overcloud-partition-uefi is an element to add extra security hardening features to
+the tripleo images: partition creation. This
+element is the equivalent of overcloud-partition one, but is used when needed to
 build images that are capable of booting from uefi.
 
 It includes the block-device-default definition, that creates independent
