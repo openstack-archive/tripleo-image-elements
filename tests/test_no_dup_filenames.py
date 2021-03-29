@@ -37,5 +37,5 @@ class TestNoDupFilenames(testtools.TestCase):
                     short_path = target[len(element_dir) + 1:]
                     if not os.path.isdir(target):
                         err_msg = 'Duplicate file name found %s' % short_path
-                        self.assertFalse(short_path in filenames, err_msg)
+                        self.assertNotIn(short_path, filenames, err_msg)
                         filenames.append(short_path)
