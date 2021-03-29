@@ -1,4 +1,4 @@
-hacking>=1.1.0,<1.2.0 # Apache-2.0
+hacking>=2.0.0 # Apache-2.0
 openstackdocstheme>=2.2.1 # Apache-2.0
 
 oslotest
