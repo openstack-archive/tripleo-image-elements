@@ -38,7 +38,7 @@ function python_install() {
         pip install -U 'setuptools>=1.0'
 
         # bug #1293812 : Avoid easy_install triggering on pbr.
-        pip install -U 'pbr>=0.11,<2.0'
+        pip install -U 'pbr>=0.11'
 
         if [ -n "$reqs" ] ; then
             # Install requirements off source repo if the install type
