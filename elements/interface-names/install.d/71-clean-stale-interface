@@ -7,3 +7,6 @@ set -o pipefail
 if ls /etc/sysconfig/network-scripts/ifcfg-ens3* &> /dev/null; then
     rm -f /etc/sysconfig/network-scripts/ifcfg-ens3*
 fi
+if ls /etc/sysconfig/network-scripts/ifcfg-eth* &> /dev/null; then
+    rm -f /etc/sysconfig/network-scripts/ifcfg-eth*
+fi
