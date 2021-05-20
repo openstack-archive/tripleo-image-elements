@@ -13,7 +13,7 @@
             mount_point: /boot/efi
             fstab:
               options: "defaults"
-              fsck-passno: 1
+              fsck-passno: 2
       - name: BSP
         type: 'EF02'
         size: 8MiB
@@ -86,7 +86,7 @@
         mount_point: /var/log
         fstab:
             options: "rw,relatime"
-            fsck-passno: 3
+            fsck-passno: 2
 - mkfs:
     name: fs_audit
     base: lv_audit
@@ -95,7 +95,7 @@
         mount_point: /var/log/audit
         fstab:
             options: "rw,relatime"
-            fsck-passno: 4
+            fsck-passno: 2
 - mkfs:
     name: fs_home
     base: lv_home
