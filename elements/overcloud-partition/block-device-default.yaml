@@ -73,7 +73,7 @@
         mount_point: /var/log
         fstab:
             options: "rw,relatime"
-            fsck-passno: 3
+            fsck-passno: 2
 - mkfs:
     name: fs_audit
     base: lv_audit
@@ -82,7 +82,7 @@
         mount_point: /var/log/audit
         fstab:
             options: "rw,relatime"
-            fsck-passno: 4
+            fsck-passno: 2
 - mkfs:
     name: fs_home
     base: lv_home

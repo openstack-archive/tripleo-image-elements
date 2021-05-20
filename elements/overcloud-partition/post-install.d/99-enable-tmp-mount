@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eux
+
+# Ensure tmp.mount isn't masked, which is done in cloud images
+# such as CentOS-Stream-GenericCloud-8
+systemctl unmask tmp.mount
+systemctl enable tmp.mount
