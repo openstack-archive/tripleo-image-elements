@@ -4,6 +4,6 @@ set -eux
 set -o pipefail
 
 # https://bugs.centos.org/view.php?id=17133
-if ls /etc/sysconfig/network-scripts/ifcfg-ens3* &> /dev/null; then
-    rm -f /etc/sysconfig/network-scripts/ifcfg-ens3*
-fi
+rm -f /etc/sysconfig/network-scripts/ifcfg-ens*
+# https://bugs.launchpad.net/tripleo/+bug/1931495
+rm -f /etc/sysconfig/network-scripts/ifcfg-eth*
