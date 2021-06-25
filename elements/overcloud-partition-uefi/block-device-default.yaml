@@ -19,7 +19,7 @@
         size: 8MiB
       - name: root
         flags: [ boot ]
-        size: 40G
+        size: 6G
 - lvm:
     name: lvm
     base: [ root ]
@@ -34,22 +34,22 @@
     lvs:
         - name: lv_root
           base: vg
-          extents: 23%VG
+          extents: 69%VG
         - name: lv_tmp
           base: vg
           extents: 4%VG
         - name: lv_var
           base: vg
-          extents: 45%VG
+          extents: 15%VG
         - name: lv_log
           base: vg
-          extents: 23%VG
+          extents: 4%VG
         - name: lv_audit
           base: vg
           extents: 4%VG
         - name: lv_home
           base: vg
-          extents: 1%VG
+          extents: 4%VG
 - mkfs:
     name: fs_root
     base: lv_root
