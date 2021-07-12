@@ -19,4 +19,5 @@ import setuptools
 
 setuptools.setup(
     setup_requires=['pbr'],
+    py_modules=[],
     pbr=True)
