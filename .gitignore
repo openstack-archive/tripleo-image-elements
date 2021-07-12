@@ -1,15 +1,24 @@
-*~
-.testrepository
-*.sw?
 *.pyc
+*.qcow2
+elements/seed-stack-config/local.json
+
+# Unit test / coverage reports
+.stestr
 .tox
+.venv
+
+# Packages
 *.egg-info
 dist
-*.qcow2
 build
+
+# pbr generates these
 AUTHORS
 ChangeLog
-elements/seed-stack-config/local.json
+
+# Editors
+*.sw?
+*~
 
 # Files created by releasenotes build
 releasenotes/build
