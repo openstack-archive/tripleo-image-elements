@@ -46,10 +46,13 @@
           extents: 4%VG
         - name: lv_audit
           base: vg
-          extents: 4%VG
+          extents: 3%VG
         - name: lv_home
           base: vg
           extents: 4%VG
+        - name: lv_srv
+          base: vg
+          extents: 1%VG
 - mkfs:
     name: fs_root
     base: lv_root
@@ -102,6 +105,15 @@
     type: xfs
     mount:
         mount_point: /home
+        fstab:
+            options: "rw,nodev,relatime"
+            fsck-passno: 2
+- mkfs:
+    name: fs_srv
+    base: lv_srv
+    type: xfs
+    mount:
+        mount_point: /srv
         fstab:
             options: "rw,nodev,relatime"
             fsck-passno: 2
