@@ -44,8 +44,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'tripleo-image-elements Release Notes'
-copyright = u'2016, TripleO Developers'
+project = 'tripleo-image-elements Release Notes'
+copyright = '2016, TripleO Developers'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -196,8 +196,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'tripleo-image-elementsReleaseNotes.tex', u'tripleo-image-elements Release Notes Documentation',
-   u'2016, TripleO Developers', 'manual'),
+  ('index', 'tripleo-image-elementsReleaseNotes.tex', 'tripleo-image-elements Release Notes Documentation',
+   '2016, TripleO Developers', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -226,8 +226,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'tripleo-image-elementsreleasenotes', u'tripleo-image-elements Release Notes Documentation',
-     [u'2016, TripleO Developers'], 1)
+    ('index', 'tripleo-image-elementsreleasenotes', 'tripleo-image-elements Release Notes Documentation',
+     ['2016, TripleO Developers'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -240,8 +240,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'tripleo-image-elementsReleaseNotes', u'tripleo-image-elements Release Notes Documentation',
-   u'2016, TripleO Developers', 'tripleo-image-elementsReleaseNotes', 'One line description of project.',
+  ('index', 'tripleo-image-elementsReleaseNotes', 'tripleo-image-elements Release Notes Documentation',
+   '2016, TripleO Developers', 'tripleo-image-elementsReleaseNotes', 'One line description of project.',
    'Miscellaneous'),
 ]
 
