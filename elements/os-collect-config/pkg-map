@@ -6,6 +6,13 @@
       }
     }
   },
+  "release": {
+    "debian": {
+      "bullseye": {
+        "os-collect-config": "python3-os-collect-config"
+      }
+    }
+  },
   "family": {
     "debian": {
       "os-collect-config": "python-os-collect-config"
