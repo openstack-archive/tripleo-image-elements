@@ -33,8 +33,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'TripleO Image Elements'
-copyright = u'2014, OpenStack Developers'
+project = 'TripleO Image Elements'
+copyright = '2014, OpenStack Developers'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -175,8 +175,8 @@ latex_elements = {}
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     ('index', 'TripleOImageElements.tex',
-     u'TripleO Image Elements Documentation',
-     u'OpenStack Developers', 'manual'),
+     'TripleO Image Elements Documentation',
+     'OpenStack Developers', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -205,8 +205,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'tripleoimageelements', u'TripleO Image Elements Documentation',
-     [u'OpenStack Developers'], 1)
+    ('index', 'tripleoimageelements', 'TripleO Image Elements Documentation',
+     ['OpenStack Developers'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -220,8 +220,8 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     ('index', 'TripleOImageElements',
-     u'TripleO Image Elements Documentation',
-     u'OpenStack Developers', 'TripleOImageElements',
+     'TripleO Image Elements Documentation',
+     'OpenStack Developers', 'TripleOImageElements',
      'One line description of project.',
      'Miscellaneous'),
 ]
