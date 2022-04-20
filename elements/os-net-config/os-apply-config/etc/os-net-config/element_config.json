@@ -1,3 +1,0 @@
-{{#os_net_config}}
-{{.}}
-{{/os_net_config}}

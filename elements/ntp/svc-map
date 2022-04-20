@@ -1,3 +1,0 @@
-ntpd:
-  default: ntp
-  redhat: ntpd
