@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    The overcloud-hardened-uefi-full image now has a separate partition mounted
+    to /boot. This means grub no longer needs to mount the root partition. This
+    will allow trying layouts which grub doesn't support, such as LVM
+    thin-provisioning. Since grub now uses the common path of loading an ext4
+    /boot partition, early boot may now be more robust, or have better error
+    messages for incorrectly built images.
