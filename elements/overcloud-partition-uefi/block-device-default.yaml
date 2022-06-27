@@ -44,27 +44,46 @@
           base: [ "pv" ]
           options: [ "--force" ]
     lvs:
+        - name: lv_thinpool
+          type: thin-pool
+          base: vg
+          # 20MiB overhead from root partition size
+          size: 5044MiB
         - name: lv_root
+          type: thin
+          thin-pool: lv_thinpool
           base: vg
           # Volume sizes should be a multiple of 4MiB (1 LVM extent)
           # so this is rounded down from 3706MiB
           size: 3704MiB
         - name: lv_tmp
+          type: thin
+          thin-pool: lv_thinpool
           base: vg
           size: 240MiB
         - name: lv_var
+          type: thin
+          thin-pool: lv_thinpool
           base: vg
           size: 952MiB
         - name: lv_log
+          type: thin
+          thin-pool: lv_thinpool
           base: vg
           size: 240MiB
         - name: lv_audit
+          type: thin
+          thin-pool: lv_thinpool
           base: vg
           size: 192MiB
         - name: lv_home
+          type: thin
+          thin-pool: lv_thinpool
           base: vg
           size: 240MiB
         - name: lv_srv
+          type: thin
+          thin-pool: lv_thinpool
           base: vg
           size: 48MiB
 - mkfs:

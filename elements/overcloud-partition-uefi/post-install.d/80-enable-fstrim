@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ "${DIB_DEBUG_TRACE:-0}" -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+sed -i "/^OnCalendar=/c\OnCalendar=daily" /usr/lib/systemd/system/fstrim.timer
+sed -i "/^Description=/c\Description=Discard unused blocks once a day" /usr/lib/systemd/system/fstrim.timer
+systemctl enable fstrim.timer
