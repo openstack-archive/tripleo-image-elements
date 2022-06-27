@@ -19,7 +19,7 @@
         size: 8MiB
       - name: boot
         type: 'BC13C2FF-59E6-4262-A352-B275FD6F7172'
-        size: 500MB
+        size: 500MiB
         mkfs:
           type: ext4
           mount:
@@ -29,7 +29,8 @@
               fsck-passno: 1
       - name: root
         flags: [ boot ]
-        size: 5500MB
+        # 2MiB overhead from disk size 6144MiB (6GiB)
+        size: 5084MiB
 - lvm:
     name: lvm
     base: [ root ]
@@ -44,25 +45,26 @@
     lvs:
         - name: lv_root
           base: vg
-          extents: 69%VG
+          # 4MiB overhead from root partition size
+          size: 3148MiB
         - name: lv_tmp
           base: vg
-          extents: 4%VG
+          size: 240MiB
         - name: lv_var
           base: vg
-          extents: 15%VG
+          size: 952MiB
         - name: lv_log
           base: vg
-          extents: 4%VG
+          size: 240MiB
         - name: lv_audit
           base: vg
-          extents: 3%VG
+          size: 192MiB
         - name: lv_home
           base: vg
-          extents: 4%VG
+          size: 240MiB
         - name: lv_srv
           base: vg
-          extents: 1%VG
+          size: 48MiB
 - mkfs:
     name: fs_root
     base: lv_root
