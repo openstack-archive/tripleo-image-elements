@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    The seven LVM volumes in the overcloud-hardened-uefi-full image are now
+    thinly provisioned, backed by a single pool. The initial boot growvols
+    behaviour is now to grow the pool to the size of the disk and grow each
+    thin provisioned volume so the capacity of the pool is filled but not over
+    provisioned. This will allow temporary volumes to be created for backups
+    during upgrades, and it will allow the operator to over-provision a volume
+    which requires extra capacity.
