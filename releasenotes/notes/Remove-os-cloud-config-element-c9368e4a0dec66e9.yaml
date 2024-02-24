@@ -1,4 +1,0 @@
----
-deprecations:
-  - |
-    The os-cloud-config element has been removed.

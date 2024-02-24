@@ -1,8 +1,0 @@
-- project:
-    templates:
-      - tripleo-buildimage-jobs
-      - openstack-python3-zed-jobs
-      - release-notes-jobs-python3
-    post:
-      jobs:
-        - publish-openstack-python-branch-tarball
